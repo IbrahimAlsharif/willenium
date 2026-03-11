@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Setup driver and configurations" parallel="false">
+    <test name="Setup Main Flow English Tests">
+<!--                <parameter name="language" value="arabic"/>-->
+        <parameter name="language" value="english"/>
+        <parameter name="browser" value="chrome"/>
+        <parameter name="branch" value="production"/>
+        <classes>
+            <class name="base.Setup">
+                <methods>
+                    <exclude name="setUpRemoteDriver"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

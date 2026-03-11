@@ -1,0 +1,13 @@
+{
+  "base-url": {
+    "env": {
+      "arabic": "https://sentra-frontend-dev-1070453196353.europe-west1.run.app/ar"
+    }
+  },
+  "users": {
+    "validUser": {
+      "email": "sentrawewill@gmail.com",
+      "password": "WEWILL@Sentra22"
+    }
+  }
+}

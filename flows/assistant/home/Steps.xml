@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Browse Assistant Home Steps" parallel="false">
+    <suite-files>
+        <suite-file path="../../steps/authentication/login.xml"/>
+        <suite-file path="../../steps/assistant/open_home.xml"/>
+        <suite-file path="../../steps/assistant/search.xml"/>
+        <suite-file path="../../steps/assistant/search_empty.xml"/>
+        <suite-file path="../../steps/assistant/search_modal.xml"/>
+        <suite-file path="../../steps/assistant/search_modal_empty.xml"/>
+    </suite-files>
+</suite>

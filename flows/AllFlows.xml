@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="All Flows" parallel="true">
+    <suite-files>
+        <suite-file path="SetupEnglish.xml"/>
+        <suite-file path="steps/authentication/login.xml"/>
+        <suite-file path="steps/analysis/open_business_dashboard.xml"/>
+        <suite-file path="steps/analysis/open_parliaments_list_from_total_widget.xml"/>
+        <suite-file path="steps/analysis/search_entity_mp.xml"/>
+        <suite-file path="steps/analysis/open_parliament_profile.xml"/>
+        <suite-file path="steps/common/back.xml"/>
+        <suite-file path="steps/common/back.xml"/>
+        <suite-file path="steps/common/back.xml"/>
+<!--        <suite-file path="steps/analysis/open_parliaments_list_from_mps_widget.xml"/>-->
+<!--        <suite-file path="steps/common/back.xml"/>-->
+        <suite-file path="steps/analysis/open_govermentals_list_from_total_widget.xml"/>
+        <suite-file path="steps/analysis/search_entity_gm.xml"/>
+        <suite-file path="steps/analysis/open_governmental_profile.xml"/>
+        <suite-file path="steps/common/back.xml"/>
+        <suite-file path="steps/common/back.xml"/>
+        <suite-file path="steps/common/back.xml"/>
+<!--        <suite-file path="steps/analysis/open_govermentals_list_from_govs_widget.xml"/>-->
+<!--        <suite-file path="steps/common/back.xml"/>-->
+<!--        <suite-file path="steps/analysis/open-influencers_dashboard.xml"/>-->
+        <suite-file path="steps/assistant/open_home.xml"/>
+        <suite-file path="steps/assistant/search.xml"/>
+        <suite-file path="steps/assistant/search_empty.xml"/>
+        <suite-file path="steps/assistant/search_modal.xml"/>
+        <suite-file path="steps/assistant/search_modal_empty.xml"/>
+        <suite-file path="TearDown.xml"/>
+    </suite-files>
+</suite>
