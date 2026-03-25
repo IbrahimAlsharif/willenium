@@ -29,8 +29,8 @@ public class TestRailManager {
     public TestRailManager() {
         String base_url="https://wewilltech.testrail.io/";
         String api_url="index.php?/api/v2/";
-        String userName="wewill.ceo@gmail.com";
-        String password="it25@WEWILL";
+        String userName="******";// add your username here
+        String password="******";// add your password here
         client = new APIClient(base_url,api_url, userName, password);
     }
 
