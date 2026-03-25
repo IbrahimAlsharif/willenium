@@ -35,6 +35,7 @@ This repo also includes a repo-local Codex skill and agent for framework-aware S
 
 - Skill: `.codex/skills/wellenium/SKILL.md`
 - Agent: `.github/agents/wellenium.agent.md`
+- Bridge files: `AGENTS.md`, `CLAUDE.md`
 
 They are designed to work like Playwright-oriented AI test agents, but for this Java/Selenium/TestNG framework.
 
@@ -57,6 +58,8 @@ Follow `.github/agents/wellenium.agent.md` and debug the failing search flow.
 ```
 
 Important: the final deliverable should still be framework-native Java/TestNG code. Selenium MCP is a discovery and debugging aid, not the final artifact.
+
+If your AI client auto-discovers root instruction files, `AGENTS.md` and `CLAUDE.md` now point it to the same Willenium-specific workflow so Codex-style and Claude-style sessions stay aligned.
 
 ## Project Structure
 
