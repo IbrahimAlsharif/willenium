@@ -29,6 +29,35 @@ Prerequisite:
 - Node.js and npm must be installed locally so the client can launch the server through `npx`.
 - Some MCP clients may still ask for a one-time workspace trust or server approval when the repo is opened.
 
+## AI Agent And Skill
+
+This repo also includes a repo-local Codex skill and agent for framework-aware Selenium work:
+
+- Skill: `.codex/skills/wellenium/SKILL.md`
+- Agent: `.github/agents/wellenium.agent.md`
+
+They are designed to work like Playwright-oriented AI test agents, but for this Java/Selenium/TestNG framework.
+
+Use them when you want an AI assistant to:
+
+- follow the current `base.Setup` / `base.Finder` / `base.Go` conventions
+- keep assertions in `*Test.java`
+- update JSON-backed test data instead of hardcoding values
+- wire new coverage through TestNG XML suites under `flows/...`
+- use the `selenium` MCP server only when live browser exploration or locator validation is actually needed
+
+Typical prompts:
+
+```text
+Use `wellenium` to add a new assistant home test.
+```
+
+```text
+Follow `.github/agents/wellenium.agent.md` and debug the failing search flow.
+```
+
+Important: the final deliverable should still be framework-native Java/TestNG code. Selenium MCP is a discovery and debugging aid, not the final artifact.
+
 ## Project Structure
 
 ```text
