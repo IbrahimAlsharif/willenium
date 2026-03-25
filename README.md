@@ -15,6 +15,20 @@ The current repo is organized around reusable setup/helpers, feature-level test 
 - Extent Reports
 - Log4j
 
+## MCP Integration
+
+This repo includes a root `.mcp.json` that registers the Selenium MCP server for MCP-aware clients that support project-level configuration.
+
+- Server: `selenium`
+- Command: `npx -y @angiejones/mcp-selenium@0.1.21`
+
+That means anyone who clones the repo gets the same Selenium MCP definition from the repository itself instead of configuring it manually per machine.
+
+Prerequisite:
+
+- Node.js and npm must be installed locally so the client can launch the server through `npx`.
+- Some MCP clients may still ask for a one-time workspace trust or server approval when the repo is opened.
+
 ## Project Structure
 
 ```text
