@@ -1,8 +1,42 @@
 # Willenium
 
-Willenium is a Selenium-based UI automation framework for the WeWill/Sentra web app. It uses Java, Maven, TestNG, and XML suite composition to run end-to-end browser flows, and it also includes a small API testing entry point with RestAssured.
+Willenium is a Selenium-based Java automation framework built with Maven, TestNG, and XML suite composition. It is designed for framework-native UI and API automation with reusable setup, helper layers, JSON-backed test data, and suite-driven execution.
 
-The current repo is organized around reusable setup/helpers, feature-level test classes, and TestNG suite files that stitch those pieces together into runnable flows.
+## Quick Start
+
+Create a new project without cloning this repository.
+
+Package: `create-willenium`
+
+```bash
+npx create-willenium@latest my-ui-tests
+```
+
+Run the starter suite:
+
+```bash
+cd my-ui-tests
+mvn test -PBrowseAssistantHomeEnglish
+```
+
+Optional examples:
+
+```bash
+npx create-willenium@latest my-ui-tests --group-id com.acme.tests
+npx create-willenium@latest my-ui-tests --force
+```
+
+Requirements:
+
+- Node.js 18+
+- Java 17+
+- Maven
+
+## Troubleshooting
+
+- If `npx` fails, confirm Node.js and npm are installed and up to date.
+- If you publish the package, run `npm publish` from the repository directory, not from `~`.
+- To verify the published version, run `npm view create-willenium version`.
 
 ## Tech Stack
 
@@ -15,31 +49,64 @@ The current repo is organized around reusable setup/helpers, feature-level test 
 - Extent Reports
 - Log4j
 
+## What You Get
+
+The `create-willenium` scaffolder:
+
+- creates the project directory
+- copies the starter framework
+- restores `.gitignore`
+- sets the Maven `artifactId` from the project name
+- generates a default `groupId` unless you provide `--group-id`
+
+Generated projects include:
+
+- Selenium + TestNG framework structure
+- ready-to-run XML suites
+- JSON test data setup
+- shared browser helpers
+- AI agent and skill files
+- MCP configuration for Selenium-aware clients
+
+## Running Tests
+
+Use the included Maven profiles:
+
+```bash
+mvn test -PBrowseAssistantHomeEnglish
+mvn test -PBrowseAssistantHomeArabic
+```
+
+Useful suite entry points:
+
+- `flows/assistant/home/BrowseAssistantHomeEnglish.xml`
+- `flows/assistant/home/BrowseAssistantHomeArabic.xml`
+- `flows/api/APITestFlow.xml`
+- `quick_path.xml`
+
+`quick_path.xml` is the shortest smoke path in the repo. It runs setup, login, and teardown.
+
 ## MCP Integration
 
-This repo includes a root `.mcp.json` that registers the Selenium MCP server for MCP-aware clients that support project-level configuration.
+Willenium includes a root `.mcp.json` that registers the Selenium MCP server for MCP-aware clients.
 
 - Server: `selenium`
 - Command: `npx -y @angiejones/mcp-selenium@0.1.21`
 
-That means anyone who clones the repo gets the same Selenium MCP definition from the repository itself instead of configuring it manually per machine.
-
-Prerequisite:
+Requirements:
 
 - Node.js and npm must be installed locally so the client can launch the server through `npx`.
 - Some MCP clients may still ask for a one-time workspace trust or server approval when the repo is opened.
 
-## AI Agent And Skill
+## AI Support
 
-This repo also includes a repo-local Codex skill and agent for framework-aware Selenium work:
+The project includes framework-aware agent files for Codex and Claude:
 
 - Skill: `.codex/skills/wellenium/SKILL.md`
 - Agent: `.github/agents/wellenium.agent.md`
 - Bridge files: `AGENTS.md`, `CLAUDE.md`
 
-They are designed to work like Playwright-oriented AI test agents, but for this Java/Selenium/TestNG framework.
-
-Use them when you want an AI assistant to:
+Use them when you want AI assistance that follows the framework conventions:
 
 - follow the current `base.Setup` / `base.Finder` / `base.Go` conventions
 - keep assertions in `*Test.java`
@@ -57,9 +124,7 @@ Use `wellenium` to add a new assistant home test.
 Follow `.github/agents/wellenium.agent.md` and debug the failing search flow.
 ```
 
-Important: the final deliverable should still be framework-native Java/TestNG code. Selenium MCP is a discovery and debugging aid, not the final artifact.
-
-If your AI client auto-discovers root instruction files, `AGENTS.md` and `CLAUDE.md` now point it to the same Willenium-specific workflow so Codex-style and Claude-style sessions stay aligned.
+Selenium MCP should be used for discovery and debugging only. Final deliverables should remain framework-native Java and TestNG code.
 
 ## Project Structure
 
@@ -86,7 +151,7 @@ wellenium/
       `- common/
 ```
 
-## How Willenium Runs
+## Execution Model
 
 UI flows follow the same pattern:
 
@@ -110,22 +175,18 @@ Inside `Steps.xml`, the framework chains existing feature suites:
 - search modal
 - empty search modal
 
-This means UI test classes are designed to run as part of a suite. Running a UI class by itself usually will not work unless `base.Setup` has already initialized the shared state.
+UI test classes are intended to run through suites. Running a UI class by itself usually will not work unless `base.Setup` has already initialized the shared state.
 
-## Existing Test Examples
+## Reference Tests
 
-These are good examples to follow when adding or updating coverage:
+Good examples to follow when adding or updating coverage:
 
 - `src/test/java/tests/assistant/login/LoginTest.java`
-  validates the login screen, clicks Google sign-in, and uses `validUser` from test data.
 - `src/test/java/tests/assistant/home/AssistantHomePageTest.java`
-  checks the assistant home UI such as search, live monitoring, chat dock, and action buttons.
 - `src/test/java/tests/assistant/search/GlobalSearchValidTest.java`
-  uses the configured search query and verifies banners, result cards, and the first result title.
 - `src/test/java/tests/api/SystemHealthApiTest.java`
-  shows the API test style used by the framework.
 
-The page/flow helper pattern is visible in:
+The page and flow helper pattern is visible in:
 
 - `src/test/java/tests/assistant/login/Login.java`
 - `src/test/java/tests/assistant/home/AssistantHomePage.java`
@@ -150,7 +211,7 @@ That mapping resolves to one of these files:
 - `src/test/java/configs/testdata/stagingEnglish.json`
 - `src/test/java/configs/testdata/stagingArabic.json`
 
-The production JSON files are currently the richest examples and include UI labels and assertions used by the existing tests, including sections such as:
+The production JSON files are the richest examples and include UI labels and assertions used by the existing tests, including sections such as:
 
 - `login`
 - `home`
@@ -186,9 +247,9 @@ Typical structure:
 }
 ```
 
-Note: the current `stagingEnglish.json` and `stagingArabic.json` are minimal compared with the production files, so production data is the better reference when creating new UI tests.
+`stagingEnglish.json` and `stagingArabic.json` are currently minimal, so the production files are the better reference when creating new UI tests.
 
-## Browser Execution
+## Browser Support
 
 `base.Setup` currently supports local execution with:
 
@@ -201,39 +262,9 @@ The checked-in setup suites default to local Chrome:
 - `flows/SetupEnglish.xml`
 - `flows/SetupArabic.xml`
 
-Remote execution through LambdaTest also exists in `base.Setup#setUpRemoteDriver`, but the provided XML setup files currently exclude that method and use local driver startup instead.
+Remote execution through LambdaTest also exists in `base.Setup#setUpRemoteDriver`, but the checked-in XML setup files use local driver startup by default.
 
-## Running Tests
-
-### Maven Profiles
-
-Two ready-to-run Maven profiles are already configured in `pom.xml`:
-
-```bash
-mvn test -PBrowseAssistantHomeEnglish
-mvn test -PBrowseAssistantHomeArabic
-```
-
-These profiles run the assistant home flow end to end through the XML suites.
-
-### XML Suites
-
-Useful suite entry points already in the repo:
-
-- `flows/assistant/home/BrowseAssistantHomeEnglish.xml`
-- `flows/assistant/home/BrowseAssistantHomeArabic.xml`
-- `flows/api/APITestFlow.xml`
-- `quick_path.xml`
-
-`quick_path.xml` is the shortest existing smoke-style path in the repo. It runs:
-
-1. setup
-2. login
-3. teardown
-
-If you want to run a different suite from Maven, follow the same pattern used by the existing Maven profiles in `pom.xml` and point Surefire at the XML file you want to execute.
-
-## Configuration Notes
+## Configuration
 
 - Headless mode is controlled in `src/test/java/configs/pipeline/PipelineConfig.java`.
 - TestRail reporting is also toggled in `PipelineConfig`.
@@ -242,7 +273,7 @@ If you want to run a different suite from Maven, follow the same pattern used by
 
 ## Adding New Tests
 
-Use the current tests as the framework convention:
+Follow the current framework conventions:
 
 1. Add or extend test data first in the correct JSON file.
 2. Create or update a page/helper class under `src/test/java/tests/...`.
@@ -250,4 +281,4 @@ Use the current tests as the framework convention:
 4. Register the class in a feature XML suite under `flows/steps/...` or a higher-level composed suite.
 5. Run the flow through a suite that includes setup and teardown.
 
-For UI coverage, `AssistantHomePageTest` and `GlobalSearchValidTest` are the clearest starting examples in the current codebase.
+For UI coverage, `AssistantHomePageTest` and `GlobalSearchValidTest` are strong starting examples.

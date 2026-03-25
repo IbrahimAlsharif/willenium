@@ -1,4 +1,4 @@
-# Wellenium Agent Guide
+# Willenium Agent Guide
 
 Use the `wellenium` agent/skill behavior for any AI-assisted browser automation work in this repository.
 

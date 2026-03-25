@@ -1,0 +1,36 @@
+{
+  "name": "create-willenium",
+  "version": "0.1.0",
+  "description": "Bootstrap a new Willenium Selenium TestNG framework project.",
+  "bin": {
+    "create-willenium": "bin/create-willenium.js"
+  },
+  "files": [
+    "bin",
+    "template-resources",
+    ".claude",
+    ".codex",
+    ".github",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "README.md",
+    "pom.xml",
+    "quick_path.xml",
+    ".mcp.json",
+    "flows",
+    "scripts",
+    "src"
+  ],
+  "keywords": [
+    "selenium",
+    "testng",
+    "maven",
+    "scaffold",
+    "bootstrap",
+    "wellenium"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

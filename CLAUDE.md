@@ -1,4 +1,4 @@
-# Wellenium Claude Guide
+# Willenium Claude Guide
 
 For AI work in this repository, follow the same behavior as the `wellenium` agent and skill:
 
