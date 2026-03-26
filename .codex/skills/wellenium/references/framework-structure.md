@@ -24,11 +24,17 @@ Because `Setup.driver`, `Setup.wait`, and `Setup.testData` are static shared sta
   Maps `branch` + `language` to the correct JSON file.
 - `src/test/java/configs/pipeline/PipelineConfig.java`
   Controls headless mode and TestRail reporting flags.
+- `test-plans/TEMPLATE.md`
+  Default template for plan-first coverage authoring.
+- `test-plans/README.md`
+  Naming and linkage rules for plans, flows, Java classes, and JSON data.
 
 ## Test Organization
 
 The current UI pattern is:
 
+- planning artifact:
+  `test-plans/<app>/<target-slug>.md`
 - feature helper/action class:
   `src/test/java/tests/.../<Feature>.java`
 - assertion-focused test class:
@@ -42,9 +48,23 @@ These checked-in classes are examples of framework structure, not the required b
 
 For a real project:
 
+- create app-specific plans before generating app-specific automation
 - create app-specific folders, helpers, tests, JSON data, and flows
 - avoid carrying forward sample names, URLs, or assertions unless the user confirms they are still relevant
 - feel free to move or rename the starter examples so they are clearly separated from the real project baseline
+
+Plans should be the source of truth when a user asks to:
+
+- inspect a target link and write a test plan
+- generate full tests from an approved plan
+- update a plan and then update the related tests
+
+Each plan should include stable metadata pointing to:
+
+- the target slug
+- the related flow XML file
+- the helper and test classes
+- the JSON data sections that support the tests
 
 ## Suite Composition
 
@@ -69,6 +89,8 @@ Example:
 If a new scenario should run with the broader flow, wire it into the relevant step suite. If it needs a dedicated path, create a new XML suite that still includes setup and teardown.
 
 When the first real client scenario is added, prefer creating dedicated app-specific suites instead of extending the WE WILL sample flow unless the user explicitly wants to keep the examples as the main path.
+
+Because XML files are execution artifacts, keep comprehensive planning in `test-plans/` by default. Only add a Markdown blueprint under `flows/...` when the user explicitly asks for a flow-local plan file.
 
 ## Test Data Rules
 

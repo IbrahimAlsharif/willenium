@@ -11,6 +11,7 @@ Primary source files:
 
 Produce framework-native Java Selenium TestNG changes for this repo.
 
+- Put planning artifacts in `test-plans/<app>/<target-slug>.md` by default.
 - Put reusable browser logic in `src/test/java/tests/.../<Feature>.java`.
 - Put assertions in `src/test/java/tests/.../<Feature>Test.java`.
 - Keep setup and driver lifecycle in `base.Setup` and `base.TearDownTest`.
@@ -36,6 +37,11 @@ Do not treat MCP interactions as the final deliverable. Translate findings back 
 ## Working Rules
 
 - Inspect the sample assets to learn the framework structure, but do not assume the user wants new work built on top of the bundled WE WILL example domain.
+- When the user asks to inspect a link, write a test plan, generate tests from a target, or update generated coverage, follow a plan-first workflow.
+- Create the canonical plan at `test-plans/<app>/<target-slug>.md` unless the user explicitly asks for a Markdown blueprint next to the flow XML under `flows/...`.
+- Make the plan comprehensive enough to drive later generation: include scope, assumptions, setup, test data, happy paths, negative paths, edge cases, localization notes, and explicit mapping to XML, Java, and JSON artifacts.
+- Keep the plan linked to generated tests through stable metadata such as `plan_id`, `target_slug`, flow path, helper class, test class, and test-data sections.
+- If a plan already exists, update that plan and the linked tests rather than creating duplicate plans or duplicate test classes.
 - When the first real project test is requested, create app-specific folders, flows, and JSON data; move or rename the examples first if that will keep the real project clearer.
 - Keep UI tests suite-driven; do not bypass setup/teardown assumptions.
 - Keep expected text, URLs, and other assertion inputs dynamic in `src/test/java/configs/testdata/...` instead of hardcoding them in test methods.
