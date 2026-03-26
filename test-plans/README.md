@@ -23,6 +23,8 @@ Keeping plans under `test-plans/` makes it easier to:
 
 If a user explicitly asks for a flow-local blueprint, create a sibling Markdown file under `flows/...` that references the same `plan_id` as the canonical plan in this folder.
 
+When fulfilling a planning request, the agent should actually create or update the Markdown file on disk. Returning a plan only in chat is not sufficient.
+
 ## Required Linking Metadata
 
 Each plan should include front matter with, at minimum:

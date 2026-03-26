@@ -37,15 +37,16 @@ Produce framework-native automation work for this repo:
 1. Inspect the example implementation, its test data, its XML suite wiring, and the `test-plans/` conventions to understand the framework shape.
 2. If the user asks to inspect a link, write a plan, generate tests from a target, or update generated coverage, create or update a comprehensive Markdown plan first.
 3. Use `test-plans/<app>/<target-slug>.md` as the default plan location. Only place a Markdown blueprint near `flows/...` when the user explicitly asks for that layout.
-4. Decide whether Selenium MCP is actually needed.
-5. If live exploration is needed, use the `selenium` MCP server to validate the page, flow, text, or locator.
-6. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
-7. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
-8. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
-9. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, and JSON section names.
-10. Register or update the relevant TestNG XML suite.
-11. When a plan changes, update the linked tests instead of creating duplicate implementations.
-12. Run the smallest meaningful verification path available.
+4. For planning requests, the task is not complete until the Markdown file has actually been created or updated on disk. Do not stop at a chat response.
+5. Decide whether Selenium MCP is actually needed.
+6. If live exploration is needed, use the `selenium` MCP server to validate the page, flow, text, or locator.
+7. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
+8. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
+9. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
+10. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, and JSON section names.
+11. Register or update the relevant TestNG XML suite.
+12. When a plan changes, update the linked tests instead of creating duplicate implementations.
+13. Run the smallest meaningful verification path available.
 
 ## Non-Negotiable Rules
 
@@ -54,6 +55,7 @@ Produce framework-native automation work for this repo:
 - Treat sample tests and sample URLs as examples only; do not build over them unless the user asks for that explicitly.
 - Prefer plan-first delivery. A comprehensive Markdown plan should exist before generating new automation from a target.
 - Use `test-plans/` as the canonical planning area unless the user explicitly asks for a flow-local blueprint.
+- When the user asks for a plan, always create or update the actual Markdown file and report its saved path.
 - Keep plan names and generated assets related through a stable slug or `plan_id` so later updates remain deterministic.
 - Reuse `base.Finder` and `base.Go` before introducing raw low-level Selenium code.
 - Keep assertions in `*Test.java`.

@@ -18,6 +18,8 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 
 1. Inspect the existing example feature, test data, suite wiring, and plan conventions before editing anything.
 2. For a new target, create or update a comprehensive Markdown test plan first. Use `test-plans/<app>/<target-slug>.md` by default. Only place a Markdown blueprint near `flows/...` when the user explicitly asks for a flow-local planning artifact.
+   - The planning task is incomplete until the `.md` file is written to disk.
+   - Do not stop at a conversational summary; persist the plan file and mention its path in the final response.
 3. Keep each plan linked to its generated automation through stable metadata such as:
    - `plan_id`
    - `target_name`
@@ -47,6 +49,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 - Treat the checked-in WE WILL example flows as examples of structure and conventions, not as the required product namespace to extend.
 - Prefer plan-first delivery when the user asks for planning, link inspection, or test generation from a target.
 - Use `test-plans/` as the canonical planning area unless the user explicitly asks for a flow-local blueprint.
+- When the user asks for a plan, always create or update the actual Markdown file. A chat-only plan is insufficient.
 - Keep plan names and generated assets related through the same stable slug or `plan_id` so later updates remain deterministic.
 - Prefer existing helper patterns over introducing a new page-object architecture.
 - Reuse `Finder` and `Go` before adding direct `driver.findElement(...)` or custom wait code.

@@ -39,6 +39,8 @@ Do not treat MCP interactions as the final deliverable. Translate findings back 
 - Inspect the sample assets to learn the framework structure, but do not assume the user wants new work built on top of the bundled WE WILL example domain.
 - When the user asks to inspect a link, write a test plan, generate tests from a target, or update generated coverage, follow a plan-first workflow.
 - Create the canonical plan at `test-plans/<app>/<target-slug>.md` unless the user explicitly asks for a Markdown blueprint next to the flow XML under `flows/...`.
+- When the user asks for a plan, the work is not complete until the Markdown file is actually created or updated on disk.
+- Do not satisfy a planning request with a chat-only response. Persist the plan as a `.md` file and report the saved path in the final reply.
 - Make the plan comprehensive enough to drive later generation: include scope, assumptions, setup, test data, happy paths, negative paths, edge cases, localization notes, and explicit mapping to XML, Java, and JSON artifacts.
 - Keep the plan linked to generated tests through stable metadata such as `plan_id`, `target_slug`, flow path, helper class, test class, and test-data sections.
 - If a plan already exists, update that plan and the linked tests rather than creating duplicate plans or duplicate test classes.
