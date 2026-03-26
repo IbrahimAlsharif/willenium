@@ -31,6 +31,10 @@ public class TestData {
         return testData.get("topic");
     }
 
+    public JsonNode getWeWillHomeData() {
+        return testData.get("wewillHome");
+    }
+
     public JsonNode getLoginData() {
         return testData.get("login");
     }
@@ -83,4 +87,3 @@ public class TestData {
         return testData.get("analysisGovernmentalProfile").get("static");
     }
 }
-

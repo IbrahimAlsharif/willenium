@@ -36,11 +36,15 @@ The current UI pattern is:
 
 Examples already in the repo:
 
-- login: `tests.assistant.login.Login` + `LoginTest`
-- assistant home: `tests.assistant.home.AssistantHomePage` + `AssistantHomePageTest`
-- search: `tests.assistant.search.GlobalSearch` + `GlobalSearchValidTest`
+- WE WILL public home journey: `tests.examples.wewill.home.WeWillHomePage` + `WeWillHomePageTest`
 
-Keep new work close to the nearest existing feature folder instead of inventing a new top-level convention.
+These checked-in classes are examples of framework structure, not the required business domain for future work.
+
+For a real project:
+
+- create app-specific folders, helpers, tests, JSON data, and flows
+- avoid carrying forward sample names, URLs, or assertions unless the user confirms they are still relevant
+- feel free to move or rename the starter examples so they are clearly separated from the real project baseline
 
 ## Suite Composition
 
@@ -49,39 +53,47 @@ TestNG XML files are the orchestration layer.
 - setup suites:
   `flows/SetupEnglish.xml`, `flows/SetupArabic.xml`
 - feature step suites:
-  `flows/steps/...`
+  `flows/examples/steps/...`
 - composed end-to-end suites:
-  `flows/assistant/home/...`
+  `flows/examples/wewill/...`
 - teardown suite:
   `flows/TearDown.xml`
 
 Example:
 
-- `flows/assistant/home/BrowseAssistantHomeEnglish.xml`
+- `flows/examples/wewill/BrowseExampleWeWillEnglish.xml`
   includes setup, steps, and teardown.
-- `flows/assistant/home/Steps.xml`
-  chains login, open home, search, and modal flows via nested suite files.
+- `flows/examples/steps/wewill/home_journey.xml`
+  runs the bundled public-site example test class.
 
 If a new scenario should run with the broader flow, wire it into the relevant step suite. If it needs a dedicated path, create a new XML suite that still includes setup and teardown.
+
+When the first real client scenario is added, prefer creating dedicated app-specific suites instead of extending the WE WILL sample flow unless the user explicitly wants to keep the examples as the main path.
 
 ## Test Data Rules
 
 Use `TestDataFactory` rules when choosing JSON files:
 
-- production + english -> `productionEnglish.json`
-- production + arabic -> `productionArabic.json`
-- non-production + english -> `stagingEnglish.json`
-- non-production + arabic -> `stagingArabic.json`
+- production + english -> `exampleProductionEnglish.json`
+- production + arabic -> `exampleProductionArabic.json`
+- non-production + english -> `exampleStagingEnglish.json`
+- non-production + arabic -> `exampleStagingArabic.json`
 
-The production JSON files are currently the richer examples. Prefer them as a structural reference when adding new keys.
+The current JSON files are starter examples of the expected shape. Use them as a structural reference only.
+
+Real tests should:
+
+- store expected assertions, URLs, credentials, and inputs in JSON rather than embedding them in test methods
+- keep English and Arabic values in their respective files when the target app supports both
+- create new app-appropriate values for the real system under test instead of reusing the sample site content
 
 ## Execution Entry Points
 
 - Maven profiles in `pom.xml`:
-  - `BrowseAssistantHomeEnglish`
-  - `BrowseAssistantHomeArabic`
+  - `BrowseExampleWeWillEnglish`
+  - `BrowseExampleWeWillArabic`
 - shortest existing smoke path:
-  - `quick_path.xml`
+  - `example_quick_path.xml`
 
 ## Practical Conventions
 

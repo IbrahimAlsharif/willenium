@@ -184,7 +184,7 @@
     </build>
     <profiles>
         <profile>
-            <id>BrowseAssistantHomeArabic</id>
+            <id>BrowseExampleWeWillArabic</id>
             <build>
                 <plugins>
                     <plugin>
@@ -193,7 +193,7 @@
                         <version>3.5.2</version>
                         <configuration>
                             <suiteXmlFiles>
-                                <suiteXmlFile>flows/assistant/home/BrowseAssistantHomeArabic.xml</suiteXmlFile>
+                                <suiteXmlFile>flows/examples/wewill/BrowseExampleWeWillArabic.xml</suiteXmlFile>
                             </suiteXmlFiles>
                         </configuration>
                     </plugin>
@@ -201,7 +201,7 @@
             </build>
         </profile>
         <profile>
-            <id>BrowseAssistantHomeEnglish</id>
+            <id>BrowseExampleWeWillEnglish</id>
             <build>
                 <plugins>
                     <plugin>
@@ -210,7 +210,7 @@
                         <version>3.5.2</version>
                         <configuration>
                             <suiteXmlFiles>
-                                <suiteXmlFile>flows/assistant/home/BrowseAssistantHomeEnglish.xml</suiteXmlFile>
+                                <suiteXmlFile>flows/examples/wewill/BrowseExampleWeWillEnglish.xml</suiteXmlFile>
                             </suiteXmlFiles>
                         </configuration>
                     </plugin>

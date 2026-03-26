@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="Browse Assistant Home English" parallel="false">
-    <suite-files>
-        <suite-file path="../../SetupEnglish.xml"/>
-        <suite-file path="Steps.xml"/>
-        <suite-file path="../../TearDown.xml"/>
-    </suite-files>
-</suite>

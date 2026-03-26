@@ -9,15 +9,15 @@ public class TestDataFactory {
 
         if (isProduction) {
             if (isEnglish) {
-                testDataFileName = "productionEnglish.json";
+                testDataFileName = "exampleProductionEnglish.json";
             } else {
-                testDataFileName = "productionArabic.json";
+                testDataFileName = "exampleProductionArabic.json";
             }
         } else {
             if (isEnglish) {
-                testDataFileName = "stagingEnglish.json";
+                testDataFileName = "exampleStagingEnglish.json";
             } else {
-                testDataFileName = "stagingArabic.json";
+                testDataFileName = "exampleStagingArabic.json";
             }
         }
         return new TestData(testDataFileName);

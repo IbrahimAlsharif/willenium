@@ -204,7 +204,7 @@ Created ${projectName} in ${destination}
 
 Next steps:
   cd ${destination}
-  mvn test -PBrowseAssistantHomeEnglish
+  mvn test -PBrowseExampleWeWillEnglish
 `);
 }
 

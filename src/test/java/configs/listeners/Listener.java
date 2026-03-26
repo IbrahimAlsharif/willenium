@@ -28,9 +28,6 @@ public class Listener implements ITestListener {
 
     @Override
     public void onStart(ITestContext result) {
-        if (halt) {
-            System.exit(1);
-        }
         System.out.println(" >>>>>>>>>>> Test Started " + result.getName()+ " <<<<<<<<<<<<");
         if (extent == null) {
             extent = new ExtentReports();
@@ -50,20 +47,34 @@ public class Listener implements ITestListener {
     public void onTestFailure(ITestResult result) {
         System.out.println("FAILED -> " + result.getName());
         ExtentTest methodTest = testMap.get(result.getName());
+        if (methodTest == null) {
+            ExtentTest suiteTest = testMap.get(result.getTestContext().getName());
+            methodTest = suiteTest != null
+                    ? suiteTest.createNode(result.getMethod().getMethodName())
+                    : extent.createTest(result.getMethod().getMethodName());
+            testMap.put(result.getMethod().getMethodName(), methodTest);
+        }
+
         methodTest.log(Status.FAIL, "Test failed");
         methodTest.fail(result.getThrowable());
-        methodTest.addScreenCaptureFromBase64String(Go.getShotAsBase64(), "Screenshot");
-        File screenShot = Go.getShotAsFile(result.getName());
 
-        if (PipelineConfig.testRailReport) {
+        File screenShot = null;
+        try {
+            String screenshotBase64 = Go.getShotAsBase64();
+            if (screenshotBase64 != null && !screenshotBase64.isBlank()) {
+                methodTest.addScreenCaptureFromBase64String(screenshotBase64, "Screenshot");
+            }
+            screenShot = Go.getShotAsFile(result.getName());
+        } catch (Exception screenshotError) {
+            methodTest.log(Status.WARNING, "Screenshot unavailable: " + screenshotError.getMessage());
+        }
+
+        if (PipelineConfig.testRailReport && screenShot != null) {
             try {
                 testRail.setResult(testRunId, testCaseId, TestRailManager.FAILED, screenShot.getAbsolutePath());
             } catch (IOException | APIException e) {
                 throw new RuntimeException(e);
             }
-        }
-        if (halt) {
-            System.exit(1);
         }
         for (String tag : result.getMethod().getGroups()) {
             if (tag.equalsIgnoreCase("haltWhenFail")) {
@@ -75,7 +86,10 @@ public class Listener implements ITestListener {
 
     @Override
     public void onTestSkipped(ITestResult result) {
-        testMap.get(result.getMethod().getMethodName()).log(Status.SKIP, "Test skipped");
+        ExtentTest methodTest = testMap.get(result.getMethod().getMethodName());
+        if (methodTest != null) {
+            methodTest.log(Status.SKIP, "Test skipped");
+        }
     }
 
     @Override
@@ -88,7 +102,10 @@ public class Listener implements ITestListener {
     @Override
     public void onTestSuccess(ITestResult result) {
         System.out.println("PASSED -> " + result.getName());
-        testMap.get(result.getMethod().getMethodName()).log(Status.PASS, "Test passed");
+        ExtentTest methodTest = testMap.get(result.getMethod().getMethodName());
+        if (methodTest != null) {
+            methodTest.log(Status.PASS, "Test passed");
+        }
         if (PipelineConfig.testRailReport) {
             try {
                 testRail.setResult(testRunId, testCaseId, TestRailManager.PASSED, null);

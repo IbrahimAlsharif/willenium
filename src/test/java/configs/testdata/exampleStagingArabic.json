@@ -1,0 +1,14 @@
+{
+  "base-url": {
+    "env": {
+      "arabic": "https://wewill.tech/"
+    }
+  },
+  "wewillHome": {
+    "heroHeading": "We don’t just test software.",
+    "primaryCta": "Book a Clarity Session",
+    "methodologyHeading": "GenAI Feature Quality & Decision Governance",
+    "bilingualOfferingCta": "Explore (EN/AR)",
+    "footerSlogan": "Reduce Time, Reduce Cost & Be Confident"
+  }
+}

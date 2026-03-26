@@ -6,6 +6,8 @@ public class TearDownTest
 {
     @Test
     public void tearDown(){
-        Setup.driver.quit();
+        if (Setup.driver != null) {
+            Setup.driver.quit();
+        }
     }
     }

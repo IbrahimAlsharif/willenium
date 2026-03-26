@@ -16,7 +16,7 @@ Run the starter suite:
 
 ```bash
 cd my-ui-tests
-mvn test -PBrowseAssistantHomeEnglish
+mvn test -PBrowseExampleWeWillEnglish
 ```
 
 Optional examples:
@@ -62,29 +62,30 @@ The `create-willenium` scaffolder:
 Generated projects include:
 
 - Selenium + TestNG framework structure
-- ready-to-run XML suites
-- JSON test data setup
+- ready-to-run example XML suites
+- example JSON test data setup
 - shared browser helpers
 - AI agent and skill files
 - MCP configuration for Selenium-aware clients
+
+The checked-in tests, flows, and JSON files are starter examples of framework structure. They are intended to be renamed, moved, or replaced when you begin real project coverage.
 
 ## Running Tests
 
 Use the included Maven profiles:
 
 ```bash
-mvn test -PBrowseAssistantHomeEnglish
-mvn test -PBrowseAssistantHomeArabic
+mvn test -PBrowseExampleWeWillEnglish
+mvn test -PBrowseExampleWeWillArabic
 ```
 
 Useful suite entry points:
 
-- `flows/assistant/home/BrowseAssistantHomeEnglish.xml`
-- `flows/assistant/home/BrowseAssistantHomeArabic.xml`
-- `flows/api/APITestFlow.xml`
-- `quick_path.xml`
+- `flows/examples/wewill/BrowseExampleWeWillEnglish.xml`
+- `flows/examples/wewill/BrowseExampleWeWillArabic.xml`
+- `example_quick_path.xml`
 
-`quick_path.xml` is the shortest smoke path in the repo. It runs setup, login, and teardown.
+`example_quick_path.xml` is the shortest smoke path in the repo. It runs setup, a single WE WILL public-site example, and teardown.
 
 ## MCP Integration
 
@@ -113,15 +114,16 @@ Use them when you want AI assistance that follows the framework conventions:
 - update JSON-backed test data instead of hardcoding values
 - wire new coverage through TestNG XML suites under `flows/...`
 - use the `selenium` MCP server only when live browser exploration or locator validation is actually needed
+- treat the bundled tests and data as examples, not the default product namespace to extend
 
 Typical prompts:
 
 ```text
-Use `wellenium` to add a new assistant home test.
+Use `wellenium` to create my first real product test and move the starter examples out of the way if needed.
 ```
 
 ```text
-Follow `.github/agents/wellenium.agent.md` and debug the failing search flow.
+Follow `.github/agents/wellenium.agent.md` and update the bundled WE WILL example flow.
 ```
 
 Selenium MCP should be used for discovery and debugging only. Final deliverables should remain framework-native Java and TestNG code.
@@ -131,14 +133,14 @@ Selenium MCP should be used for discovery and debugging only. Final deliverables
 ```text
 wellenium/
 |- pom.xml
-|- quick_path.xml
+|- example_quick_path.xml
 |- flows/
 |  |- SetupEnglish.xml
 |  |- SetupArabic.xml
 |  |- TearDown.xml
-|  |- assistant/home/
-|  |- steps/
-|  `- api/
+|  `- examples/
+|     |- wewill/
+|     `- steps/
 `- src/test/java/
    |- base/
    |- configs/
@@ -146,9 +148,8 @@ wellenium/
    |  |- listeners/
    |  `- pipeline/
    `- tests/
-      |- assistant/
-      |- api/
-      `- common/
+      `- examples/
+         `- wewill/
 ```
 
 ## Execution Model
@@ -161,36 +162,27 @@ UI flows follow the same pattern:
 
 Example:
 
-- `flows/assistant/home/BrowseAssistantHomeEnglish.xml`
+- `flows/examples/wewill/BrowseExampleWeWillEnglish.xml`
   calls `flows/SetupEnglish.xml`
-- then `flows/assistant/home/Steps.xml`
+- then `flows/examples/steps/wewill/home_journey.xml`
 - then `flows/TearDown.xml`
 
-Inside `Steps.xml`, the framework chains existing feature suites:
-
-- login
-- open home
-- global search
-- empty search
-- search modal
-- empty search modal
+The bundled public example uses the stable WE WILL homepage only.
+The English and Arabic files are kept separate even though the current public landing page content is shared, so future language-specific values can diverge cleanly.
 
 UI test classes are intended to run through suites. Running a UI class by itself usually will not work unless `base.Setup` has already initialized the shared state.
+
+The bundled suites are examples only. When you begin real automation for a new product, create app-specific suites and test data rather than extending the WE WILL example by default.
 
 ## Reference Tests
 
 Good examples to follow when adding or updating coverage:
 
-- `src/test/java/tests/assistant/login/LoginTest.java`
-- `src/test/java/tests/assistant/home/AssistantHomePageTest.java`
-- `src/test/java/tests/assistant/search/GlobalSearchValidTest.java`
-- `src/test/java/tests/api/SystemHealthApiTest.java`
+- `src/test/java/tests/examples/wewill/home/WeWillHomePageTest.java`
 
 The page and flow helper pattern is visible in:
 
-- `src/test/java/tests/assistant/login/Login.java`
-- `src/test/java/tests/assistant/home/AssistantHomePage.java`
-- `src/test/java/tests/assistant/search/GlobalSearch.java`
+- `src/test/java/tests/examples/wewill/home/WeWillHomePage.java`
 
 Shared Selenium utilities live in:
 
@@ -206,19 +198,12 @@ Willenium selects test data through `configs.testdata.TestDataFactory` using:
 
 That mapping resolves to one of these files:
 
-- `src/test/java/configs/testdata/productionEnglish.json`
-- `src/test/java/configs/testdata/productionArabic.json`
-- `src/test/java/configs/testdata/stagingEnglish.json`
-- `src/test/java/configs/testdata/stagingArabic.json`
+- `src/test/java/configs/testdata/exampleProductionEnglish.json`
+- `src/test/java/configs/testdata/exampleProductionArabic.json`
+- `src/test/java/configs/testdata/exampleStagingEnglish.json`
+- `src/test/java/configs/testdata/exampleStagingArabic.json`
 
-The production JSON files are the richest examples and include UI labels and assertions used by the existing tests, including sections such as:
-
-- `login`
-- `home`
-- `search`
-- `searchModal`
-- `topic`
-- analysis-related datasets
+The example production JSON files are the starter references used by the bundled WE WILL public-site example.
 
 Typical structure:
 
@@ -229,25 +214,17 @@ Typical structure:
       "english": "https://example/en"
     }
   },
-  "users": {
-    "validUser": {
-      "email": "<email>",
-      "password": "<password>"
-    }
-  },
-  "login": {
-    "welcomeHeader": "Welcome back"
-  },
-  "home": {
-    "sidebarSearch": "Search"
-  },
-  "search": {
-    "query": "German-GCC Sports Relations"
+  "wewillHome": {
+    "heroHeading": "We don’t just test software.",
+    "primaryCta": "Book a Clarity Session",
+    "methodologyHeading": "GenAI Feature Quality & Decision Governance"
   }
 }
 ```
 
-`stagingEnglish.json` and `stagingArabic.json` are currently minimal, so the production files are the better reference when creating new UI tests.
+The English and Arabic example files currently share the same homepage expectations because that public landing page is shared, but they remain split into separate JSON files so a future Arabic-specific version can be modeled without changing the framework shape.
+
+For real projects, keep expected text, URLs, credentials, and other assertion inputs in app-specific JSON files and have assertions read from the active language file instead of hardcoding them in test methods.
 
 ## Browser Support
 
@@ -275,10 +252,10 @@ Remote execution through LambdaTest also exists in `base.Setup#setUpRemoteDriver
 
 Follow the current framework conventions:
 
-1. Add or extend test data first in the correct JSON file.
+1. Add or extend app-specific test data first in the correct JSON file.
 2. Create or update a page/helper class under `src/test/java/tests/...`.
 3. Add assertions in a `*Test.java` class.
-4. Register the class in a feature XML suite under `flows/steps/...` or a higher-level composed suite.
+4. Register the class in a feature XML suite under `flows/...`.
 5. Run the flow through a suite that includes setup and teardown.
 
-For UI coverage, `AssistantHomePageTest` and `GlobalSearchValidTest` are strong starting examples.
+If the bundled example assets would make the real project confusing, rename or move them first and then add the real app-specific coverage.

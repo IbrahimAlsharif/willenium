@@ -17,6 +17,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -50,6 +51,9 @@ public class Setup {
     @Test(priority = 2, groups = {"haltWhenFail"})
     @Parameters({"language"})
     public void openWebsite(String language){
+        if (driver == null || testData == null) {
+            throw new SkipException("Skipping openWebsite because setup did not initialize driver and test data");
+        }
         testCaseId = "9380";
         driver.get(testData.getBaseUrl(language).asText());
         Go.setMainTab();
@@ -126,4 +130,3 @@ public class Setup {
         }
     }
 }
-
