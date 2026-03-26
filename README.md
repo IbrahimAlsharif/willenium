@@ -1,6 +1,7 @@
 # Willenium
 
-Willenium is a Selenium-based Java automation framework built with Maven, TestNG, and XML suite composition. It is designed for framework-native UI and API automation with reusable setup, helper layers, JSON-backed test data, and suite-driven execution.
+Willenium is a Java Selenium TestNG starter framework built for suite-driven UI automation.
+It gives you reusable setup and helper layers, JSON-backed test data, XML flow composition, and AI guidance files that match the framework structure.
 
 ## Quick Start
 
@@ -31,6 +32,8 @@ Requirements:
 - Node.js 18+
 - Java 17+
 - Maven
+
+The generated project includes a simple public WE WILL homepage example so the framework shape is runnable immediately, but that example is starter content and should be replaced with your real product coverage.
 
 ## Troubleshooting
 
@@ -64,6 +67,7 @@ Generated projects include:
 - Selenium + TestNG framework structure
 - ready-to-run example XML suites
 - example JSON test data setup
+- a simple public WE WILL homepage example
 - shared browser helpers
 - AI agent and skill files
 - MCP configuration for Selenium-aware clients
@@ -85,7 +89,7 @@ Useful suite entry points:
 - `flows/examples/wewill/BrowseExampleWeWillArabic.xml`
 - `example_quick_path.xml`
 
-`example_quick_path.xml` is the shortest smoke path in the repo. It runs setup, a single WE WILL public-site example, and teardown.
+`example_quick_path.xml` is the shortest smoke path in the repo. It runs setup, a single public homepage example, and teardown.
 
 ## MCP Integration
 
@@ -203,7 +207,7 @@ That mapping resolves to one of these files:
 - `src/test/java/configs/testdata/exampleStagingEnglish.json`
 - `src/test/java/configs/testdata/exampleStagingArabic.json`
 
-The example production JSON files are the starter references used by the bundled WE WILL public-site example.
+The example production JSON files are the starter references used by the bundled public WE WILL homepage example.
 
 Typical structure:
 
