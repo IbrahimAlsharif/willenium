@@ -4,6 +4,11 @@ target_name: Replace With User Target Name
 target_url: https://example.com/path
 target_slug: target-slug
 app: app
+jira_issue_key:
+jira_issue_url:
+affected_flows: []
+affected_tests: []
+affected_testdata: []
 flow_xml: flows/app/steps/target_slug.xml
 java_helper: tests.app.feature.TargetFeature
 java_test: tests.app.feature.TargetFeatureTest
@@ -36,6 +41,17 @@ Use `target_slug` as the canonical identifier for the target. Derive `flow_xml`,
 ## Open Questions
 
 - Record unknowns that may affect implementation or require user confirmation later.
+
+## Jira Linkage
+
+- If this plan came from a Jira bug, record the issue key, issue URL, and any acceptance criteria or repro notes that should stay traceable.
+- If there is no Jira issue, explicitly note that the work is locally scoped for now.
+
+## Impact Analysis
+
+- Record which existing flows, tests, and JSON sections this bug affects.
+- Explain whether the right move is to extend existing coverage or create a new path, and why.
+- If multiple journeys are affected, list the primary owner and any secondary suites that need follow-up coverage.
 
 ## Environment And Setup
 
@@ -86,3 +102,4 @@ Use `target_slug` as the canonical identifier for the target. Derive `flow_xml`,
 - Smallest suite to run after implementation
 - Any focused smoke checks
 - Areas that may need Selenium MCP validation before coding
+- If the bug affects more than one flow, note which path is the primary regression check and which paths can be follow-up validation

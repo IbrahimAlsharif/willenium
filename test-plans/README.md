@@ -42,6 +42,16 @@ Each plan should include front matter with, at minimum:
 
 These fields keep the plan, XML, Java, and JSON assets tied together so later updates can find the right files.
 
+When the work starts from Jira, also include:
+
+- `jira_issue_key`
+- `jira_issue_url`
+- `affected_flows`
+- `affected_tests`
+- `affected_testdata`
+
+These fields are optional for local-only work, but recommended whenever a bug or story should stay linked to its generated automation.
+
 ## Related Artifact Naming
 
 Derive related artifact names from the same canonical target slug:
@@ -70,6 +80,7 @@ At a minimum, cover:
 - target summary
 - scope and out-of-scope boundaries
 - assumptions and open questions
+- impact analysis across existing flows, tests, and JSON data
 - environment and setup needs
 - test data required
 - happy paths

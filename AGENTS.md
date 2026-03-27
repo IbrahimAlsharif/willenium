@@ -34,6 +34,26 @@ Use Selenium MCP only when live browser exploration materially helps:
 
 Do not treat MCP interactions as the final deliverable. Translate findings back into Java/TestNG framework code.
 
+## Jira MCP
+
+This repo also includes a workspace MCP server in `.mcp.json` named `atlassian`.
+
+Use Atlassian MCP when Jira work materially helps:
+
+- read an existing bug before planning or generating tests
+- create a Jira bug from a reproduced failure or regression
+- add comments or status updates that point back to generated framework artifacts
+
+For bug-driven automation, do impact analysis first:
+
+- identify which existing plans already describe the affected journey
+- identify which XML flows already execute that journey
+- identify which helper and `*Test.java` classes already own the behavior
+- identify which JSON sections already contain the relevant assertions or inputs
+
+Keep Jira MCP at the agent/client layer. Do not add Jira calls to `base.Setup`, `base.Go`, `base.Finder`, or TestNG execution code.
+Do not commit personal credentials, cloud IDs, account IDs, or customer Jira site URLs into this public template. The actual Jira tenant should come from the user's own MCP client authorization when they use the framework.
+
 ## Working Rules
 
 - Inspect the sample assets to learn the framework structure, but do not assume the user wants new work built on top of the bundled WE WILL example domain.
@@ -43,6 +63,8 @@ Do not treat MCP interactions as the final deliverable. Translate findings back 
 - Do not satisfy a planning request with a chat-only response. Persist the plan as a `.md` file and report the saved path in the final reply.
 - Make the plan comprehensive enough to drive later generation: include scope, assumptions, setup, test data, happy paths, negative paths, edge cases, localization notes, and explicit mapping to XML, Java, and JSON artifacts.
 - Keep the plan linked to generated tests through stable metadata such as `plan_id`, `target_slug`, flow path, helper class, test class, and test-data sections.
+- When the target comes from Jira, also persist `jira_issue_key` and `jira_issue_url` in the plan metadata so later updates can find the same bug-linked assets.
+- For Jira bugs, update the existing plan and linked coverage when the behavior already belongs to an existing journey; create new artifacts only when there is no clean owner yet.
 - If a plan already exists, update that plan and the linked tests rather than creating duplicate plans or duplicate test classes.
 - When the first real project test is requested, create app-specific folders, flows, and JSON data; move or rename the examples first if that will keep the real project clearer.
 - Keep UI tests suite-driven; do not bypass setup/teardown assumptions.

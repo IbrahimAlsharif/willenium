@@ -12,6 +12,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 ## Read These References
 
 - For framework structure and file placement, read `references/framework-structure.md`.
+- For Jira MCP workflows and issue-to-test linkage, read `references/jira-mcp.md` when the task involves Jira.
 - For the Selenium MCP contract and when to use it, read `references/selenium-mcp.md`.
 
 ## Core Workflow
@@ -20,11 +21,14 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 2. For a new target, create or update a comprehensive Markdown test plan first. Use `test-plans/<app>/<target-slug>.md` by default. Only place a Markdown blueprint near `flows/...` when the user explicitly asks for a flow-local planning artifact.
    - The planning task is incomplete until the `.md` file is written to disk.
    - Do not stop at a conversational summary; persist the plan file and mention its path in the final response.
+   - If the target comes from a Jira bug, keep the plan linked to the issue through metadata such as `jira_issue_key` and `jira_issue_url`.
+   - For Jira bugs, inspect existing plans, flows, tests, and test data first so you can update the right artifacts instead of creating duplicates.
 3. Keep each plan linked to its generated automation through stable metadata such as:
    - `plan_id`
    - `target_name`
    - `target_url`
    - `target_slug`
+   - Jira issue key and URL when the work starts from a bug
    - related flow XML path
    - related Java helper and test class names
    - related test-data section names
@@ -42,6 +46,24 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 10. When a plan already exists for the target, update the linked plan and tests instead of creating duplicates.
 11. Run the smallest relevant suite or Maven profile when feasible.
 
+## Jira MCP Rules
+
+If Jira work is part of the request and an Atlassian MCP-compatible client is available:
+
+- use the repo's `atlassian` MCP server to read or create Jira issues
+- treat Jira issue details as inputs to the plan, not as the final deliverable
+- persist Jira linkage in the plan front matter so later updates can find the right automation assets
+- analyze which existing flows, helper classes, test classes, and JSON sections the bug should affect before deciding to add new coverage
+- keep bug filing and bug reading outside `base.Setup` and the Java runtime; the framework code should stay focused on tests
+
+Typical Jira-driven flows:
+
+1. Read a Jira bug.
+2. Identify which existing plans, flows, tests, and test-data sections already own the affected journey.
+3. Update the linked plan under `test-plans/...` with the impacted artifacts and the chosen coverage strategy.
+4. Generate or update the Java helper, `*Test.java`, JSON data, and XML suite from that plan.
+5. Optionally comment back on the Jira issue with the generated artifact paths or verification result.
+
 ## Framework Rules
 
 - Do not create standalone Selenium scripts in JavaScript, Python, or raw MCP actions as the deliverable.
@@ -51,6 +73,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 - Use `test-plans/` as the canonical planning area unless the user explicitly asks for a flow-local blueprint.
 - When the user asks for a plan, always create or update the actual Markdown file. A chat-only plan is insufficient.
 - Keep plan names and generated assets related through the same stable slug or `plan_id` so later updates remain deterministic.
+- For bug-driven work, prefer extending the smallest existing plan/flow/test that already owns the behavior before creating new artifacts.
 - Prefer existing helper patterns over introducing a new page-object architecture.
 - Reuse `Finder` and `Go` before adding direct `driver.findElement(...)` or custom wait code.
 - Keep assertions in `*Test.java`; helper classes should expose actions, locators, and small state checks.
@@ -58,6 +81,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 - If the target app supports both English and Arabic, keep both language variants in test data and have assertions read from the active language file.
 - If only one language is known today, still preserve the JSON structure so the second language can be added cleanly later.
 - Use the existing JSON files only as examples of shape; do not treat their sample website links or labels as canonical values for a new client project.
+- Do not commit personal Jira credentials, cloud IDs, account IDs, or customer tenant URLs into this public template; Jira tenant details should come from the user's authorized MCP client at runtime.
 
 ## Selenium MCP Rules
 

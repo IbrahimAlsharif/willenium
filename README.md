@@ -70,7 +70,7 @@ Generated projects include:
 - a simple public WE WILL homepage example
 - shared browser helpers
 - AI agent and skill files
-- MCP configuration for Selenium-aware clients
+- MCP configuration for Selenium-aware and Atlassian-aware clients
 
 The checked-in tests, flows, and JSON files are starter examples of framework structure. They are intended to be renamed, moved, or replaced when you begin real project coverage.
 
@@ -93,15 +93,30 @@ Useful suite entry points:
 
 ## MCP Integration
 
-Willenium includes a root `.mcp.json` that registers the Selenium MCP server for MCP-aware clients.
+Willenium includes a root `.mcp.json` that registers both a browser MCP server and an Atlassian MCP server for MCP-aware clients.
 
-- Server: `selenium`
-- Command: `npx -y @angiejones/mcp-selenium@0.1.21`
+- `selenium`
+  Local browser automation and DOM inspection through `npx -y @angiejones/mcp-selenium@0.1.21`
+- `atlassian`
+  Atlassian Rovo MCP endpoint at `https://mcp.atlassian.com/v1/mcp`
+
+Use them for different jobs:
+
+- `selenium`: inspect a real page, validate a locator, or reproduce a UI issue before translating the result into Java/TestNG code
+- `atlassian`: read Jira bugs before planning automation, create Jira bugs from failures, or update Jira issues with generated test artifact paths
 
 Requirements:
 
-- Node.js and npm must be installed locally so the client can launch the server through `npx`.
+- Node.js and npm must be installed locally so the client can launch the `selenium` server through `npx`.
+- Atlassian workflows require an Atlassian Cloud site with Jira access and an MCP-aware client authorized to use Atlassian Rovo MCP.
+- The first Atlassian Rovo MCP connection may require site or org admin approval depending on your Atlassian setup.
 - Some MCP clients may still ask for a one-time workspace trust or server approval when the repo is opened.
+
+Template safety notes:
+
+- Do not commit personal credentials, API tokens, account IDs, cloud IDs, or site-specific Jira URLs into this template.
+- Do not hardcode a customer Jira site or project into framework files.
+- The public template should keep only the generic Atlassian MCP endpoint; the actual Jira site and permissions should come from the user's own MCP client authorization flow at usage time.
 
 ## AI Support
 
@@ -117,8 +132,11 @@ Use them when you want AI assistance that follows the framework conventions:
 - keep assertions in `*Test.java`
 - update JSON-backed test data instead of hardcoding values
 - wire new coverage through TestNG XML suites under `flows/...`
+- when work starts from a Jira bug, read the issue first and keep the resulting plan linked to that bug
+- for Jira bugs, analyze which existing plans, flows, tests, and JSON sections should be updated before deciding to add new coverage
 - use the `selenium` MCP server only when live browser exploration or locator validation is actually needed
 - treat the bundled tests and data as examples, not the default product namespace to extend
+- keep Jira tenant configuration user-provided at runtime rather than committed in the template
 
 Typical prompts:
 
@@ -130,7 +148,16 @@ Use `wellenium` to create my first real product test and move the starter exampl
 Follow `.github/agents/wellenium.agent.md` and update the bundled WE WILL example flow.
 ```
 
+```text
+Use `wellenium` to read Jira bug ABC-123, write the linked test plan under test-plans/, and generate the framework-native automation from it.
+```
+
+```text
+Use `wellenium` to read Jira bug ABC-123, decide which existing flows and plans it affects, update those plans, then update the linked tests instead of creating duplicates.
+```
+
 Selenium MCP should be used for discovery and debugging only. Final deliverables should remain framework-native Java and TestNG code.
+Atlassian MCP should be used for Jira issue access and bug filing only. Final deliverables should still be plans, Java tests, JSON data, and XML flows in this repo.
 
 ## Project Structure
 
