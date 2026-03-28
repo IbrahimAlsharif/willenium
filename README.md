@@ -133,6 +133,7 @@ Use them when you want AI assistance that follows the framework conventions:
 - keep assertions in `*Test.java`
 - update JSON-backed test data instead of hardcoding values
 - wire new coverage through TestNG XML suites under `flows/...`
+- ask for test plan scope and plan type before drafting a new plan when those are not already clear
 - when work starts from a Jira bug, read the issue first and keep the resulting plan linked to that bug
 - for Jira bugs, analyze which existing plans, flows, tests, and JSON sections should be updated before deciding to add new coverage
 - use the `selenium` MCP server only when live browser exploration or locator validation is actually needed
@@ -142,6 +143,7 @@ Use them when you want AI assistance that follows the framework conventions:
 Use `willenium-coach` when you want help deciding what to ask for, what inputs to provide, or which workflow to use before the implementation work starts.
 Use `willenium-automation` when you want the framework work done through the execution skill.
 Use `willenium` when you want to reference the repo agent directly.
+For plan-first work, the expected flow is: confirm scope and plan type -> write the Markdown draft under `test-plans/` -> let the user review -> then generate or update tests.
 
 Typical prompts:
 
@@ -163,6 +165,10 @@ Use `willenium-automation` to read Jira bug ABC-123, decide which existing flows
 
 ```text
 Use `willenium-coach` to help me choose the best next prompt for planning, generation, debugging, or Jira-driven automation in this repo.
+```
+
+```text
+Use `willenium-coach` to help me choose the right test plan scope and whether I need a smoke, regression, or full plan before you draft the Markdown plan.
 ```
 
 Selenium MCP should be used for discovery and debugging only. Final deliverables should remain framework-native Java and TestNG code.

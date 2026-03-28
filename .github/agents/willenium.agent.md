@@ -40,20 +40,21 @@ Produce framework-native automation work for this repo:
 ## Workflow
 
 1. Inspect the example implementation, its test data, its XML suite wiring, and the `test-plans/` conventions to understand the framework shape.
-2. If the user asks to inspect a link, write a plan, generate tests from a target, or update generated coverage, create or update a comprehensive Markdown plan first.
+2. If the user asks to inspect a link, write a plan, generate tests from a target, or update generated coverage, determine the desired plan scope and plan type first.
 3. Use `test-plans/<app>/<target-slug>.md` as the default plan location. Only place a Markdown blueprint near `flows/...` when the user explicitly asks for that layout.
 4. For planning requests, the task is not complete until the Markdown file has actually been created or updated on disk. Do not stop at a chat response.
-5. If the request starts from a Jira bug, use the `atlassian` MCP server to read the issue first and inspect which existing plans, flows, tests, and JSON sections already cover the affected journey.
-6. Keep the resulting plan linked through metadata such as `jira_issue_key`, `jira_issue_url`, and impacted artifacts when applicable.
-7. Decide whether Selenium MCP is actually needed.
-8. If live exploration is needed, use the `selenium` MCP server to validate the page, flow, text, or locator.
-9. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
-10. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
-11. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
-12. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, and Jira issue metadata when applicable.
-13. Register or update the relevant TestNG XML suite.
-14. When a plan changes, update the linked tests instead of creating duplicate implementations.
-15. Run the smallest meaningful verification path available.
+5. Write the plan as a draft for user review before broad generation begins.
+6. If the request starts from a Jira bug, use the `atlassian` MCP server to read the issue first and inspect which existing plans, flows, tests, and JSON sections already cover the affected journey.
+7. Keep the resulting plan linked through metadata such as `jira_issue_key`, `jira_issue_url`, `plan_scope`, `plan_type`, and impacted artifacts when applicable.
+8. Decide whether Selenium MCP is actually needed.
+9. If live exploration is needed, use the `selenium` MCP server to validate the page, flow, text, or locator.
+10. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
+11. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
+12. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
+13. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, and Jira issue metadata when applicable.
+14. Register or update the relevant TestNG XML suite.
+15. When a plan changes, update the linked tests instead of creating duplicate implementations.
+16. Run the smallest meaningful verification path available.
 
 ## Non-Negotiable Rules
 
@@ -63,6 +64,9 @@ Produce framework-native automation work for this repo:
 - Prefer plan-first delivery. A comprehensive Markdown plan should exist before generating new automation from a target.
 - Use `test-plans/` as the canonical planning area unless the user explicitly asks for a flow-local blueprint.
 - When the user asks for a plan, always create or update the actual Markdown file and report its saved path.
+- Ask for plan scope and plan type before drafting the plan when they are not already clear.
+- Do not assume a smoke-only plan when the user may need full coverage for a page or flow.
+- Draft the Markdown plan for user review before large generation steps.
 - Keep plan names and generated assets related through a stable slug or `plan_id` so later updates remain deterministic.
 - When the target comes from Jira, keep the plan linked to the issue through metadata instead of burying the issue key in chat only.
 - For Jira bugs, analyze impact across existing plans, flows, helper classes, test classes, and JSON data before deciding whether new assets are warranted.

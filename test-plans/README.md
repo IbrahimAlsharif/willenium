@@ -34,6 +34,8 @@ Each plan should include front matter with, at minimum:
 - `target_url`
 - `target_slug`
 - `app`
+- `plan_scope`
+- `plan_type`
 - `flow_xml`
 - `java_helper`
 - `java_test`
@@ -75,9 +77,17 @@ The relationship to the canonical target slug should remain obvious across all o
 
 Plans should be comprehensive enough that a later "generate the tests" request can be fulfilled without rediscovering the whole target.
 
+Before drafting the plan, confirm:
+
+- the desired plan scope such as page, flow, journey, feature area, or regression slice
+- the desired plan type such as smoke, happy-path, regression, or full coverage
+
+Do not assume every plan is a smoke plan. A user may want a full page-level or flow-level plan even before any code is generated.
+
 At a minimum, cover:
 
 - target summary
+- explicit plan scope and plan type
 - scope and out-of-scope boundaries
 - assumptions and open questions
 - impact analysis across existing flows, tests, and JSON data
@@ -88,3 +98,5 @@ At a minimum, cover:
 - edge cases
 - localization coverage when relevant
 - automation mapping to XML, Java, and JSON artifacts
+
+The first planning deliverable should be a Markdown draft on disk for user review. Treat that reviewable draft as the checkpoint before broad generation work.

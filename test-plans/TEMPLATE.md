@@ -4,6 +4,8 @@ target_name: Replace With User Target Name
 target_url: https://example.com/path
 target_slug: target-slug
 app: app
+plan_scope: flow
+plan_type: full
 jira_issue_key:
 jira_issue_url:
 affected_flows: []
@@ -25,10 +27,17 @@ Describe the user target, why it matters, and what this plan intends to verify.
 
 Use `target_slug` as the canonical identifier for the target. Derive `flow_xml`, Java class names, and JSON sections from it using the repo's naming conventions.
 
+Record whether this is a smoke, regression, or full plan, and whether the scope is a page, flow, journey, feature area, or broader regression slice.
+
 ## Scope
 
 - List the pages, features, or user journeys this plan covers.
 - Note what should be automated in the first pass.
+
+## Plan Type
+
+- Record the chosen depth such as smoke, happy-path, regression, or full coverage.
+- Explain why this depth is the right fit for the user's request.
 
 ## Out Of Scope
 
@@ -41,6 +50,7 @@ Use `target_slug` as the canonical identifier for the target. Derive `flow_xml`,
 ## Open Questions
 
 - Record unknowns that may affect implementation or require user confirmation later.
+- If plan scope or plan type still has assumptions, make them explicit so the user can review them.
 
 ## Jira Linkage
 
@@ -103,3 +113,7 @@ Use `target_slug` as the canonical identifier for the target. Derive `flow_xml`,
 - Any focused smoke checks
 - Areas that may need Selenium MCP validation before coding
 - If the bug affects more than one flow, note which path is the primary regression check and which paths can be follow-up validation
+
+## Review Status
+
+- Record what needs user review before broad test generation starts.

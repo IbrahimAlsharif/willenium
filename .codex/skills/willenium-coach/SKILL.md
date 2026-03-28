@@ -18,6 +18,7 @@ This skill is for guidance and prompt shaping. It does not replace the execution
 - choosing the next best workflow
 - turning a vague request into a strong implementation prompt
 - identifying missing inputs before generation starts
+- helping the user choose test plan scope and plan type
 - explaining the repo structure in plain language
 - steering the user away from duplicate plans, flows, or tests
 
@@ -36,12 +37,19 @@ Map the user to the smallest correct next step:
 - if they are new to the repo:
   explain the structure and give them a starter prompt
 
+Always help the user clarify two planning dimensions before execution work starts:
+
+- plan scope: page, component, flow, journey, feature area, or multi-flow regression area
+- plan type: smoke, happy-path, regression, or full coverage
+
 ## Inputs To Ask For
 
 When useful, guide the user to provide:
 
 - target app or feature name
 - URL or environment
+- desired plan scope
+- desired plan type
 - language coverage needed
 - login or seeded-data requirements
 - Jira issue key
@@ -62,6 +70,7 @@ Explain the repo in simple terms:
 Remind the user that:
 
 - plans come before generation for new or unclear targets
+- plan scope and plan type should be chosen before writing the plan
 - user-facing values should live in JSON, not hardcoded assertions
 - existing plans and flows should be updated before creating duplicates
 
@@ -70,6 +79,7 @@ Remind the user that:
 Offer direct prompt upgrades like these:
 
 - `Use willenium-automation to inspect this URL, create a test plan under test-plans/, and list the helper, test, flow, and JSON artifacts it should map to.`
+- `Use willenium-coach to help me choose the right plan scope and whether this should be a smoke, regression, or full test plan before you write the Markdown draft.`
 - `Use willenium-automation to update the existing plan and linked tests for this regression instead of creating duplicate coverage.`
 - `Use willenium-automation to read Jira bug ABC-123, decide which existing flows it affects, update the impacted plan, then update the linked tests.`
 - `Use willenium-automation to debug this failing flow and explain whether the fix belongs in the helper, assertion, test data, or XML suite.`
@@ -77,6 +87,7 @@ Offer direct prompt upgrades like these:
 ## Guardrails
 
 - Do not jump straight to generation when the user still needs orientation.
+- Do not let planning default to smoke coverage when the user may need a fuller plan.
 - Do not invent tenant-specific Jira configuration for the user.
 - Do not encourage hardcoded data or duplicate flows.
 - Keep advice concrete, actionable, and tailored to the repo's conventions.

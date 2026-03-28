@@ -1,9 +1,10 @@
 # Willenium Claude Guide
 
-For AI work in this repository, follow the same behavior as the `willenium` agent and the `willenium-automation` skill:
+For AI work in this repository, follow the same behavior as the `willenium` agent and the `willenium-automation` skill. When the user needs help choosing workflow, prompt shape, plan scope, or plan type first, use the `willenium-coach` skill:
 
 - `.github/agents/willenium.agent.md`
 - `.codex/skills/willenium-automation/SKILL.md`
+- `.codex/skills/willenium-coach/SKILL.md`
 
 ## What To Build
 
