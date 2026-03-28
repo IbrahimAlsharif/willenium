@@ -292,6 +292,8 @@ The checked-in setup suites default to local Chrome:
 
 Remote execution through LambdaTest also exists in `base.Setup#setUpRemoteDriver`, but the checked-in XML setup files use local driver startup by default.
 
+If Chrome or Firefox fails before the browser opens with a message about `localhost`, `bind`, or finding a free port, the environment is blocking the local WebDriver service. Headless mode does not fix that. Run the suite from a normal local terminal session or switch the suite to remote driver execution.
+
 ## Configuration
 
 - Headless mode is controlled in `src/test/java/configs/pipeline/PipelineConfig.java`.

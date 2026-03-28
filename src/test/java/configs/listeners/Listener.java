@@ -11,6 +11,9 @@ import configs.testRail.TestRailManager;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+import org.testng.SkipException;
+import org.testng.IInvokedMethod;
+import org.testng.IInvokedMethodListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,10 +21,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static base.Go.testRunId;
+import static base.Setup.getUiInitializationBlockerMessage;
 import static base.Setup.testCaseId;
 import static base.Setup.testRail;
 
-public class Listener implements ITestListener {
+public class Listener implements ITestListener, IInvokedMethodListener {
     private ExtentReports extent;
     private final Map<String, ExtentTest> testMap = new HashMap<>();
     private boolean halt = false;
@@ -100,6 +104,24 @@ public class Listener implements ITestListener {
     }
 
     @Override
+    public void beforeInvocation(IInvokedMethod method, ITestResult testResult) {
+        if (!method.isTestMethod()) {
+            return;
+        }
+
+        String blockerMessage = getUiInitializationBlockerMessage();
+        String className = method.getTestMethod().getTestClass().getName();
+        boolean isFrameworkLifecycleClass = className.equals("base.Setup") || className.equals("base.TearDownTest");
+
+        if (blockerMessage != null && !isFrameworkLifecycleClass) {
+            SkipException exception = new SkipException(blockerMessage);
+            testResult.setThrowable(exception);
+            testResult.setStatus(ITestResult.SKIP);
+            throw exception;
+        }
+    }
+
+    @Override
     public void onTestSuccess(ITestResult result) {
         System.out.println("PASSED -> " + result.getName());
         ExtentTest methodTest = testMap.get(result.getMethod().getMethodName());
@@ -118,6 +140,11 @@ public class Listener implements ITestListener {
     @Override
     public void onFinish(ITestContext result) {
         extent.flush();
+    }
+
+    @Override
+    public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
+        // No action needed after invocation
     }
 
 }

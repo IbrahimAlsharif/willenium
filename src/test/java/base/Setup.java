@@ -22,6 +22,8 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,12 +38,14 @@ public class Setup {
     public static WebDriverWait wait;
     public static String testCaseId;
     public static final TestRailManager testRail = new TestRailManager();
+    private static String uiInitializationBlockerMessage;
 
 
     @Test(priority = 1)
     @Parameters({"language", "branch", "browser"})
     public void setUpLocalDriver(String language, String branch, String browser) throws Exception {
         testCaseId = "9379";
+        resetSharedState();
         cleanScreenshotsDirectory();
         testData = TestDataFactory.getTestData(branch, language);
         initializeLocalDriver(browser, testData.getBaseUrl(language).asText());
@@ -64,6 +68,7 @@ public class Setup {
     @Parameters({"language", "branch", "browser"})
     public void setUpRemoteDriver(String language, String branch, String browser) throws Exception {
         testCaseId = "9381";
+        resetSharedState();
         cleanScreenshotsDirectory();
         testData = TestDataFactory.getTestData(branch, language);
         initializeRemoteDriver(browser);
@@ -102,7 +107,15 @@ public class Setup {
             Go.testRunId = testRailManager.createTestRun("Sentra", 2);
         }
         if (browser.equalsIgnoreCase("chrome")) {
-            driver = WebDriverManager.chromedriver().capabilities(new BrowserOptions().getChromeOptions(PipelineConfig.isBrowserHeadless, true)).create();
+            validateLocalExecutionEnvironment("Chrome");
+            try {
+                driver = WebDriverManager.chromedriver()
+                        .capabilities(new BrowserOptions().getChromeOptions(PipelineConfig.isBrowserHeadless, true))
+                        .create();
+            } catch (RuntimeException exception) {
+                uiInitializationBlockerMessage = buildDriverStartupFailureMessage("Chrome", exception);
+                throw new IllegalStateException(uiInitializationBlockerMessage, exception);
+            }
         } else if (browser.equalsIgnoreCase("safari")) {
             driver = new SafariDriver();
         } else {
@@ -111,11 +124,54 @@ public class Setup {
         configureHelperComponents();
     }
 
+    public static String getUiInitializationBlockerMessage() {
+        return uiInitializationBlockerMessage;
+    }
+
+    public static void ensureUiSessionReady() {
+        if (uiInitializationBlockerMessage != null) {
+            throw new SkipException(uiInitializationBlockerMessage);
+        }
+        if (driver == null || wait == null || testData == null) {
+            throw new SkipException("UI setup did not complete. Run the suite through a setup XML and fix any setup failure before running page assertions.");
+        }
+    }
+
     private void configureHelperComponents() {
         wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driver;
         Go.initialize(driver, javascriptExecutor, wait);
         Finder.initialize(driver, wait);
+    }
+
+    private void resetSharedState() {
+        driver = null;
+        wait = null;
+        testData = null;
+        uiInitializationBlockerMessage = null;
+    }
+
+    private void validateLocalExecutionEnvironment(String browserName) {
+        try (ServerSocket socket = new ServerSocket(0, 0, InetAddress.getLoopbackAddress())) {
+            socket.setReuseAddress(true);
+        } catch (IOException exception) {
+            uiInitializationBlockerMessage = String.format(
+                    "%s local driver startup is blocked because this environment cannot bind a localhost port. Run the suite from a normal local terminal or use remote driver execution instead.",
+                    browserName
+            );
+            throw new IllegalStateException(uiInitializationBlockerMessage, exception);
+        }
+    }
+
+    private String buildDriverStartupFailureMessage(String browserName, RuntimeException exception) {
+        String rootMessage = exception.getMessage();
+        if (rootMessage != null && rootMessage.contains("Unable to find a free port")) {
+            return String.format(
+                    "%s local driver startup failed because no localhost port could be opened. This usually means the run is happening inside a restricted sandbox. Run the suite from a normal local terminal or use remote driver execution instead.",
+                    browserName
+            );
+        }
+        return String.format("%s local driver startup failed: %s", browserName, rootMessage);
     }
 
     private void cleanScreenshotsDirectory() {
