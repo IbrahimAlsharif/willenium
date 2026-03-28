@@ -6,20 +6,7 @@
     "create-willenium": "bin/create-willenium.js"
   },
   "files": [
-    "bin",
-    "template-resources",
-    ".claude",
-    ".codex",
-    ".github",
-    "AGENTS.md",
-    "CLAUDE.md",
-    "README.md",
-    "pom.xml",
-    "example_quick_path.xml",
-    ".mcp.json",
-    "flows",
-    "scripts",
-    "src"
+    "bin"
   ],
   "keywords": [
     "selenium",
@@ -29,6 +16,10 @@
     "bootstrap",
     "willenium"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IbrahimAlsharif/willenium.git"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=18"

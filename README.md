@@ -9,6 +9,8 @@ Create a new project without cloning this repository.
 
 Package: `create-willenium`
 
+The npm package is only the launcher. When you run it, it downloads the current `main` branch template from GitHub and then applies your project name and optional `groupId`.
+
 ```bash
 npx create-willenium@latest my-ui-tests
 ```
@@ -30,6 +32,7 @@ npx create-willenium@latest my-ui-tests --force
 Requirements:
 
 - Node.js 18+
+- Internet access to `github.com` and `codeload.github.com`
 - Java 17+
 - Maven
 
@@ -38,8 +41,10 @@ The generated project includes a simple public WE WILL homepage example so the f
 ## Troubleshooting
 
 - If `npx` fails, confirm Node.js and npm are installed and up to date.
+- If scaffolding fails during download, confirm access to `github.com` and `codeload.github.com`.
 - If you publish the package, run `npm publish` from the repository directory, not from `~`.
 - To verify the published version, run `npm view create-willenium version`.
+- To verify the template source the launcher will fetch, inspect the latest commit on [`main`](https://github.com/IbrahimAlsharif/willenium/tree/main).
 
 ## Tech Stack
 
@@ -57,7 +62,7 @@ The generated project includes a simple public WE WILL homepage example so the f
 The `create-willenium` scaffolder:
 
 - creates the project directory
-- copies the starter framework
+- downloads the latest starter framework from GitHub `main`
 - restores `.gitignore`
 - sets the Maven `artifactId` from the project name
 - generates a default `groupId` unless you provide `--group-id`
