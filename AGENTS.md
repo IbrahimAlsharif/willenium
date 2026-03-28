@@ -1,11 +1,12 @@
 # Willenium Agent Guide
 
-Use the `wellenium` agent/skill behavior for any AI-assisted browser automation work in this repository.
+Use the `willenium` agent and the `willenium-automation` skill behavior for any AI-assisted browser automation work in this repository.
 
 Primary source files:
 
-- Codex skill: `.codex/skills/wellenium/SKILL.md`
-- Agent spec: `.github/agents/wellenium.agent.md`
+- Codex execution skill: `.codex/skills/willenium-automation/SKILL.md`
+- Codex coaching skill: `.codex/skills/willenium-coach/SKILL.md`
+- Agent spec: `.github/agents/willenium.agent.md`
 
 ## Mission
 

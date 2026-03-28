@@ -1,9 +1,9 @@
 # Willenium Claude Guide
 
-For AI work in this repository, follow the same behavior as the `wellenium` agent and skill:
+For AI work in this repository, follow the same behavior as the `willenium` agent and the `willenium-automation` skill:
 
-- `.github/agents/wellenium.agent.md`
-- `.codex/skills/wellenium/SKILL.md`
+- `.github/agents/willenium.agent.md`
+- `.codex/skills/willenium-automation/SKILL.md`
 
 ## What To Build
 

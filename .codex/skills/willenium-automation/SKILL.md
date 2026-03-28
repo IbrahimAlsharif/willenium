@@ -1,5 +1,5 @@
 ---
-name: wellenium
+name: willenium-automation
 description: Use when creating, updating, or debugging Java Selenium TestNG coverage in the Willenium framework, especially when work must follow base.Setup, base.Finder, base.Go, JSON test data, and TestNG XML suite composition, with Selenium MCP used for live browser exploration when needed.
 ---
 

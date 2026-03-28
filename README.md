@@ -122,8 +122,9 @@ Template safety notes:
 
 The project includes framework-aware agent files for Codex and Claude:
 
-- Skill: `.codex/skills/wellenium/SKILL.md`
-- Agent: `.github/agents/wellenium.agent.md`
+- Execution skill: `.codex/skills/willenium-automation/SKILL.md`
+- Coaching skill: `.codex/skills/willenium-coach/SKILL.md`
+- Agent: `.github/agents/willenium.agent.md`
 - Bridge files: `AGENTS.md`, `CLAUDE.md`
 
 Use them when you want AI assistance that follows the framework conventions:
@@ -138,22 +139,30 @@ Use them when you want AI assistance that follows the framework conventions:
 - treat the bundled tests and data as examples, not the default product namespace to extend
 - keep Jira tenant configuration user-provided at runtime rather than committed in the template
 
+Use `willenium-coach` when you want help deciding what to ask for, what inputs to provide, or which workflow to use before the implementation work starts.
+Use `willenium-automation` when you want the framework work done through the execution skill.
+Use `willenium` when you want to reference the repo agent directly.
+
 Typical prompts:
 
 ```text
-Use `wellenium` to create my first real product test and move the starter examples out of the way if needed.
+Use `willenium-automation` to create my first real product test and move the starter examples out of the way if needed.
 ```
 
 ```text
-Follow `.github/agents/wellenium.agent.md` and update the bundled WE WILL example flow.
+Follow `.github/agents/willenium.agent.md` and update the bundled WE WILL example flow.
 ```
 
 ```text
-Use `wellenium` to read Jira bug ABC-123, write the linked test plan under test-plans/, and generate the framework-native automation from it.
+Use `willenium-automation` to read Jira bug ABC-123, write the linked test plan under test-plans/, and generate the framework-native automation from it.
 ```
 
 ```text
-Use `wellenium` to read Jira bug ABC-123, decide which existing flows and plans it affects, update those plans, then update the linked tests instead of creating duplicates.
+Use `willenium-automation` to read Jira bug ABC-123, decide which existing flows and plans it affects, update those plans, then update the linked tests instead of creating duplicates.
+```
+
+```text
+Use `willenium-coach` to help me choose the best next prompt for planning, generation, debugging, or Jira-driven automation in this repo.
 ```
 
 Selenium MCP should be used for discovery and debugging only. Final deliverables should remain framework-native Java and TestNG code.
@@ -162,7 +171,7 @@ Atlassian MCP should be used for Jira issue access and bug filing only. Final de
 ## Project Structure
 
 ```text
-wellenium/
+willenium/
 |- pom.xml
 |- example_quick_path.xml
 |- flows/
