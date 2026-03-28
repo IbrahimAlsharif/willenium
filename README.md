@@ -298,6 +298,7 @@ If Chrome or Firefox fails before the browser opens with a message about `localh
 
 - Headless mode is controlled in `src/test/java/configs/pipeline/PipelineConfig.java`.
 - TestRail reporting is also toggled in `PipelineConfig`.
+- Extent report auto-open is controlled in `PipelineConfig`. Local runs try to open `extent-reports/extent-report.html`; when auto-open is unavailable, Willenium prints an exact command you can run to open it.
 - Browser-specific capabilities are set in `src/test/java/configs/BrowserOptions.java`.
 - Screenshots are cleaned and recreated in the `screenshots/` directory at setup time.
 

@@ -8,6 +8,7 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import configs.pipeline.PipelineConfig;
 import configs.testRail.APIException;
 import configs.testRail.TestRailManager;
+import org.testng.IExecutionListener;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
@@ -25,7 +26,7 @@ import static base.Setup.getUiInitializationBlockerMessage;
 import static base.Setup.testCaseId;
 import static base.Setup.testRail;
 
-public class Listener implements ITestListener, IInvokedMethodListener {
+public class Listener implements ITestListener, IInvokedMethodListener, IExecutionListener {
     private ExtentReports extent;
     private final Map<String, ExtentTest> testMap = new HashMap<>();
     private boolean halt = false;
@@ -35,7 +36,7 @@ public class Listener implements ITestListener, IInvokedMethodListener {
         System.out.println(" >>>>>>>>>>> Test Started " + result.getName()+ " <<<<<<<<<<<<");
         if (extent == null) {
             extent = new ExtentReports();
-            extent.attachReporter(new ExtentSparkReporter("extent-reports/extent-report.html"));
+            extent.attachReporter(new ExtentSparkReporter(ExtentReportSupport.getReportPathForReporter()));
         }
         testMap.put(result.getName(), extent.createTest(result.getName()));
     }
@@ -140,6 +141,16 @@ public class Listener implements ITestListener, IInvokedMethodListener {
     @Override
     public void onFinish(ITestContext result) {
         extent.flush();
+    }
+
+    @Override
+    public void onExecutionFinish() {
+        if (extent == null) {
+            return;
+        }
+
+        extent.flush();
+        ExtentReportSupport.openOrSuggestReport();
     }
 
     @Override

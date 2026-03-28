@@ -7,5 +7,6 @@ public class PipelineConfig {
 //    public static boolean isBrowserHeadless = System.getenv("CI") != null;
     public static boolean isBrowserHeadless = false;
 //    public static boolean isBrowserHeadless = true;
+    public static boolean autoOpenExtentReport = System.getenv("CI") == null;
 
 }
