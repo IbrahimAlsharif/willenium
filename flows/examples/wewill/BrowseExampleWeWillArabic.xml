@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="Browse Example WE WILL Arabic" parallel="false">
+<suite name="Browse Example WE WILL Arabic" parallel="none">
     <suite-files>
         <suite-file path="flows/SetupArabic.xml"/>
         <suite-file path="flows/examples/steps/wewill/home_journey.xml"/>

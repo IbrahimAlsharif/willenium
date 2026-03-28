@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="example quick path" parallel="false">
+<suite name="example quick path" parallel="none">
     <listeners>
         <listener class-name="configs.listeners.Listener"/>
         <listener class-name="configs.listeners.TimeoutExceptionListener"/>

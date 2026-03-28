@@ -185,4 +185,5 @@ public class Setup {
             throw new RuntimeException("Failed to clean screenshots directory", e);
         }
     }
+
 }
