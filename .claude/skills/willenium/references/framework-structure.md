@@ -23,7 +23,7 @@ Because `Setup.driver`, `Setup.wait`, and `Setup.testData` are static shared sta
 - `src/test/java/configs/testdata/TestDataFactory.java`
   Maps `branch` + `language` to the correct JSON file.
 - `src/test/java/configs/pipeline/PipelineConfig.java`
-  Controls headless mode and TestRail reporting flags.
+  Controls report auto-open behavior and other pipeline-level flags.
 
 ## Test Organization
 
@@ -36,9 +36,8 @@ The current UI pattern is:
 
 Examples already in the repo:
 
-- login: `tests.assistant.login.Login` + `LoginTest`
-- assistant home: `tests.assistant.home.AssistantHomePage` + `AssistantHomePageTest`
-- search: `tests.assistant.search.GlobalSearch` + `GlobalSearchValidTest`
+- homepage helper: `tests.examples.wewill.home.WeWillHomePage`
+- homepage assertions: `tests.examples.wewill.home.WeWillHomePageTest`
 
 Keep new work close to the nearest existing feature folder instead of inventing a new top-level convention.
 
@@ -49,18 +48,18 @@ TestNG XML files are the orchestration layer.
 - setup suites:
   `flows/SetupEnglish.xml`, `flows/SetupArabic.xml`
 - feature step suites:
-  `flows/steps/...`
+  `flows/examples/steps/...` in the starter example, or app-specific `flows/steps/...` areas for real projects
 - composed end-to-end suites:
-  `flows/assistant/home/...`
+  `flows/examples/wewill/...` in the starter example, or app-specific `flows/...` suites for real projects
 - teardown suite:
   `flows/TearDown.xml`
 
 Example:
 
-- `flows/assistant/home/BrowseAssistantHomeEnglish.xml`
-  includes setup, steps, and teardown.
-- `flows/assistant/home/Steps.xml`
-  chains login, open home, search, and modal flows via nested suite files.
+- `flows/examples/wewill/BrowseExampleWeWillEnglish.xml`
+  includes setup, example journey steps, and teardown.
+- `flows/examples/steps/wewill/home_journey.xml`
+  runs the sample public homepage check inside the initialized suite flow.
 
 If a new scenario should run with the broader flow, wire it into the relevant step suite. If it needs a dedicated path, create a new XML suite that still includes setup and teardown.
 
@@ -68,20 +67,29 @@ If a new scenario should run with the broader flow, wire it into the relevant st
 
 Use `TestDataFactory` rules when choosing JSON files:
 
-- production + english -> `productionEnglish.json`
-- production + arabic -> `productionArabic.json`
-- non-production + english -> `stagingEnglish.json`
-- non-production + arabic -> `stagingArabic.json`
+- production + english -> `exampleProductionEnglish.json`
+- production + arabic -> `exampleProductionArabic.json`
+- non-production + english -> `exampleStagingEnglish.json`
+- non-production + arabic -> `exampleStagingArabic.json`
 
 The production JSON files are currently the richer examples. Prefer them as a structural reference when adding new keys.
+
+## Planning Area
+
+- canonical Markdown plans:
+  `test-plans/<app>/<target-slug>.md`
+- starter references:
+  `test-plans/README.md`, `test-plans/TEMPLATE.md`
+
+When the user asks for a plan, the task is not complete until the Markdown file exists on disk.
 
 ## Execution Entry Points
 
 - Maven profiles in `pom.xml`:
-  - `BrowseAssistantHomeEnglish`
-  - `BrowseAssistantHomeArabic`
+  - `BrowseExampleWeWillEnglish`
+  - `BrowseExampleWeWillArabic`
 - shortest existing smoke path:
-  - `quick_path.xml`
+  - `example_quick_path.xml`
 
 ## Practical Conventions
 
