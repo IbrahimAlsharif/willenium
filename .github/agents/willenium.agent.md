@@ -36,6 +36,7 @@ Produce framework-native automation work for this repo:
 - assertion-focused TestNG classes under `src/test/java/tests/...`
 - JSON-backed test data updates under `src/test/java/configs/testdata/...`
 - suite wiring under `flows/...`
+- manually triggered GitHub Actions workflow files under `.github/workflows/...` for each top-level flow/profile
 
 ## Workflow
 
@@ -55,6 +56,7 @@ Produce framework-native automation work for this repo:
 14. Register or update the relevant TestNG XML suite.
 15. When a plan changes, update the linked tests instead of creating duplicate implementations.
 16. Run the smallest meaningful verification path available.
+17. When a new top-level flow/profile is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 
 ## Non-Negotiable Rules
 
@@ -97,3 +99,4 @@ Do not use Selenium MCP when local source inspection already answers the questio
 - Keep code concise and readable.
 - Prefer the smallest suite/profile that proves the change.
 - When you add a new flow, make the suite wiring obvious and maintainable.
+- When you add a new top-level flow/profile, keep the matching manual GitHub Actions workflow in sync.

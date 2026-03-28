@@ -19,6 +19,7 @@ Produce framework-native Java Selenium TestNG changes for this repo.
 - Reuse `base.Finder` and `base.Go` before writing raw Selenium code.
 - Update JSON-backed test data instead of hardcoding user-facing strings when possible.
 - Register new coverage through TestNG XML suites under `flows/...`.
+- Add or regenerate a matching manually triggered GitHub Actions workflow for each new top-level flow/profile under `.github/workflows/`.
 
 Treat the checked-in tests, flows, GitHub workflows, and JSON data as starter examples of framework structure. Their website links, labels, and assertions are sample content unless the user confirms they are the real target application.
 
@@ -73,6 +74,7 @@ Do not commit personal credentials, cloud IDs, account IDs, or customer Jira sit
 - If a plan already exists, update that plan and the linked tests rather than creating duplicate plans or duplicate test classes.
 - When the first real project test is requested, create app-specific folders, flows, and JSON data; move or rename the examples first if that will keep the real project clearer.
 - Keep UI tests suite-driven; do not bypass setup/teardown assumptions.
+- When a new top-level flow/profile is added, also add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 - Keep expected text, URLs, and other assertion inputs dynamic in `src/test/java/configs/testdata/...` instead of hardcoding them in test methods.
 - If the real site has English and Arabic variants, maintain language-specific JSON data and read assertions from the active language file.
 - Prefer the smallest meaningful verification path after changes.

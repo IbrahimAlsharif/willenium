@@ -30,6 +30,7 @@ Treat the checked-in tests, flows, and test data as starter examples of structur
 9. Move or rename the sample assets first if that keeps the real project clearer.
 10. Translate any MCP findings into framework-native Java/TestNG changes.
 11. Run the smallest relevant suite or profile when feasible.
+12. When a new top-level flow/profile is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow under `.github/workflows/`.
 
 ## Guardrails
 

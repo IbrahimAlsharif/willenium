@@ -38,8 +38,9 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 6. If keeping the examples in place would make the real project confusing, move or rename the sample assets so they are clearly marked as examples or starter content before adding the first real coverage.
 7. Add or update JSON-backed test data before hardcoding user-facing strings, URLs, credentials, or inputs.
 8. Register new or changed coverage in the appropriate TestNG XML suite under `flows/steps/...` or a composed suite under `flows/...`.
-9. When a plan already exists for the target, update the linked plan and tests instead of creating duplicates.
-10. Run the smallest relevant verification path that matches the plan type and request.
+9. When a new top-level flow/profile is added, add or regenerate the matching manually triggered GitHub Actions workflow under `.github/workflows/`.
+10. When a plan already exists for the target, update the linked plan and tests instead of creating duplicates.
+11. Run the smallest relevant verification path that matches the plan type and request.
 
 ## Jira MCP Rules
 

@@ -60,6 +60,7 @@ When generating from a plan, verify that each area is reflected in code:
 - helper class path matches the plan
 - test class path matches the plan
 - flow XML path matches the plan
+- a matching manual GitHub Actions workflow exists for each new top-level flow/profile
 - JSON section names match the plan
 - suite composition still includes setup and teardown
 

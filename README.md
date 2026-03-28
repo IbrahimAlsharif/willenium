@@ -86,6 +86,7 @@ Use the included Maven profiles:
 ```bash
 mvn test -PBrowseExampleWeWillEnglish
 mvn test -PBrowseExampleWeWillArabic
+npm run sync:flow-workflows
 ```
 
 Useful suite entry points:
@@ -95,6 +96,18 @@ Useful suite entry points:
 - `example_quick_path.xml`
 
 `example_quick_path.xml` is the shortest smoke path in the repo. It runs setup, a single public homepage example, and teardown.
+
+## GitHub Workflows
+
+Each top-level Maven profile that points at a TestNG suite gets a matching GitHub Actions workflow with a `workflow_dispatch` trigger under `.github/workflows/`.
+
+When you add or rename a top-level flow/profile, regenerate those workflow files with:
+
+```bash
+npm run sync:flow-workflows
+```
+
+The generated workflow name matches the Maven profile name, so the new flow can be run manually from GitHub Actions without hand-writing another YAML file.
 
 ## MCP Integration
 
