@@ -1,6 +1,6 @@
 {
   "name": "create-willenium",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Scaffold a Java Selenium TestNG starter framework with JSON test data and XML flow suites.",
   "bin": {
     "create-willenium": "bin/create-willenium.js"
