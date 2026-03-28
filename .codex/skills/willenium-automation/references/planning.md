@@ -36,6 +36,39 @@ The expected sequence is:
 4. Let the user review the draft direction.
 5. Generate or update automation from the approved plan.
 
+## When Planning Should Use Selenium MCP
+
+Planning does not automatically require Selenium MCP.
+
+Default approach:
+
+1. confirm scope and plan type
+2. inspect local plans, flows, tests, and test data
+3. draft the Markdown plan
+4. use Selenium MCP only if live browser evidence would materially improve the plan
+
+Use Selenium MCP during planning when:
+
+- the user explicitly asks to inspect a real target link
+- the page structure or behavior is unclear from the user's description
+- rendered text, navigation, visibility, or dynamic content needs confirmation
+- live exploration would meaningfully improve the plan's accuracy
+
+Do not use Selenium MCP during planning when:
+
+- the user's description is already sufficient to draft the plan
+- the task is mainly updating an existing plan from a known bug or known coverage area
+- scope and plan type are still undecided and live browsing would be premature
+
+Practical examples:
+
+- `Write a full test plan for this page`
+  Selenium MCP may be useful if the page needs inspection.
+- `Update this existing plan for Jira bug ABC-123`
+  often no Selenium MCP at first; confirm the desired scope and plan type with the user, then decide whether live inspection is actually needed.
+- `Inspect this target link and create the plan`
+  Selenium MCP is likely useful.
+
 ## Scope Guidance
 
 Use the smallest scope that matches the user intent:

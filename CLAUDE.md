@@ -20,14 +20,16 @@ Treat the checked-in tests, flows, and test data as starter examples of structur
 ## How To Work
 
 1. Inspect the starter examples to understand the framework shape.
-2. Use `base.Setup`, `base.Finder`, `base.Go`, and `base.TearDownTest` conventions.
-3. Use the repo's `atlassian` MCP server when Jira bugs should drive planning, bug filing, or test generation.
-4. For Jira bugs, inspect which existing plans, flows, classes, and JSON data already own the affected journey before deciding whether to extend or create coverage.
-5. Use the repo's `selenium` MCP server only when live browser validation is needed.
-6. For the first real project test, create app-specific test data, flows, and classes instead of extending the bundled WE WILL example assets by default.
-7. Move or rename the sample assets first if that keeps the real project clearer.
-8. Translate any MCP findings into framework-native Java/TestNG changes.
-9. Run the smallest relevant suite or profile when feasible.
+2. For plan-first work, confirm the user's desired plan scope and plan type before drafting the Markdown plan.
+3. Write the plan draft under `test-plans/...` for user review before broad generation starts.
+4. Use `base.Setup`, `base.Finder`, `base.Go`, and `base.TearDownTest` conventions.
+5. Use the repo's `atlassian` MCP server when Jira bugs should drive planning, bug filing, or test generation.
+6. For Jira bugs, inspect which existing plans, flows, classes, and JSON data already own the affected journey before deciding whether to extend or create coverage.
+7. Use the repo's `selenium` MCP server during planning or debugging only when live browser validation would materially improve the work.
+8. For the first real project test, create app-specific test data, flows, and classes instead of extending the bundled WE WILL example assets by default.
+9. Move or rename the sample assets first if that keeps the real project clearer.
+10. Translate any MCP findings into framework-native Java/TestNG changes.
+11. Run the smallest relevant suite or profile when feasible.
 
 ## Guardrails
 
@@ -35,6 +37,8 @@ Treat the checked-in tests, flows, and test data as starter examples of structur
 - Do not bypass suite-driven setup assumptions for UI tests.
 - Do not hardcode user-facing strings, URLs, or expected assertions if they belong in JSON test data.
 - Do not hardcode customer Jira site URLs, personal credentials, or tenant-specific identifiers into this public template.
+- Do not draft every plan as smoke coverage by default; the user may need full page or flow planning.
+- Do not use Selenium MCP automatically during planning when the Markdown draft can be written accurately from the current information.
 - Keep assertions dynamic by reading expected values from the active JSON data file.
 - If the target site supports English and Arabic, maintain language-specific test data rather than mixing values in code.
 - Keep assertions in `*Test.java`.

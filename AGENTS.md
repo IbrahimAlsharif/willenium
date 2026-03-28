@@ -60,6 +60,7 @@ Do not commit personal credentials, cloud IDs, account IDs, or customer Jira sit
 - Inspect the sample assets to learn the framework structure, but do not assume the user wants new work built on top of the bundled WE WILL example domain.
 - When the user asks to inspect a link, write a test plan, generate tests from a target, or update generated coverage, follow a plan-first workflow.
 - Before drafting a plan, ask for or confirm the user's desired plan scope and plan type.
+- Use Selenium MCP during planning only when live inspection would materially improve the draft or the user explicitly asks to inspect the target link.
 - Create the canonical plan at `test-plans/<app>/<target-slug>.md` unless the user explicitly asks for a Markdown blueprint next to the flow XML under `flows/...`.
 - When the user asks for a plan, the work is not complete until the Markdown file is actually created or updated on disk.
 - Do not satisfy a planning request with a chat-only response. Persist the plan as a `.md` file and report the saved path in the final reply.

@@ -71,6 +71,7 @@ Remind the user that:
 
 - plans come before generation for new or unclear targets
 - plan scope and plan type should be chosen before writing the plan
+- Selenium MCP is optional during planning and should be used when live inspection would materially improve the draft
 - user-facing values should live in JSON, not hardcoded assertions
 - existing plans and flows should be updated before creating duplicates
 
@@ -80,6 +81,7 @@ Offer direct prompt upgrades like these:
 
 - `Use willenium-automation to inspect this URL, create a test plan under test-plans/, and list the helper, test, flow, and JSON artifacts it should map to.`
 - `Use willenium-coach to help me choose the right plan scope and whether this should be a smoke, regression, or full test plan before you write the Markdown draft.`
+- `Use willenium-coach to decide whether this planning task should inspect the live page with Selenium MCP first or whether the Markdown draft can be written from the current information.`
 - `Use willenium-automation to update the existing plan and linked tests for this regression instead of creating duplicate coverage.`
 - `Use willenium-automation to read Jira bug ABC-123, decide which existing flows it affects, update the impacted plan, then update the linked tests.`
 - `Use willenium-automation to debug this failing flow and explain whether the fix belongs in the helper, assertion, test data, or XML suite.`

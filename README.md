@@ -144,6 +144,7 @@ Use `willenium-coach` when you want help deciding what to ask for, what inputs t
 Use `willenium-automation` when you want the framework work done through the execution skill.
 Use `willenium` when you want to reference the repo agent directly.
 For plan-first work, the expected flow is: confirm scope and plan type -> write the Markdown draft under `test-plans/` -> let the user review -> then generate or update tests.
+Selenium MCP is optional during planning and is most useful when the plan needs live page inspection rather than just the user's description and existing local artifacts.
 
 Typical prompts:
 
@@ -169,6 +170,10 @@ Use `willenium-coach` to help me choose the best next prompt for planning, gener
 
 ```text
 Use `willenium-coach` to help me choose the right test plan scope and whether I need a smoke, regression, or full plan before you draft the Markdown plan.
+```
+
+```text
+Use `willenium-coach` to decide whether this plan should inspect the live target with Selenium MCP first or whether the Markdown draft can be written from the current information.
 ```
 
 Selenium MCP should be used for discovery and debugging only. Final deliverables should remain framework-native Java and TestNG code.
