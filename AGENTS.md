@@ -67,6 +67,26 @@ For bug-driven automation, do impact analysis first:
 Keep Jira MCP at the agent/client layer. Do not add Jira calls to `base.Setup`, `base.Go`, `base.Finder`, or TestNG execution code.
 Do not commit personal credentials, cloud IDs, account IDs, or customer Jira site URLs into this public template. The actual Jira tenant should come from the user's own MCP client authorization when they use the framework.
 
+## TestRail MCP
+
+This repo can also use a workspace MCP server in `.mcp.json` named `testrail`.
+
+Use TestRail MCP when TestRail work materially helps:
+
+- read existing cases, plans, or runs before planning or generating tests
+- map generated framework coverage back to TestRail case IDs or run IDs
+- coordinate execution-report expectations with existing TestRail organization
+
+For TestRail-driven automation, do impact analysis first:
+
+- identify which existing plans already map to the requested case or run
+- identify which XML flows already execute that coverage
+- identify which helper and `*Test.java` or `*ApiTest.java` classes already own the behavior
+- identify which JSON sections already contain the relevant assertions or inputs
+
+Keep TestRail MCP at the agent/client layer. Do not add TestRail calls to `base.Setup`, `base.Go`, `base.Finder`, `base.ApiSetup`, or TestNG execution code.
+Do not commit personal TestRail URLs, usernames, API keys, or customer workspace details into this public template. The actual TestRail tenant should come from the user's own MCP client authorization or local environment when they use the framework.
+
 ## Working Rules
 
 - Inspect the sample assets to learn the framework structure, but do not assume the user wants new work built on top of the bundled WE WILL example domain.
@@ -81,6 +101,7 @@ Do not commit personal credentials, cloud IDs, account IDs, or customer Jira sit
 - Do not default every plan to smoke coverage; the user may want full test planning for a specific page or flow.
 - Keep the plan linked to generated tests through stable metadata such as `plan_id`, `target_slug`, flow path, helper class, test class, and test-data sections.
 - When the target comes from Jira, also persist `jira_issue_key` and `jira_issue_url` in the plan metadata so later updates can find the same bug-linked assets.
+- When the target comes from TestRail, also persist `testrail_case_ids` and `testrail_run_ids` in the plan metadata so later updates can find the same TestRail-linked assets.
 - For Jira bugs, update the existing plan and linked coverage when the behavior already belongs to an existing journey; create new artifacts only when there is no clean owner yet.
 - If a plan already exists, update that plan and the linked tests rather than creating duplicate plans or duplicate test classes.
 - When the first real project test is requested, create app-specific folders, flows, and JSON data; move or rename the examples first if that will keep the real project clearer.

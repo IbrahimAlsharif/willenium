@@ -1,6 +1,6 @@
 ---
 name: willenium-api
-description: Use when creating, updating, or debugging Java RestAssured TestNG API coverage in the Willenium framework, especially when work must follow base.ApiSetup, base.ApiClient, configs.api.ApiContext, JSON-backed test data, and TestNG XML suite composition.
+description: Use when creating, updating, or debugging Java RestAssured TestNG API coverage in the Willenium framework, especially when work must follow base.ApiSetup, base.ApiClient, configs.api.ApiContext, JSON-backed test data, and TestNG XML suite composition, with TestRail MCP used for case linkage when relevant.
 ---
 
 # Willenium API TestNG
@@ -16,6 +16,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 - For generation and update workflow after planning, read `references/generation.md`.
 - For verification strategy and smallest-meaningful validation, read `references/verification.md`.
 - For Jira MCP workflows and issue-to-test linkage, read `../willenium-automation/references/jira-mcp.md` when the task involves Jira.
+- Use TestRail MCP when the task starts from existing API cases, runs, or execution reporting expectations and keep that linkage at the agent/client layer rather than in Java runtime code.
 
 ## Core Workflow
 
@@ -25,6 +26,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
    - Jira-linked work -> `../willenium-automation/references/jira-mcp.md`
    - generation or automation updates -> `references/generation.md`
    - verification -> `references/verification.md`
+   - TestRail-linked work -> inspect the relevant TestRail cases or runs before creating duplicate framework assets
 3. Keep the plan as the source of truth for later generation and update work.
 4. Keep the API framework split intact:
    - setup/shared request specification in `base.ApiSetup`
@@ -49,8 +51,10 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 - Use `test-plans/` as the canonical planning area unless the user explicitly asks for a flow-local blueprint.
 - When the user asks for a plan, always create or update the actual Markdown file. A chat-only plan is insufficient.
 - Treat plan scope and plan type as required planning inputs, not optional polish.
+- When work starts from TestRail, keep related identifiers such as case IDs or run IDs in plan metadata so later updates stay traceable.
 - Keep assertions in `*ApiTest.java`; helper classes should expose request construction and execution helpers.
 - Put endpoints, headers, payload fragments, credentials, and expected values in JSON test data rather than hardcoding them in assertions.
 - Preserve environment separation in test data so production and staging API values remain cleanly isolated.
 - For hybrid UI plus API work, keep API setup and assertions in the API layer and only use the UI skill where browser behavior genuinely belongs.
 - Do not commit personal Jira credentials, cloud IDs, account IDs, customer tenant URLs, or real API secrets into this public template; tenant and secret details should come from the user's runtime context.
+- Do not commit personal TestRail URLs, usernames, API keys, or project-specific identifiers into this public template; TestRail access belongs to workspace MCP config and runtime reporting configuration.

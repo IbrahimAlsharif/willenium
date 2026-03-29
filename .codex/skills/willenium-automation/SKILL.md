@@ -1,6 +1,6 @@
 ---
 name: willenium-automation
-description: Use when creating, updating, or debugging Java Selenium TestNG UI coverage in the Willenium framework, especially when work must follow base.Setup, base.Finder, base.Go, JSON test data, and TestNG XML suite composition, with Selenium MCP used for live browser exploration when needed.
+description: Use when creating, updating, or debugging Java Selenium TestNG UI coverage in the Willenium framework, especially when work must follow base.Setup, base.Finder, base.Go, JSON test data, and TestNG XML suite composition, with Selenium MCP used for live browser exploration when needed and TestRail MCP used for case linkage when relevant.
 ---
 
 # Willenium UI Selenium TestNG
@@ -19,6 +19,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 - For verification strategy and smallest-meaningful validation, read `references/verification.md`.
 - For Jira MCP workflows and issue-to-test linkage, read `references/jira-mcp.md` when the task involves Jira.
 - For the Selenium MCP contract and when to use it, read `references/selenium-mcp.md`.
+- Use TestRail MCP when the task starts from existing test cases, runs, or execution reporting expectations and keep that linkage at the agent/client layer rather than in Java runtime code.
 
 ## Core Workflow
 
@@ -29,6 +30,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
    - generation or automation updates -> `references/generation.md`
    - live browser clarification -> `references/selenium-mcp.md`
    - verification -> `references/verification.md`
+   - TestRail-linked work -> inspect the relevant TestRail cases or runs before creating duplicate framework assets
 3. Keep the plan as the source of truth for later generation and update work.
 4. Keep the framework split intact:
    - setup/driver lifecycle in `base.Setup` and `base.TearDownTest`
@@ -60,7 +62,9 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Do not default every plan to smoke coverage. Ask whether the user wants smoke, regression, or full coverage depth.
 - For plan-first work, write the Markdown draft for user review before large generation steps.
 - Keep plan names and generated assets related through the same stable slug or `plan_id` so later updates remain deterministic.
+- When work starts from TestRail, keep related identifiers such as case IDs or run IDs in plan metadata so later updates stay traceable.
 - For bug-driven work, prefer extending the smallest existing plan/flow/test that already owns the behavior before creating new artifacts.
+- For TestRail-linked work, prefer updating the existing owner plan/flow/test that already maps to the case or run instead of creating parallel coverage.
 - Prefer existing helper patterns over introducing a new page-object architecture.
 - Reuse `Finder` and `Go` before adding direct `driver.findElement(...)` or custom wait code.
 - Prefer the higher-level shared helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before writing one-off synchronization or interaction fallback logic.
@@ -75,3 +79,4 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - If only one language is known today, still preserve the JSON structure so the second language can be added cleanly later.
 - Use the existing JSON files only as examples of shape; do not treat their sample website links or labels as canonical values for a new client project.
 - Do not commit personal Jira credentials, cloud IDs, account IDs, or customer tenant URLs into this public template; Jira tenant details should come from the user's authorized MCP client at runtime.
+- Do not commit personal TestRail URLs, usernames, API keys, or project-specific identifiers into this public template; TestRail access belongs to workspace MCP config and runtime reporting configuration.

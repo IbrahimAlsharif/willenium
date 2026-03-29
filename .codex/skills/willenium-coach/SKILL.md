@@ -37,6 +37,8 @@ Map the user to the smallest correct next step:
   recommend debugging the smallest affected flow
 - if they have a Jira issue:
   recommend issue read -> impact analysis -> plan update -> test update
+- if they have a TestRail case or run:
+  recommend case/run read -> impact analysis -> plan update -> test update or reporting alignment
 - if they are new to the repo:
   explain the structure and give them a starter prompt
 
@@ -64,6 +66,7 @@ When useful, guide the user to provide:
 - language coverage needed
 - login or seeded-data requirements
 - Jira issue key
+- TestRail case IDs or run IDs
 - screenshots or repro steps
 - whether this is new coverage or an update to existing coverage
 
@@ -100,6 +103,7 @@ Offer direct prompt upgrades like these:
 - `Use willenium-api to update the existing API plan and linked tests for this service regression instead of creating duplicate coverage.`
 - `Use willenium-coach to help me choose whether this API work should be planned as endpoint, service, contract, or integration-flow coverage and whether it should be smoke, regression, negative-path, or full.`
 - `Use willenium-automation to read Jira bug ABC-123, decide which existing flows it affects, update the impacted plan, then update the linked tests.`
+- `Use willenium-automation to read TestRail case C123 or run R45, decide which existing flows it maps to, update the impacted plan, then update the linked tests.`
 - `Use willenium-automation to debug this failing flow and explain whether the fix belongs in the helper, assertion, test data, or XML suite.`
 
 ## Guardrails
@@ -107,5 +111,6 @@ Offer direct prompt upgrades like these:
 - Do not jump straight to generation when the user still needs orientation.
 - Do not let planning default to smoke coverage when the user may need a fuller plan.
 - Do not invent tenant-specific Jira configuration for the user.
+- Do not invent tenant-specific TestRail configuration for the user.
 - Do not encourage hardcoded data or duplicate flows.
 - Keep advice concrete, actionable, and tailored to the repo's conventions.

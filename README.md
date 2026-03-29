@@ -115,30 +115,37 @@ The generated workflow name matches the Maven profile name, so the new flow can 
 
 ## MCP Integration
 
-Willenium includes a root `.mcp.json` that registers both a browser MCP server and an Atlassian MCP server for MCP-aware clients.
+Willenium includes a root `.mcp.json` that registers browser, Jira, and test-management MCP servers for MCP-aware clients.
 
 - `selenium`
   Local browser automation and DOM inspection through `npx -y @angiejones/mcp-selenium@0.1.21`
 - `atlassian`
   Atlassian Rovo MCP endpoint at `https://mcp.atlassian.com/v1/mcp`
+- `testrail`
+  TestRail MCP server through `uvx --from testrail-api-module testrail-mcp-server`
 
 Use them for different jobs:
 
 - `selenium`: inspect a real page, validate a locator, or reproduce a UI issue before translating the result into Java/TestNG code
 - `atlassian`: read Jira bugs before planning automation, create Jira bugs from failures, or update Jira issues with generated test artifact paths
+- `testrail`: read TestRail cases, plans, or runs before planning automation, map framework artifacts to TestRail IDs, or coordinate reporting expectations
 
 Requirements:
 
 - Node.js and npm must be installed locally so the client can launch the `selenium` server through `npx`.
 - Atlassian workflows require an Atlassian Cloud site with Jira access and an MCP-aware client authorized to use Atlassian Rovo MCP.
+- TestRail workflows require `uvx` and valid TestRail credentials configured in the MCP server environment.
 - The first Atlassian Rovo MCP connection may require site or org admin approval depending on your Atlassian setup.
 - Some MCP clients may still ask for a one-time workspace trust or server approval when the repo is opened.
 
 Template safety notes:
 
 - Do not commit personal credentials, API tokens, account IDs, cloud IDs, or site-specific Jira URLs into this template.
+- Do not commit personal TestRail URLs, usernames, API keys, or project-specific identifiers into this template.
 - Do not hardcode a customer Jira site or project into framework files.
+- Do not hardcode a customer TestRail workspace or credentials into framework files.
 - The public template should keep only the generic Atlassian MCP endpoint; the actual Jira site and permissions should come from the user's own MCP client authorization flow at usage time.
+- The public template should keep only placeholder TestRail MCP values; the actual TestRail tenant and credentials should come from the user's own local MCP configuration at usage time.
 
 ## AI Support
 

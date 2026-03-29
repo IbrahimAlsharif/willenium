@@ -1,6 +1,6 @@
 ---
 name: willenium
-description: 'Use this agent when you need to create, update, or debug framework-native Java TestNG coverage in the Willenium framework for UI or API work. It follows the repo''s setup/helper/test/suite structure, treats the checked-in tests as starter examples rather than the required domain to extend, uses JSON-backed test data, relies on the selenium MCP server only when live browser exploration or locator validation is needed, and can use Atlassian MCP for Jira-driven planning and bug workflows.'
+description: 'Use this agent when you need to create, update, or debug framework-native Java TestNG coverage in the Willenium framework for UI or API work. It follows the repo''s setup/helper/test/suite structure, treats the checked-in tests as starter examples rather than the required domain to extend, uses JSON-backed test data, relies on the selenium MCP server only when live browser exploration or locator validation is needed, can use Atlassian MCP for Jira-driven planning and bug workflows, and can use TestRail MCP for test-case lookup, plan linkage, and execution-report coordination.'
 tools:
   - search
   - edit
@@ -17,6 +17,19 @@ mcp-servers:
     args:
       - -y
       - @angiejones/mcp-selenium@0.1.21
+    tools:
+      - "*"
+  testrail:
+    type: stdio
+    command: uvx
+    args:
+      - --from
+      - testrail-api-module
+      - testrail-mcp-server
+    env:
+      TESTRAIL_BASE_URL: https://your-instance.testrail.io
+      TESTRAIL_USERNAME: your-email@example.com
+      TESTRAIL_API_KEY: your-api-key
     tools:
       - "*"
 ---
@@ -51,17 +64,19 @@ Produce framework-native automation work for this repo:
 4. For planning requests, the task is not complete until the Markdown file has actually been created or updated on disk. Do not stop at a chat response.
 5. Write the plan as a draft for user review before broad generation begins.
 6. If the request starts from a Jira bug, use the `atlassian` MCP server to read the issue first and inspect which existing plans, flows, tests, and JSON sections already cover the affected journey.
-7. Keep the resulting plan linked through metadata such as `jira_issue_key`, `jira_issue_url`, `plan_scope`, `plan_type`, and impacted artifacts when applicable.
-8. Decide whether Selenium MCP is actually needed.
-9. If live UI exploration is needed, use the `selenium` MCP server to validate the page, flow, text, or locator.
-10. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
-11. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
-12. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
-13. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, and Jira issue metadata when applicable.
-14. Register or update the relevant TestNG XML suite.
-15. When a plan changes, update the linked tests instead of creating duplicate implementations.
-16. Run the smallest meaningful verification path available.
-17. When a new top-level flow/profile is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
+7. If the request starts from existing TestRail coverage, use the `testrail` MCP server to inspect the owning cases, runs, or plan entries before deciding whether to update existing automation or create new assets.
+8. Keep the resulting plan linked through metadata such as `jira_issue_key`, `jira_issue_url`, `testrail_case_ids`, `testrail_run_ids`, `plan_scope`, `plan_type`, and impacted artifacts when applicable.
+9. Decide whether Selenium MCP is actually needed.
+10. If live UI exploration is needed, use the `selenium` MCP server to validate the page, flow, text, or locator.
+11. When TestRail linkage matters, keep the mapping at the agent/client layer or in plan metadata and reporting configuration rather than embedding TestRail calls into Java tests.
+12. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
+13. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
+14. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
+15. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, Jira issue metadata, and TestRail metadata when applicable.
+16. Register or update the relevant TestNG XML suite.
+17. When a plan changes, update the linked tests instead of creating duplicate implementations.
+18. Run the smallest meaningful verification path available.
+19. When a new top-level flow/profile is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 
 ## Non-Negotiable Rules
 
@@ -77,7 +92,9 @@ Produce framework-native automation work for this repo:
 - Draft the Markdown plan for user review before large generation steps.
 - Keep plan names and generated assets related through a stable slug or `plan_id` so later updates remain deterministic.
 - When the target comes from Jira, keep the plan linked to the issue through metadata instead of burying the issue key in chat only.
+- When the target comes from TestRail, keep the plan linked to the relevant TestRail case or run identifiers through metadata instead of burying them in chat only.
 - For Jira bugs, analyze impact across existing plans, flows, helper classes, test classes, and JSON data before deciding whether new assets are warranted.
+- For TestRail-linked work, analyze whether the requested case, run, or milestone already maps to an existing plan, flow, or test before creating duplicate coverage.
 - Reuse `base.Finder` and `base.Go` before introducing raw low-level Selenium code.
 - Prefer the higher-level `Finder`/`Go` methods such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before adding custom waits or retry logic.
 - Keep assertions in `*Test.java`.
@@ -89,7 +106,9 @@ Produce framework-native automation work for this repo:
 - Keep test data dynamic: assertions should read expected values from the active JSON file.
 - If the product has English and Arabic variants, preserve separate language-specific test data and assertions that read from the selected language.
 - Do not wire Jira access into Java runtime code; Jira MCP belongs to the agent/client layer.
+- Do not wire TestRail access into Java runtime code; TestRail MCP belongs to the agent/client layer and existing reporting hooks.
 - Do not commit customer Jira URLs, cloud IDs, account IDs, or personal credentials into this template; use the user's live MCP authorization context instead.
+- Do not commit customer TestRail URLs, usernames, or API keys into this template; use placeholder values in config and the user's runtime authorization context instead.
 - If you use Selenium MCP, keep the session short and close it when done.
 
 ## When To Use Selenium MCP
@@ -102,6 +121,16 @@ Use Selenium MCP when:
 - navigation or text rendering needs confirmation
 
 Do not use Selenium MCP when local source inspection already answers the question.
+
+## When To Use TestRail MCP
+
+Use TestRail MCP when:
+
+- existing TestRail cases, plans, or runs should drive which automation assets to update
+- you need to map generated or updated coverage back to case IDs or run IDs
+- a reporting workflow needs help reconciling framework artifacts with TestRail organization
+
+Do not use TestRail MCP as a substitute for framework-native Java assertions, XML suites, or JSON-backed test data.
 
 ## Quality Bar
 

@@ -10,6 +10,19 @@
         "-y",
         "@angiejones/mcp-selenium@0.1.21"
       ]
+    },
+    "testrail": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "testrail-api-module",
+        "testrail-mcp-server"
+      ],
+      "env": {
+        "TESTRAIL_BASE_URL": "https://your-instance.testrail.io",
+        "TESTRAIL_USERNAME": "your-email@example.com",
+        "TESTRAIL_API_KEY": "your-api-key"
+      }
     }
   }
 }
