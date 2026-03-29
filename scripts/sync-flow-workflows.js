@@ -47,6 +47,10 @@ function parseProfiles(pomXml) {
   return profiles.sort((left, right) => left.profileId.localeCompare(right.profileId));
 }
 
+function isApiProfile({ profileId, suiteXmlFile }) {
+  return /api/i.test(profileId) || /api/i.test(suiteXmlFile);
+}
+
 function findExistingWorkflowFilesByName() {
   const fileNamesByWorkflowName = new Map();
 
@@ -74,7 +78,7 @@ function findExistingWorkflowFilesByName() {
   return fileNamesByWorkflowName;
 }
 
-function buildWorkflow({ profileId, suiteXmlFile }) {
+function buildUiWorkflow({ profileId, suiteXmlFile }) {
   return `${GENERATED_MARKER}
 # Source profile: ${profileId}
 # Source suite: ${suiteXmlFile}
@@ -132,6 +136,45 @@ jobs:
           name: test-report
           path: ./extent-reports/
 `;
+}
+
+function buildApiWorkflow({ profileId, suiteXmlFile }) {
+  return `${GENERATED_MARKER}
+# Source profile: ${profileId}
+# Source suite: ${suiteXmlFile}
+name: ${profileId}
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run API Tests
+        run: mvn clean test -P ${profileId}
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: ./extent-reports/
+`;
+}
+
+function buildWorkflow(profile) {
+  return isApiProfile(profile) ? buildApiWorkflow(profile) : buildUiWorkflow(profile);
 }
 
 function syncWorkflows() {

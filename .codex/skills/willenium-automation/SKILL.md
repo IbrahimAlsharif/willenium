@@ -1,11 +1,13 @@
 ---
 name: willenium-automation
-description: Use when creating, updating, or debugging Java Selenium TestNG coverage in the Willenium framework, especially when work must follow base.Setup, base.Finder, base.Go, JSON test data, and TestNG XML suite composition, with Selenium MCP used for live browser exploration when needed.
+description: Use when creating, updating, or debugging Java Selenium TestNG UI coverage in the Willenium framework, especially when work must follow base.Setup, base.Finder, base.Go, JSON test data, and TestNG XML suite composition, with Selenium MCP used for live browser exploration when needed.
 ---
 
-# Willenium Selenium TestNG
+# Willenium UI Selenium TestNG
 
 Use this skill for browser-test work in this repository. The implementation target is always the Java/TestNG framework in this repo, not ad hoc scripts in another language.
+
+Use `willenium-api` instead when the task is primarily API coverage, API planning, API debugging, or RestAssured/TestNG work.
 
 Treat the checked-in tests, flows, and JSON data as starter examples of framework structure, not as the product under test. Their URLs, labels, and assertions are sample content unless the user explicitly says they are still the target application.
 

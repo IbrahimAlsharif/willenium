@@ -1,10 +1,12 @@
 package configs.listeners;
 
 import base.Go;
+import base.Setup;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import configs.api.ApiContext;
 import configs.pipeline.PipelineConfig;
 import configs.testRail.APIException;
 import configs.testRail.TestRailManager;
@@ -63,15 +65,21 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
         methodTest.log(Status.FAIL, "Test failed");
         methodTest.fail(result.getThrowable());
 
+        if (ApiContext.hasExchange()) {
+            methodTest.info(ApiContext.buildReportDetails());
+        }
+
         File screenShot = null;
-        try {
-            String screenshotBase64 = Go.getShotAsBase64();
-            if (screenshotBase64 != null && !screenshotBase64.isBlank()) {
-                methodTest.addScreenCaptureFromBase64String(screenshotBase64, "Screenshot");
+        if (Setup.driver != null) {
+            try {
+                String screenshotBase64 = Go.getShotAsBase64();
+                if (screenshotBase64 != null && !screenshotBase64.isBlank()) {
+                    methodTest.addScreenCaptureFromBase64String(screenshotBase64, "Screenshot");
+                }
+                screenShot = Go.getShotAsFile(result.getName());
+            } catch (Exception screenshotError) {
+                methodTest.log(Status.WARNING, "Screenshot unavailable: " + screenshotError.getMessage());
             }
-            screenShot = Go.getShotAsFile(result.getName());
-        } catch (Exception screenshotError) {
-            methodTest.log(Status.WARNING, "Screenshot unavailable: " + screenshotError.getMessage());
         }
 
         if (PipelineConfig.testRailReport && screenShot != null) {
@@ -99,6 +107,7 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
 
     @Override
     public void onTestStart(ITestResult result) {
+        ApiContext.clear();
         ExtentTest test = testMap.get(result.getTestContext().getName());
         ExtentTest methodTest = test.createNode(result.getMethod().getMethodName());
         testMap.put(result.getMethod().getMethodName(), methodTest);

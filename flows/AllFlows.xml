@@ -4,5 +4,7 @@
     <suite-files>
         <suite-file path="flows/examples/wewill/BrowseExampleWeWillEnglish.xml"/>
         <suite-file path="flows/examples/wewill/BrowseExampleWeWillArabic.xml"/>
+        <suite-file path="flows/examples/wewill/RunExamplePublicApiEnglish.xml"/>
+        <suite-file path="flows/examples/wewill/RunExamplePublicApiArabic.xml"/>
     </suite-files>
 </suite>

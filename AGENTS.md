@@ -1,21 +1,31 @@
 # Willenium Agent Guide
 
-Use the `willenium` agent and the `willenium-automation` skill behavior for any AI-assisted browser automation work in this repository.
+Use the `willenium` agent for framework-native automation work in this repository.
+
+Skill routing:
+
+- use `willenium-automation` for UI/browser automation work
+- use `willenium-api` for API/service automation work
+- use `willenium-coach` when the user needs help choosing workflow, prompt shape, plan scope, or plan type
 
 Primary source files:
 
 - Codex execution skill: `.codex/skills/willenium-automation/SKILL.md`
+- Codex API execution skill: `.codex/skills/willenium-api/SKILL.md`
 - Codex coaching skill: `.codex/skills/willenium-coach/SKILL.md`
 - Agent spec: `.github/agents/willenium.agent.md`
 
 ## Mission
 
-Produce framework-native Java Selenium TestNG changes for this repo.
+Produce framework-native Java Selenium TestNG and RestAssured TestNG changes for this repo.
 
 - Put planning artifacts in `test-plans/<app>/<target-slug>.md` by default.
 - Put reusable browser logic in `src/test/java/tests/.../<Feature>.java`.
 - Put assertions in `src/test/java/tests/.../<Feature>Test.java`.
+- Put reusable API logic in `src/test/java/tests/.../<Feature>Api.java`.
+- Put API assertions in `src/test/java/tests/.../<Feature>ApiTest.java`.
 - Keep setup and driver lifecycle in `base.Setup` and `base.TearDownTest`.
+- Keep API setup in `base.ApiSetup` and shared request execution in `base.ApiClient`.
 - Reuse `base.Finder` and `base.Go` before writing raw Selenium code.
 - Update JSON-backed test data instead of hardcoding user-facing strings when possible.
 - Register new coverage through TestNG XML suites under `flows/...`.
@@ -74,6 +84,7 @@ Do not commit personal credentials, cloud IDs, account IDs, or customer Jira sit
 - If a plan already exists, update that plan and the linked tests rather than creating duplicate plans or duplicate test classes.
 - When the first real project test is requested, create app-specific folders, flows, and JSON data; move or rename the examples first if that will keep the real project clearer.
 - Keep UI tests suite-driven; do not bypass setup/teardown assumptions.
+- Keep API tests suite-driven; do not bypass `base.ApiSetup`.
 - When a new top-level flow/profile is added, also add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 - Keep expected text, URLs, and other assertion inputs dynamic in `src/test/java/configs/testdata/...` instead of hardcoding them in test methods.
 - If the real site has English and Arabic variants, maintain language-specific JSON data and read assertions from the active language file.

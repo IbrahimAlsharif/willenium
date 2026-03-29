@@ -27,6 +27,10 @@ public class TestData {
         return testData.get("base-url").get("env").get(language);
     }
 
+    public JsonNode getApiData() {
+        return testData.get("api");
+    }
+
     public JsonNode getTopicData() {
         return testData.get("topic");
     }

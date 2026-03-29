@@ -10,7 +10,8 @@ Use this skill when the user is unsure how to ask for work, what information to 
 This skill is for guidance and prompt shaping. It does not replace the execution skill:
 
 - use `willenium-coach` to orient the user
-- use `willenium-automation` to perform the actual framework work when invoking skills by name
+- use `willenium-automation` for UI/browser work
+- use `willenium-api` for API/service work
 - use the `willenium` agent when invoking the repo agent directly
 
 ## What To Help With
@@ -30,6 +31,8 @@ Map the user to the smallest correct next step:
   recommend plan-first work
 - if they already have a plan:
   recommend generation or update of linked assets
+- if they have an endpoint or service and want coverage:
+  recommend plan-first API work with `willenium-api`
 - if they have a failing test:
   recommend debugging the smallest affected flow
 - if they have a Jira issue:
@@ -39,8 +42,14 @@ Map the user to the smallest correct next step:
 
 Always help the user clarify two planning dimensions before execution work starts:
 
-- plan scope: page, component, flow, journey, feature area, or multi-flow regression area
-- plan type: smoke, happy-path, regression, or full coverage
+- plan scope:
+  for UI work use values like page, component, flow, journey, feature area, or multi-flow regression area
+- plan scope:
+  for API work use values like endpoint, service, contract, integration-flow, or multi-service regression
+- plan type:
+  for UI work use values like smoke, happy-path, regression, or full coverage
+- plan type:
+  for API work also consider negative-path coverage when validation of rejected requests or error contracts matters
 
 ## Inputs To Ask For
 
@@ -48,8 +57,10 @@ When useful, guide the user to provide:
 
 - target app or feature name
 - URL or environment
+- endpoint, service name, or API base URL
 - desired plan scope
 - desired plan type
+- auth or header requirements
 - language coverage needed
 - login or seeded-data requirements
 - Jira issue key
@@ -64,8 +75,9 @@ Explain the repo in simple terms:
 
 - `test-plans/...` holds the source-of-truth plans
 - `flows/...` holds TestNG suite wiring
-- `src/test/java/tests/...` holds helper classes and `*Test.java`
+- `src/test/java/tests/...` holds helper classes and `*Test.java` or `*ApiTest.java`
 - `src/test/java/configs/testdata/...` holds dynamic assertions and inputs
+- `src/test/java/base/...` holds shared setup and execution helpers such as `Setup`, `ApiSetup`, `Go`, `Finder`, and `ApiClient`
 
 Remind the user that:
 
@@ -73,6 +85,7 @@ Remind the user that:
 - plan scope and plan type should be chosen before writing the plan
 - Selenium MCP is optional during planning and should be used when live inspection would materially improve the draft
 - user-facing values should live in JSON, not hardcoded assertions
+- API endpoints, headers, payload fragments, and expected response values should also live in JSON rather than test methods
 - existing plans and flows should be updated before creating duplicates
 
 ## Prompt Patterns
@@ -83,6 +96,9 @@ Offer direct prompt upgrades like these:
 - `Use willenium-coach to help me choose the right plan scope and whether this should be a smoke, regression, or full test plan before you write the Markdown draft.`
 - `Use willenium-coach to decide whether this planning task should inspect the live page with Selenium MCP first or whether the Markdown draft can be written from the current information.`
 - `Use willenium-automation to update the existing plan and linked tests for this regression instead of creating duplicate coverage.`
+- `Use willenium-api to create a test plan under test-plans/ for this endpoint, then map it to ApiSetup, a service helper, an ApiTest class, and JSON test data.`
+- `Use willenium-api to update the existing API plan and linked tests for this service regression instead of creating duplicate coverage.`
+- `Use willenium-coach to help me choose whether this API work should be planned as endpoint, service, contract, or integration-flow coverage and whether it should be smoke, regression, negative-path, or full.`
 - `Use willenium-automation to read Jira bug ABC-123, decide which existing flows it affects, update the impacted plan, then update the linked tests.`
 - `Use willenium-automation to debug this failing flow and explain whether the fix belongs in the helper, assertion, test data, or XML suite.`
 

@@ -1,6 +1,6 @@
 # Willenium
 
-Willenium is a Java Selenium TestNG starter framework built for suite-driven UI automation.
+Willenium is a Java Selenium TestNG starter framework built for suite-driven UI and API automation.
 It gives you reusable setup and helper layers, JSON-backed test data, XML flow composition, and AI guidance files that match the framework structure.
 
 ## Quick Start
@@ -86,6 +86,8 @@ Use the included Maven profiles:
 ```bash
 mvn test -PBrowseExampleWeWillEnglish
 mvn test -PBrowseExampleWeWillArabic
+mvn test -PRunExamplePublicApiEnglish
+mvn test -PRunExamplePublicApiArabic
 npm run sync:flow-workflows
 ```
 
@@ -93,6 +95,8 @@ Useful suite entry points:
 
 - `flows/examples/wewill/BrowseExampleWeWillEnglish.xml`
 - `flows/examples/wewill/BrowseExampleWeWillArabic.xml`
+- `flows/examples/wewill/RunExamplePublicApiEnglish.xml`
+- `flows/examples/wewill/RunExamplePublicApiArabic.xml`
 - `example_quick_path.xml`
 
 `example_quick_path.xml` is the shortest smoke path in the repo. It runs setup, a single public homepage example, and teardown.
@@ -140,15 +144,18 @@ Template safety notes:
 
 The project includes framework-aware agent files for Codex and Claude:
 
-- Execution skill: `.codex/skills/willenium-automation/SKILL.md`
+- UI execution skill: `.codex/skills/willenium-automation/SKILL.md`
+- API execution skill: `.codex/skills/willenium-api/SKILL.md`
 - Coaching skill: `.codex/skills/willenium-coach/SKILL.md`
 - Agent: `.github/agents/willenium.agent.md`
 - Bridge files: `AGENTS.md`, `CLAUDE.md`
 
 Use them when you want AI assistance that follows the framework conventions:
 
-- follow the current `base.Setup` / `base.Finder` / `base.Go` conventions
-- keep assertions in `*Test.java`
+- follow the current `base.Setup` / `base.Finder` / `base.Go` conventions for UI work
+- follow `base.ApiSetup` / `base.ApiClient` / `configs.api.ApiContext` for API work
+- keep UI assertions in `*Test.java`
+- keep API assertions in `*ApiTest.java`
 - update JSON-backed test data instead of hardcoding values
 - wire new coverage through TestNG XML suites under `flows/...`
 - ask for test plan scope and plan type before drafting a new plan when those are not already clear
@@ -159,7 +166,8 @@ Use them when you want AI assistance that follows the framework conventions:
 - keep Jira tenant configuration user-provided at runtime rather than committed in the template
 
 Use `willenium-coach` when you want help deciding what to ask for, what inputs to provide, or which workflow to use before the implementation work starts.
-Use `willenium-automation` when you want the framework work done through the execution skill.
+Use `willenium-automation` when you want UI or browser automation work done through the execution skill.
+Use `willenium-api` when you want API or service automation work done through the execution skill.
 Use `willenium` when you want to reference the repo agent directly.
 For plan-first work, the expected flow is: confirm scope and plan type -> write the Markdown draft under `test-plans/` -> let the user review -> then generate or update tests.
 Selenium MCP is optional during planning and is most useful when the plan needs live page inspection rather than just the user's description and existing local artifacts.
@@ -168,6 +176,10 @@ Typical prompts:
 
 ```text
 Use `willenium-automation` to create my first real product test and move the starter examples out of the way if needed.
+```
+
+```text
+Use `willenium-api` to create my first real API coverage slice, write the linked plan under test-plans/, and map it to ApiSetup, Api helpers, Api tests, JSON test data, and XML flows.
 ```
 
 ```text
@@ -184,6 +196,10 @@ Use `willenium-automation` to read Jira bug ABC-123, decide which existing flows
 
 ```text
 Use `willenium-coach` to help me choose the best next prompt for planning, generation, debugging, or Jira-driven automation in this repo.
+```
+
+```text
+Use `willenium-coach` to help me choose whether this API work should be planned as endpoint, service, contract, or integration-flow coverage and whether it should be smoke, regression, negative-path, or full.
 ```
 
 ```text
@@ -243,20 +259,44 @@ UI test classes are intended to run through suites. Running a UI class by itself
 
 The bundled suites are examples only. When you begin real automation for a new product, create app-specific suites and test data rather than extending the WE WILL example by default.
 
+API flows follow a parallel suite-driven pattern:
+
+1. `base.ApiSetup` loads the right test data file and builds the shared request specification.
+2. One or more `*ApiTest.java` suites run the actual API assertions.
+
+Example:
+
+- `flows/examples/wewill/RunExamplePublicApiEnglish.xml`
+  calls `flows/SetupApiEnglish.xml`
+- then `flows/examples/steps/wewill/public_api_journey.xml`
+
+The bundled public API example uses JSONPlaceholder as a stable public contract target and includes both a GET contract check and a POST contract check.
+The English and Arabic files currently share the same API expectations, but they remain split so future language or tenant-specific API data can diverge cleanly without changing the framework shape.
+
+API test classes are also intended to run through suites. Running an API test class by itself may skip the shared setup that initializes `ApiSetup.testData` and the shared request specification.
+
 ## Reference Tests
 
 Good examples to follow when adding or updating coverage:
 
 - `src/test/java/tests/examples/wewill/home/WeWillHomePageTest.java`
+- `src/test/java/tests/examples/wewill/api/WeWillPublicApiTest.java`
 
 The page and flow helper pattern is visible in:
 
 - `src/test/java/tests/examples/wewill/home/WeWillHomePage.java`
+- `src/test/java/tests/examples/wewill/api/WeWillPublicApi.java`
 
 Shared Selenium utilities live in:
 
 - `src/test/java/base/Finder.java`
 - `src/test/java/base/Go.java`
+
+Shared API utilities live in:
+
+- `src/test/java/base/ApiSetup.java`
+- `src/test/java/base/ApiClient.java`
+- `src/test/java/configs/api/ApiContext.java`
 
 ## Test Data
 
@@ -281,6 +321,15 @@ Typical structure:
   "base-url": {
     "env": {
       "english": "https://example/en"
+    }
+  },
+  "api": {
+    "baseUrl": "https://api.example.com",
+    "posts": {
+      "getOne": {
+        "endpoint": "/posts/1",
+        "expectedStatus": 200
+      }
     }
   },
   "wewillHome": {
