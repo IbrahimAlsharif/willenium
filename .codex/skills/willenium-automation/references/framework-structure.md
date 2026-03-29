@@ -107,6 +107,10 @@ Real tests should:
 
 - store expected assertions, URLs, credentials, and inputs in JSON rather than embedding them in test methods
 - keep English and Arabic values in their respective files when the target app supports both
+- keep production and staging values in their respective files when the target app differs by environment
+- default new bilingual flow coverage to four files: production arabic, production english, staging arabic, and staging english
+- duplicate same-language content across production and staging by default when only one environment's values are known
+- keep all four files structurally identical even when their values differ
 - create new app-appropriate values for the real system under test instead of reusing the sample site content
 
 ## Execution Entry Points

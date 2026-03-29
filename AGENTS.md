@@ -89,6 +89,10 @@ Do not commit personal credentials, cloud IDs, account IDs, or customer Jira sit
 - Keep API tests suite-driven; do not bypass `base.ApiSetup`.
 - When a new top-level flow/profile is added, also add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 - Keep expected text, URLs, and other assertion inputs dynamic in `src/test/java/configs/testdata/...` instead of hardcoding them in test methods.
-- If the real site has English and Arabic variants, maintain language-specific JSON data and read assertions from the active language file.
+- If the real site has English and Arabic variants, maintain environment-and-language-specific JSON data and read assertions from the active file selected by `branch` + `language`.
+- For new flow generation, default to four JSON files: `Production Arabic`, `Production English`, `Staging Arabic`, and `Staging English`.
+- When only one environment's content is known for a language, duplicate that language's content into the other environment file by default.
+- Only diverge production and staging content when the user explicitly provides different values or the target URLs clearly indicate different environment-specific data should be captured.
+- Keep all four JSON files structurally identical even when their values differ.
 - Prefer the smallest meaningful verification path after changes.
 - Final output should match existing repository conventions, not generic Selenium examples.

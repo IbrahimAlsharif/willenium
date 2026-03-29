@@ -51,7 +51,10 @@ Keep:
 - keep helper classes focused on actions, locators, and small state checks
 - keep browser/runtime behavior property-driven through `configs.pipeline.PipelineConfig` instead of embedding wait or browser flags in feature code
 - put expected UI text, URLs, credentials, filters, and inputs in JSON instead of hardcoding them
-- preserve English/Arabic separation when the product supports both
+- preserve environment-and-language separation when the product supports both multiple languages and multiple environments
+- default new bilingual flow generation to four synchronized JSON files: production arabic, production english, staging arabic, and staging english
+- duplicate same-language production and staging content by default unless the user provides different values or the target URLs clearly indicate environment-specific content
+- update all four files together whenever the JSON structure changes
 - update existing helper/test/flow assets when the plan says the behavior belongs there
 
 ## Mapping Checklist

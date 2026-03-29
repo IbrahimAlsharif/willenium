@@ -322,6 +322,7 @@ Typical structure:
 {
   "base-url": {
     "env": {
+      "arabic": "https://example/ar",
       "english": "https://example/en"
     }
   },
@@ -342,9 +343,9 @@ Typical structure:
 }
 ```
 
-The English and Arabic example files currently share the same homepage expectations because that public landing page is shared, but they remain split into separate JSON files so a future Arabic-specific version can be modeled without changing the framework shape.
+The English and Arabic example files currently share the same homepage expectations because that public landing page is shared, and the staging and production example files currently share the same values because the starter content is identical across environments. Keep the four files structurally aligned so language and environment values can diverge later without changing the framework shape.
 
-For real projects, keep expected text, URLs, credentials, and other assertion inputs in app-specific JSON files and have assertions read from the active language file instead of hardcoding them in test methods.
+For real projects, keep expected text, URLs, credentials, and other assertion inputs in app-specific JSON files and have assertions read from the active environment-and-language file instead of hardcoding them in test methods.
 
 ## Browser Support
 
@@ -391,7 +392,8 @@ If Chrome or Firefox fails before the browser opens with a message about `localh
 
 Follow the current framework conventions:
 
-1. Add or extend app-specific test data first in the correct JSON file.
+1. Add or extend app-specific test data first in all required JSON files for the target `branch` + `language` shape.
+   For bilingual UI work, default to updating `Production Arabic`, `Production English`, `Staging Arabic`, and `Staging English` together so the structure stays aligned across all four files.
 2. Create or update a page/helper class under `src/test/java/tests/...`.
 3. Add assertions in a `*Test.java` class.
 4. Register the class in a feature XML suite under `flows/...`.

@@ -53,6 +53,6 @@ Treat the checked-in tests, flows, and test data as starter examples of structur
 - Do not draft every plan as smoke coverage by default; the user may need full page or flow planning.
 - Do not use Selenium MCP automatically during planning when the Markdown draft can be written accurately from the current information.
 - Keep assertions dynamic by reading expected values from the active JSON data file.
-- If the target site supports English and Arabic, maintain language-specific test data rather than mixing values in code.
+- If the target site supports English and Arabic, maintain environment-and-language-specific test data rather than mixing values in code, and let `branch` + `language` select the active file.
 - Keep assertions in `*Test.java`.
 - Keep Jira integration at the MCP/client layer; do not embed Jira calls in the Java execution path.

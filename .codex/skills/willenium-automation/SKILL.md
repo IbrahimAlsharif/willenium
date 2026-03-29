@@ -67,7 +67,11 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Keep assertions in `*Test.java`; helper classes should expose actions, locators, and small state checks.
 - Keep browser, wait, retry, and reporting toggles property-driven through `configs.pipeline.PipelineConfig` rather than hardcoding them in helper or test classes.
 - Put expected UI text, URLs, credentials, and other user-facing values in JSON test data rather than hardcoding them in assertions.
-- If the target app supports both English and Arabic, keep both language variants in test data and have assertions read from the active language file.
+- If the target app supports both English and Arabic, keep environment-and-language variants in test data and have assertions read from the active file selected by `branch` + `language`.
+- For new flow generation, default to creating and updating four JSON files together: production arabic, production english, staging arabic, and staging english.
+- When production and staging values are not separately specified, duplicate the same language's content across both environment files by default.
+- Only let production and staging content diverge when the user explicitly says they differ or the inspected URLs clearly indicate environment-specific values.
+- Keep all four JSON files structurally identical even when their values differ.
 - If only one language is known today, still preserve the JSON structure so the second language can be added cleanly later.
 - Use the existing JSON files only as examples of shape; do not treat their sample website links or labels as canonical values for a new client project.
 - Do not commit personal Jira credentials, cloud IDs, account IDs, or customer tenant URLs into this public template; Jira tenant details should come from the user's authorized MCP client at runtime.

@@ -1,6 +1,7 @@
 {
   "base-url": {
     "env": {
+      "arabic": "https://wewill.tech/",
       "english": "https://wewill.tech/"
     }
   },
