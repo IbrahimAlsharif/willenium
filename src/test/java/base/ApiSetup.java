@@ -2,6 +2,7 @@ package base;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import configs.api.ApiContext;
+import configs.api.OpenApiContract;
 import configs.testdata.TestData;
 import configs.testdata.TestDataFactory;
 import io.restassured.builder.RequestSpecBuilder;
@@ -43,6 +44,7 @@ public class ApiSetup {
             }
         }
 
+        OpenApiContract.configure(apiData);
         apiSpecification = builder.build();
         ApiClient.initialize(apiSpecification, baseUrl);
         Assert.assertNotNull(apiSpecification, "API request specification should be initialized");

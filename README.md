@@ -272,6 +272,8 @@ Example:
 
 The bundled public API example uses JSONPlaceholder as a stable public contract target and includes both a GET contract check and a POST contract check.
 The English and Arabic files currently share the same API expectations, but they remain split so future language or tenant-specific API data can diverge cleanly without changing the framework shape.
+The shared API setup also supports OpenAPI contract validation when `api.contractValidation.enabled` is true in the selected JSON test data file.
+The bundled example points at `src/test/resources/openapi/jsonplaceholder-posts-v1.json` and applies that contract automatically through `base.ApiSetup` and `base.ApiClient`.
 
 API test classes are also intended to run through suites. Running an API test class by itself may skip the shared setup that initializes `ApiSetup.testData` and the shared request specification.
 
@@ -357,9 +359,23 @@ The checked-in setup suites default to local Chrome:
 - `flows/SetupEnglish.xml`
 - `flows/SetupArabic.xml`
 
-Remote execution through LambdaTest also exists in `base.Setup#setUpRemoteDriver`, but the checked-in XML setup files use local driver startup by default.
+Remote execution through `base.Setup#setUpRemoteDriver` also exists, and the framework now supports `WILLENIUM_EXECUTION_MODE=auto|local|remote`.
 
-If Chrome or Firefox fails before the browser opens with a message about `localhost`, `bind`, or finding a free port, the environment is blocking the local WebDriver service. Headless mode does not fix that. Run the suite from a normal local terminal session or switch the suite to remote driver execution.
+In `auto` mode, `setUpLocalDriver` tries local browser startup first. If the environment blocks localhost port binding, it automatically falls back to remote execution when `WILLENIUM_REMOTE_URL` is configured.
+
+Supported remote environment variables:
+
+- `WILLENIUM_EXECUTION_MODE`
+- `WILLENIUM_REMOTE_URL`
+- `WILLENIUM_REMOTE_PROVIDER` (`lambdatest` or leave empty for generic Selenium Grid)
+- `WILLENIUM_REMOTE_USERNAME`
+- `WILLENIUM_REMOTE_ACCESS_KEY`
+- `WILLENIUM_REMOTE_PLATFORM`
+- `WILLENIUM_REMOTE_BROWSER_VERSION`
+- `WILLENIUM_REMOTE_PROJECT`
+- `WILLENIUM_REMOTE_BUILD`
+
+If Chrome or Firefox fails before the browser opens with a message about `localhost`, `bind`, or finding a free port, the environment is blocking the local WebDriver service. Headless mode does not fix that. Run the suite from a normal local terminal session, rerun the command outside the sandbox, or provide remote execution settings so auto fallback can take over.
 
 ## Configuration
 

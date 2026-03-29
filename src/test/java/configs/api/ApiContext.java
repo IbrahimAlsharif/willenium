@@ -27,6 +27,12 @@ public final class ApiContext {
         exchange.responseBody = trimToLimit(response.getBody().prettyPrint());
     }
 
+    public static void recordContractValidation(boolean contractValidationEnabled, String specificationLocation) {
+        ApiExchange exchange = EXCHANGE.get();
+        exchange.contractValidationEnabled = contractValidationEnabled;
+        exchange.specificationLocation = specificationLocation;
+    }
+
     public static boolean hasExchange() {
         ApiExchange exchange = EXCHANGE.get();
         return exchange.url != null || exchange.responseBody != null;
@@ -42,6 +48,10 @@ public final class ApiContext {
 
         if (exchange.method != null && exchange.url != null) {
             builder.append("Request: ").append(exchange.method).append(" ").append(exchange.url).append(System.lineSeparator());
+        }
+
+        if (exchange.contractValidationEnabled && exchange.specificationLocation != null) {
+            builder.append("OpenAPI contract: ").append(exchange.specificationLocation).append(System.lineSeparator());
         }
 
         if (exchange.requestBody != null && !exchange.requestBody.isBlank()) {
@@ -71,6 +81,8 @@ public final class ApiContext {
         private String method;
         private String url;
         private String requestBody;
+        private boolean contractValidationEnabled;
+        private String specificationLocation;
         private Integer statusCode;
         private String responseBody;
     }

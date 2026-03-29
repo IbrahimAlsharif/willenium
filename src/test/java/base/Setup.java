@@ -2,6 +2,7 @@ package base;
 
 import configs.BrowserOptions;
 import configs.pipeline.PipelineConfig;
+import configs.pipeline.RemoteExecutionConfig;
 import configs.testRail.APIException;
 import configs.testRail.TestRailManager;
 import configs.testdata.TestData;
@@ -15,6 +16,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.AbstractDriverOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.safari.SafariOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -48,7 +50,7 @@ public class Setup {
         resetSharedState();
         cleanScreenshotsDirectory();
         testData = TestDataFactory.getTestData(branch, language);
-        initializeLocalDriver(browser, testData.getBaseUrl(language).asText());
+        initializePreferredDriver(browser, testData.getBaseUrl(language).asText());
         Assert.assertTrue(true);
     }
 
@@ -71,33 +73,67 @@ public class Setup {
         resetSharedState();
         cleanScreenshotsDirectory();
         testData = TestDataFactory.getTestData(branch, language);
-        initializeRemoteDriver(browser);
+        initializeRemoteDriver(browser, RemoteExecutionConfig.fromEnvironment());
         Assert.assertTrue(true);
     }
 
 
-    private void initializeRemoteDriver(String browser) throws IOException, APIException {
+    private void initializePreferredDriver(String browser, String url) throws IOException, APIException {
+        RemoteExecutionConfig remoteExecutionConfig = RemoteExecutionConfig.fromEnvironment();
+
+        if (remoteExecutionConfig.isRemoteOnly()) {
+            initializeRemoteDriver(browser, remoteExecutionConfig);
+            return;
+        }
+
+        try {
+            initializeLocalDriver(browser, url);
+        } catch (IllegalStateException exception) {
+            if (shouldFallbackToRemote(exception, remoteExecutionConfig)) {
+                initializeRemoteDriver(browser, remoteExecutionConfig);
+                return;
+            }
+            throw augmentLocalFailure(exception, remoteExecutionConfig);
+        }
+    }
+
+    private void initializeRemoteDriver(String browser, RemoteExecutionConfig remoteExecutionConfig) throws IOException, APIException {
         if (PipelineConfig.testRailReport) {
             TestRailManager testRailManager = new TestRailManager();
             Go.testRunId = testRailManager.createTestRun("Sentra", 2);
         }
+        ensureRemoteExecutionConfigured(remoteExecutionConfig);
         AbstractDriverOptions<?> browserOptions = null;
-        String platform = "Windows 10";
-        String browserVersion = "126";
+        String platform = remoteExecutionConfig.getRemotePlatform();
+        String browserVersion = remoteExecutionConfig.getRemoteBrowserVersion();
         if (browser.equalsIgnoreCase("chrome")) {
-            //todo browserOptions
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.setPlatformName(platform);
-            chromeOptions.setBrowserVersion(browserVersion);
+            if (!browserVersion.isBlank()) {
+                chromeOptions.setBrowserVersion(browserVersion);
+            }
             browserOptions = chromeOptions;
         } else if (browser.equalsIgnoreCase("firefox")) {
             FirefoxOptions firefoxOptions = new FirefoxOptions();
             firefoxOptions.setPlatformName(platform);
-            firefoxOptions.setBrowserVersion(browserVersion);
+            if (!browserVersion.isBlank()) {
+                firefoxOptions.setBrowserVersion(browserVersion);
+            }
             browserOptions = firefoxOptions;
+        } else if (browser.equalsIgnoreCase("safari")) {
+            SafariOptions safariOptions = new SafariOptions();
+            safariOptions.setPlatformName(platform);
+            if (!browserVersion.isBlank()) {
+                safariOptions.setBrowserVersion(browserVersion);
+            }
+            browserOptions = safariOptions;
+        } else {
+            throw new IllegalArgumentException("Unsupported remote browser: " + browser);
         }
-        browserOptions.setCapability("LT:Options", new BrowserOptions().getLambdaTestOptions());
-        driver = new RemoteWebDriver(new URL("https://hub.lambdatest.com/wd/hub"), browserOptions);
+        if (remoteExecutionConfig.isLambdaTest()) {
+            browserOptions.setCapability("LT:Options", new BrowserOptions().getLambdaTestOptions(remoteExecutionConfig));
+        }
+        driver = new RemoteWebDriver(new URL(remoteExecutionConfig.getRemoteUrl()), browserOptions);
         configureHelperComponents();
     }
 
@@ -172,6 +208,48 @@ public class Setup {
             );
         }
         return String.format("%s local driver startup failed: %s", browserName, rootMessage);
+    }
+
+    private boolean shouldFallbackToRemote(IllegalStateException exception, RemoteExecutionConfig remoteExecutionConfig) {
+        if (!remoteExecutionConfig.isAutoMode() || !remoteExecutionConfig.isRemoteConfigured()) {
+            return false;
+        }
+        return isLocalExecutionBlocker(exception);
+    }
+
+    private boolean isLocalExecutionBlocker(IllegalStateException exception) {
+        String message = exception.getMessage();
+        if (message == null) {
+            return false;
+        }
+        return message.contains("localhost port")
+                || message.contains("cannot bind")
+                || message.contains("sandbox")
+                || message.contains("free port");
+    }
+
+    private IllegalStateException augmentLocalFailure(IllegalStateException exception, RemoteExecutionConfig remoteExecutionConfig) {
+        if (!remoteExecutionConfig.isAutoMode() || remoteExecutionConfig.isRemoteConfigured()) {
+            return exception;
+        }
+        return new IllegalStateException(
+                exception.getMessage() + " Automatic remote fallback is available in execution mode 'auto' when remote configuration is present. "
+                        + remoteExecutionConfig.describeRemoteRequirement(),
+                exception
+        );
+    }
+
+    private void ensureRemoteExecutionConfigured(RemoteExecutionConfig remoteExecutionConfig) {
+        if (!remoteExecutionConfig.isRemoteConfigured()) {
+            throw new IllegalStateException(
+                    "Remote driver execution was requested but no remote URL is configured. " + remoteExecutionConfig.describeRemoteRequirement()
+            );
+        }
+        if (remoteExecutionConfig.isLambdaTest() && !remoteExecutionConfig.hasRemoteCredentials()) {
+            throw new IllegalStateException(
+                    "Remote LambdaTest execution requires WILLENIUM_REMOTE_USERNAME and WILLENIUM_REMOTE_ACCESS_KEY."
+            );
+        }
     }
 
     private void cleanScreenshotsDirectory() {

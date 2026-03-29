@@ -6,6 +6,10 @@
   },
   "api": {
     "baseUrl": "https://jsonplaceholder.typicode.com",
+    "contractValidation": {
+      "enabled": true,
+      "specificationPath": "src/test/resources/openapi/jsonplaceholder-posts-v1.json"
+    },
     "posts": {
       "getOne": {
         "description": "Get example public post",

@@ -1,6 +1,8 @@
 package base;
 
 import configs.api.ApiContext;
+import configs.api.OpenApiContract;
+import io.restassured.filter.Filter;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -34,8 +36,13 @@ public class ApiClient {
         ensureInitialized();
         String requestUrl = buildUrl(endpoint);
         ApiContext.recordRequest(requestName, method, requestUrl, requestBody);
+        ApiContext.recordContractValidation(OpenApiContract.isEnabled(), OpenApiContract.getSpecificationLocation());
 
         RequestSpecification request = RestAssured.given().spec(requestSpecification);
+        Filter validationFilter = OpenApiContract.getValidationFilter();
+        if (validationFilter != null) {
+            request.filter(validationFilter);
+        }
         if (requestBody != null) {
             request.body(requestBody);
         }

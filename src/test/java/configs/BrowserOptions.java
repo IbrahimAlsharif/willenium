@@ -1,5 +1,6 @@
 package configs;
 
+import configs.pipeline.RemoteExecutionConfig;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -176,12 +177,12 @@ public class BrowserOptions {
         return options;
     }
 
-    public HashMap<String, Object> getLambdaTestOptions() {
+    public HashMap<String, Object> getLambdaTestOptions(RemoteExecutionConfig remoteExecutionConfig) {
         HashMap<String, Object> ltOptions = new HashMap<>();
-        ltOptions.put("username", "micetribewewill");
-        ltOptions.put("accessKey", "XJGk8f3H21FOUfUMYmu6OvFMFZDRmUj271EENPQgsrXl6XryPo");
-        ltOptions.put("project", "V3");
-        ltOptions.put("build", "V3");
+        ltOptions.put("username", remoteExecutionConfig.getRemoteUsername());
+        ltOptions.put("accessKey", remoteExecutionConfig.getRemoteAccessKey());
+        ltOptions.put("project", remoteExecutionConfig.getRemoteProject());
+        ltOptions.put("build", remoteExecutionConfig.getRemoteBuild());
         ltOptions.put("selenium_version", "4.22.0");
         ltOptions.put("w3c", true);
         ltOptions.put("visual", true);
