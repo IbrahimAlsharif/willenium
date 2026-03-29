@@ -47,6 +47,7 @@ import static base.Setup.driver;
 public class Go {
     private static final String ARTIFACTS_FOLDER = "screenshots/";
     public static Faker faker = new Faker();
+    @Deprecated
     public static String testRunId;
     public static String location;
     public static String currentTab;

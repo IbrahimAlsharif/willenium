@@ -9,7 +9,12 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import configs.api.ApiContext;
 import configs.pipeline.PipelineConfig;
 import configs.testRail.APIException;
+import configs.testRail.TestRailContext;
+import configs.testRail.TestRailConfig;
 import configs.testRail.TestRailManager;
+import configs.testRail.TestRailPublisher;
+import configs.testRail.TestRailReportingSupport;
+import configs.testRail.TestRailRunCreator;
 import org.testng.IExecutionListener;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
@@ -22,20 +27,56 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import static base.Go.testRunId;
 import static base.Setup.getUiInitializationBlockerMessage;
 import static base.Setup.testCaseId;
-import static base.Setup.testRail;
-
 public class Listener implements ITestListener, IInvokedMethodListener, IExecutionListener {
+    private static final String TESTRAIL_RUN_ID_ATTRIBUTE = "testrail.runId";
+    private static final TestRailConfig TEST_RAIL_CONFIG = TestRailConfig.getInstance();
     private ExtentReports extent;
     private final Map<String, ExtentTest> testMap = new HashMap<>();
+    private final BooleanSupplier reportingEnabledSupplier;
+    private final TestRailPublisher testRailPublisher;
+    private final TestRailRunCreator testRailRunCreator;
     private boolean halt = false;
+
+    public Listener() {
+        this(
+                (testRunId, testCaseId, status, comment, attachmentPath) ->
+                        new TestRailManager().setResult(testRunId, testCaseId, status, comment, attachmentPath),
+                () -> new TestRailManager().createTestRun(TEST_RAIL_CONFIG.getProjectName(), TEST_RAIL_CONFIG.getProjectId()),
+                () -> PipelineConfig.testRailReport
+        );
+    }
+
+    Listener(TestRailPublisher testRailPublisher) {
+        this(
+                testRailPublisher,
+                () -> new TestRailManager().createTestRun(TEST_RAIL_CONFIG.getProjectName(), TEST_RAIL_CONFIG.getProjectId()),
+                () -> PipelineConfig.testRailReport
+        );
+    }
+
+    Listener(TestRailPublisher testRailPublisher, BooleanSupplier reportingEnabledSupplier) {
+        this(
+                testRailPublisher,
+                () -> new TestRailManager().createTestRun(TEST_RAIL_CONFIG.getProjectName(), TEST_RAIL_CONFIG.getProjectId()),
+                reportingEnabledSupplier
+        );
+    }
+
+    Listener(TestRailPublisher testRailPublisher, TestRailRunCreator testRailRunCreator, BooleanSupplier reportingEnabledSupplier) {
+        this.testRailPublisher = testRailPublisher;
+        this.testRailRunCreator = testRailRunCreator;
+        this.reportingEnabledSupplier = reportingEnabledSupplier;
+    }
 
     @Override
     public void onStart(ITestContext result) {
         System.out.println(" >>>>>>>>>>> Test Started " + result.getName()+ " <<<<<<<<<<<<");
+        TestRailContext.clearAll();
         if (extent == null) {
             extent = new ExtentReports();
             extent.attachReporter(new ExtentSparkReporter(ExtentReportSupport.getReportPathForReporter()));
@@ -86,13 +127,17 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
             }
         }
 
-        if (PipelineConfig.testRailReport && screenShot != null) {
-            try {
-                testRail.setResult(testRunId, testCaseId, TestRailManager.FAILED, screenShot.getAbsolutePath());
-            } catch (IOException | APIException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        publishTestRailResult(
+                result,
+                TestRailManager.FAILED,
+                TestRailReportingSupport.buildFailureComment(
+                        result.getName(),
+                        result.getThrowable(),
+                        screenShot,
+                        ApiContext.hasExchange() ? ApiContext.buildReportDetails() : null
+                ),
+                screenShot != null ? screenShot.getAbsolutePath() : null
+        );
         for (String tag : result.getMethod().getGroups()) {
             if (tag.equalsIgnoreCase("haltWhenFail")) {
                 halt = true;
@@ -110,11 +155,21 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
                 methodTest.skip(result.getThrowable());
             }
         }
+
+        publishTestRailResult(
+                result,
+                TestRailManager.Blocked,
+                TestRailReportingSupport.buildSkippedComment(result.getName(), result.getThrowable()),
+                null
+        );
     }
 
     @Override
     public void onTestStart(ITestResult result) {
         ApiContext.clear();
+        TestRailContext.clearCurrentTestCaseId();
+        testCaseId = null;
+        syncRunIdFromContext(result.getTestContext());
         ExtentTest test = testMap.get(result.getTestContext().getName());
         ExtentTest methodTest = test.createNode(result.getMethod().getMethodName());
         testMap.put(result.getMethod().getMethodName(), methodTest);
@@ -148,13 +203,7 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
                 attachBrowserContext(methodTest);
             }
         }
-        if (PipelineConfig.testRailReport) {
-            try {
-                testRail.setResult(testRunId, testCaseId, TestRailManager.PASSED, null);
-            } catch (IOException | APIException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        publishTestRailResult(result, TestRailManager.PASSED, "Test passed", null);
     }
 
     @Override
@@ -174,7 +223,14 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
 
     @Override
     public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
-        // No action needed after invocation
+        if (!method.isTestMethod()) {
+            return;
+        }
+
+        rememberLegacyRunId(testResult.getTestContext());
+        if (hasText(testCaseId)) {
+            TestRailContext.setCurrentTestCaseId(testCaseId);
+        }
     }
 
     private void attachBrowserContext(ExtentTest methodTest) {
@@ -197,6 +253,121 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
 
     private boolean isTearDownLifecycle(ITestResult result) {
         return result.getMethod().getTestClass().getName().equals("base.TearDownTest");
+    }
+
+    private void publishTestRailResult(ITestResult result, int status, String comment, String attachmentPath) {
+        if (!reportingEnabledSupplier.getAsBoolean()) {
+            return;
+        }
+
+        String resolvedTestCaseId = resolveTestCaseId(result);
+        if (!hasText(resolvedTestCaseId)) {
+            System.out.printf(
+                    "Skipping TestRail update because testCaseId is missing. caseId=%s%n",
+                    resolvedTestCaseId
+            );
+            return;
+        }
+
+        String resolvedTestRunId = null;
+        try {
+            resolvedTestRunId = resolveOrCreateTestRunId(result);
+            if (!TestRailReportingSupport.shouldPublish(true, resolvedTestRunId, resolvedTestCaseId)) {
+                System.out.printf(
+                        "Skipping TestRail update because testRunId or testCaseId is missing. runId=%s caseId=%s%n",
+                        resolvedTestRunId,
+                        resolvedTestCaseId
+                );
+                return;
+            }
+            testRailPublisher.publish(resolvedTestRunId, resolvedTestCaseId, status, comment, attachmentPath);
+        } catch (IOException | APIException | RuntimeException exception) {
+            System.out.printf(
+                    "TestRail publish failed for runId=%s caseId=%s status=%s: %s%n",
+                    resolvedTestRunId,
+                    resolvedTestCaseId,
+                    status,
+                    exception.getMessage()
+            );
+        }
+    }
+
+    private String resolveTestCaseId(ITestResult result) {
+        if (result == null || result.getMethod() == null || result.getMethod().getConstructorOrMethod() == null) {
+            return TestRailReportingSupport.resolveTestCaseId(null, TestRailContext.getCurrentTestCaseId());
+        }
+
+        java.lang.reflect.Method method = result.getMethod().getConstructorOrMethod().getMethod();
+        return TestRailReportingSupport.resolveTestCaseId(method, TestRailContext.getCurrentTestCaseId());
+    }
+
+    private String resolveOrCreateTestRunId(ITestResult result) throws IOException, APIException {
+        syncRunIdFromContext(result != null ? result.getTestContext() : null);
+        String currentRunId = TestRailContext.getCurrentTestRunId();
+        if (currentRunId != null && !currentRunId.isBlank()) {
+            return currentRunId;
+        }
+
+        ITestContext context = result != null ? result.getTestContext() : null;
+        rememberLegacyRunId(context);
+        currentRunId = TestRailContext.getCurrentTestRunId();
+        if (currentRunId != null && !currentRunId.isBlank()) {
+            return currentRunId;
+        }
+
+        if (context == null) {
+            return null;
+        }
+
+        String createdRunId = testRailRunCreator.createRun();
+        storeRunId(context, createdRunId);
+        return createdRunId;
+    }
+
+    private void syncRunIdFromContext(ITestContext context) {
+        if (context == null) {
+            return;
+        }
+
+        Object storedRunId = context.getAttribute(TESTRAIL_RUN_ID_ATTRIBUTE);
+        if (storedRunId instanceof String runId && hasText(runId)) {
+            TestRailContext.setCurrentTestRunId(runId);
+        }
+    }
+
+    private void rememberLegacyRunId(ITestContext context) {
+        if (hasText(TestRailContext.getCurrentTestRunId())) {
+            return;
+        }
+
+        if (context != null) {
+            Object storedRunId = context.getAttribute(TESTRAIL_RUN_ID_ATTRIBUTE);
+            if (storedRunId instanceof String runId && hasText(runId)) {
+                TestRailContext.setCurrentTestRunId(runId);
+                return;
+            }
+        }
+
+        if (hasText(testRunId)) {
+            storeRunId(context, testRunId);
+        }
+    }
+
+    private void storeRunId(ITestContext context, String runId) {
+        if (!hasText(runId)) {
+            return;
+        }
+
+        String normalizedRunId = runId.trim();
+        TestRailContext.setCurrentTestRunId(normalizedRunId);
+        testRunId = normalizedRunId;
+        if (context != null) {
+            context.setAttribute(TESTRAIL_RUN_ID_ATTRIBUTE, normalizedRunId);
+        }
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 
 }

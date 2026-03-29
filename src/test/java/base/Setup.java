@@ -3,8 +3,8 @@ package base;
 import configs.BrowserOptions;
 import configs.pipeline.PipelineConfig;
 import configs.pipeline.RemoteExecutionConfig;
-import configs.testRail.APIException;
-import configs.testRail.TestRailManager;
+import configs.testRail.TestRailCaseId;
+import configs.testRail.TestRailContext;
 import configs.testdata.TestData;
 import configs.testdata.TestDataFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -34,19 +34,18 @@ import java.time.Duration;
 
 
 public class Setup {
-
     public static WebDriver driver;
     public static TestData testData;
     public static WebDriverWait wait;
+    @Deprecated
     public static String testCaseId;
-    public static final TestRailManager testRail = new TestRailManager();
     private static String uiInitializationBlockerMessage;
 
 
     @Test(priority = 1)
+    @TestRailCaseId("9379")
     @Parameters({"language", "branch", "browser"})
     public void setUpLocalDriver(String language, String branch, String browser) throws Exception {
-        testCaseId = "9379";
         resetSharedState();
         cleanScreenshotsDirectory();
         testData = TestDataFactory.getTestData(branch, language);
@@ -55,21 +54,21 @@ public class Setup {
     }
 
     @Test(priority = 2, groups = {"haltWhenFail"})
+    @TestRailCaseId("9380")
     @Parameters({"language"})
     public void openWebsite(String language){
         if (driver == null || testData == null) {
             throw new SkipException("Skipping openWebsite because setup did not initialize driver and test data");
         }
-        testCaseId = "9380";
         driver.get(testData.getBaseUrl(language).asText());
         Go.setMainTab();
         configureBrowserWindow();
     }
 
     @Test(priority = 1)
+    @TestRailCaseId("9381")
     @Parameters({"language", "branch", "browser"})
     public void setUpRemoteDriver(String language, String branch, String browser) throws Exception {
-        testCaseId = "9381";
         resetSharedState();
         cleanScreenshotsDirectory();
         testData = TestDataFactory.getTestData(branch, language);
@@ -78,7 +77,7 @@ public class Setup {
     }
 
 
-    private void initializePreferredDriver(String browser, String url) throws IOException, APIException {
+    private void initializePreferredDriver(String browser, String url) throws IOException {
         RemoteExecutionConfig remoteExecutionConfig = RemoteExecutionConfig.fromEnvironment();
 
         if (remoteExecutionConfig.isRemoteOnly()) {
@@ -97,11 +96,7 @@ public class Setup {
         }
     }
 
-    private void initializeRemoteDriver(String browser, RemoteExecutionConfig remoteExecutionConfig) throws IOException, APIException {
-        if (PipelineConfig.testRailReport) {
-            TestRailManager testRailManager = new TestRailManager();
-            Go.testRunId = testRailManager.createTestRun("Sentra", 2);
-        }
+    private void initializeRemoteDriver(String browser, RemoteExecutionConfig remoteExecutionConfig) throws IOException {
         ensureRemoteExecutionConfigured(remoteExecutionConfig);
         BrowserOptions configuredBrowserOptions = new BrowserOptions();
         AbstractDriverOptions<?> browserOptions = null;
@@ -132,11 +127,7 @@ public class Setup {
         configureHelperComponents();
     }
 
-    private void initializeLocalDriver(String browser, String url) throws APIException, IOException {
-        if (PipelineConfig.testRailReport) {
-            TestRailManager testRailManager = new TestRailManager();
-            Go.testRunId = testRailManager.createTestRun("Sentra", 2);
-        }
+    private void initializeLocalDriver(String browser, String url) throws IOException {
         if (browser.equalsIgnoreCase("chrome")) {
             initializeManagedLocalDriver(
                     "Chrome",
@@ -210,6 +201,9 @@ public class Setup {
         wait = null;
         testData = null;
         uiInitializationBlockerMessage = null;
+        TestRailContext.clearAll();
+        testCaseId = null;
+        Go.testRunId = null;
     }
 
     private void validateLocalExecutionEnvironment(String browserName) {

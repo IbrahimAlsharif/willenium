@@ -135,6 +135,7 @@ Requirements:
 - Node.js and npm must be installed locally so the client can launch the `selenium` server through `npx`.
 - Atlassian workflows require an Atlassian Cloud site with Jira access and an MCP-aware client authorized to use Atlassian Rovo MCP.
 - TestRail workflows require `uvx` and valid TestRail credentials configured in the MCP server environment.
+- The built-in Java TestRail reporting path reads shared defaults from `src/test/resources/testrail.properties`, optional local overrides from `src/test/resources/testrail.local.properties`, and also accepts matching system property or environment variable overrides.
 - The first Atlassian Rovo MCP connection may require site or org admin approval depending on your Atlassian setup.
 - Some MCP clients may still ask for a one-time workspace trust or server approval when the repo is opened.
 
@@ -391,6 +392,7 @@ If Chrome or Firefox fails before the browser opens with a message about `localh
 - Common toggles include `WILLENIUM_BROWSER_HEADLESS`, `WILLENIUM_BROWSER_INCOGNITO`, `WILLENIUM_BROWSER_MAXIMIZE`, `WILLENIUM_BROWSER_WINDOW_SIZE`, and `WILLENIUM_PAGE_LOAD_STRATEGY`.
 - UI synchronization and interaction safety are tunable with `WILLENIUM_UI_WAIT_TIMEOUT_SECONDS`, `WILLENIUM_UI_INTERACTION_RETRY_ATTEMPTS`, `WILLENIUM_UI_INTERACTION_RETRY_DELAY_MILLIS`, `WILLENIUM_UI_VERIFY_TYPED_TEXT`, and `WILLENIUM_UI_HIGHLIGHT_INTERACTIONS`.
 - TestRail reporting is controlled by `WILLENIUM_TESTRAIL_REPORT`.
+- TestRail runtime config keys are `testrail.baseUrl`, `testrail.apiUrl`, `testrail.username`, `testrail.password`, `testrail.projectName`, `testrail.projectId`, `testrail.connectTimeoutMillis`, and `testrail.readTimeoutMillis`.
 - Extent report auto-open is controlled by `WILLENIUM_AUTO_OPEN_EXTENT_REPORT`. Local runs try to open `extent-reports/extent-report.html`; when auto-open is unavailable, Willenium prints an exact command you can run to open it.
 - Browser-specific capabilities are set in `src/test/java/configs/BrowserOptions.java`.
 - Screenshots and page-source artifacts are cleaned and recreated in the `screenshots/` directory at setup time.

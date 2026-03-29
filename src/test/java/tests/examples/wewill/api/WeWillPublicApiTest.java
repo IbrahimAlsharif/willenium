@@ -1,18 +1,18 @@
 package tests.examples.wewill.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import configs.testRail.TestRailCaseId;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static base.ApiSetup.testData;
-import static base.Setup.testCaseId;
 
 public class WeWillPublicApiTest {
 
     @Test(priority = 1)
+    @TestRailCaseId("API-0001")
     public void verifyExamplePostContract() {
-        testCaseId = "API-0001";
         JsonNode getOnePostData = testData.getApiData().get("posts").get("getOne");
         Response response = WeWillPublicApi.getExamplePost();
 
@@ -38,8 +38,8 @@ public class WeWillPublicApiTest {
     }
 
     @Test(priority = 2)
+    @TestRailCaseId("API-0002")
     public void verifyExamplePostCreationContract() {
-        testCaseId = "API-0002";
         JsonNode createPostData = testData.getApiData().get("posts").get("createOne");
         Response response = WeWillPublicApi.createExamplePost();
 

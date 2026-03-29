@@ -1,0 +1,9 @@
+# Copy this file to src/test/resources/testrail.local.properties
+# and fill in your real values locally. This file should not be committed.
+
+testrail.baseUrl=https://your-instance.testrail.io/
+testrail.username=your-email@example.com
+testrail.password=your-api-key
+testrail.projectId=1
+# Optional: map API setup itself to a dedicated TestRail case
+testrail.apiSetupCaseId=

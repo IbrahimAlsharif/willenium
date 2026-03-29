@@ -42,3 +42,4 @@ build/
 ### Node ###
 node_modules/
 *.tgz
+src/test/resources/testrail.local.properties

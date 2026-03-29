@@ -3,6 +3,8 @@ package base;
 import com.fasterxml.jackson.databind.JsonNode;
 import configs.api.ApiContext;
 import configs.api.OpenApiContract;
+import configs.testRail.TestRailContext;
+import configs.testRail.TestRailConfig;
 import configs.testdata.TestData;
 import configs.testdata.TestDataFactory;
 import io.restassured.builder.RequestSpecBuilder;
@@ -16,6 +18,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class ApiSetup {
+    private static final TestRailConfig TEST_RAIL_CONFIG = TestRailConfig.getInstance();
     public static TestData testData;
     public static RequestSpecification apiSpecification;
 
@@ -23,7 +26,17 @@ public class ApiSetup {
     @Parameters({"language", "branch"})
     public void setUpApiClient(String language, String branch) {
         ApiContext.clear();
+        TestRailContext.clearCurrentTestRunId();
+        TestRailContext.clearCurrentTestCaseId();
+        Go.testRunId = null;
         Setup.testCaseId = null;
+
+        String apiSetupCaseId = TEST_RAIL_CONFIG.getApiSetupCaseId();
+        if (!apiSetupCaseId.isBlank()) {
+            TestRailContext.setCurrentTestCaseId(apiSetupCaseId);
+            Setup.testCaseId = apiSetupCaseId;
+        }
+
         testData = TestDataFactory.getTestData(branch, language);
 
         JsonNode apiData = testData.getApiData();

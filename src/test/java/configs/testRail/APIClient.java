@@ -23,12 +23,16 @@ import java.util.Base64;
 
 public class APIClient {
     private final String m_url;
+    private final int connectTimeoutMillis;
+    private final int readTimeoutMillis;
     private String userName;
     private String password;
 
-    public APIClient(@NotNull String base_url, String testrail_api_url, String userName, String password) {
+    public APIClient(@NotNull String base_url, String testrail_api_url, String userName, String password, int connectTimeoutMillis, int readTimeoutMillis) {
         this.userName = userName;
         this.password = password;
+        this.connectTimeoutMillis = connectTimeoutMillis;
+        this.readTimeoutMillis = readTimeoutMillis;
         if (!base_url.endsWith("/")) {
             base_url += "/";
         }
@@ -36,10 +40,20 @@ public class APIClient {
     }
 
     public APIClient(String base_url) {
+        this.connectTimeoutMillis = 10000;
+        this.readTimeoutMillis = 30000;
         if (!base_url.endsWith("/")) {
             base_url += "/";
         }
         this.m_url = base_url;
+    }
+
+    int getConfiguredConnectTimeoutMillis() {
+        return connectTimeoutMillis;
+    }
+
+    int getConfiguredReadTimeoutMillis() {
+        return readTimeoutMillis;
     }
 
     public Object sendGet(String uri, String data)
@@ -68,6 +82,8 @@ public class APIClient {
         // Create the connection object and set the required HTTP method
         // (GET/POST) and headers (content type and basic auth).
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(connectTimeoutMillis);
+        conn.setReadTimeout(readTimeoutMillis);
 //        conn.setRequestProperty("x-apikey", "XTA11ZAByeVKMV1Jf9YP-rTUYqDKxZymbhToKIq4E");
         String auth = getAuthorization(userName, password);
         conn.addRequestProperty("Authorization", "Basic " + auth);
