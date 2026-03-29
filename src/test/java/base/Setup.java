@@ -63,7 +63,7 @@ public class Setup {
         testCaseId = "9380";
         driver.get(testData.getBaseUrl(language).asText());
         Go.setMainTab();
-        driver.manage().window().maximize();
+        configureBrowserWindow();
     }
 
     @Test(priority = 1)
@@ -103,22 +103,23 @@ public class Setup {
             Go.testRunId = testRailManager.createTestRun("Sentra", 2);
         }
         ensureRemoteExecutionConfigured(remoteExecutionConfig);
+        BrowserOptions configuredBrowserOptions = new BrowserOptions();
         AbstractDriverOptions<?> browserOptions = null;
         String platform = remoteExecutionConfig.getRemotePlatform();
         String browserVersion = remoteExecutionConfig.getRemoteBrowserVersion();
         if (browser.equalsIgnoreCase("chrome")) {
-            ChromeOptions chromeOptions = new ChromeOptions();
+            ChromeOptions chromeOptions = configuredBrowserOptions.getChromeOptions(PipelineConfig.isBrowserHeadless, PipelineConfig.isBrowserIncognito);
             applyRemoteMetadata(chromeOptions, platform, browserVersion);
             if (!browserVersion.isBlank()) {
                 chromeOptions.setBrowserVersion(browserVersion);
             }
             browserOptions = chromeOptions;
         } else if (browser.equalsIgnoreCase("firefox")) {
-            FirefoxOptions firefoxOptions = new FirefoxOptions();
+            FirefoxOptions firefoxOptions = configuredBrowserOptions.getFirefoxOptions(PipelineConfig.isBrowserHeadless, PipelineConfig.isBrowserIncognito);
             applyRemoteMetadata(firefoxOptions, platform, browserVersion);
             browserOptions = firefoxOptions;
         } else if (browser.equalsIgnoreCase("safari")) {
-            SafariOptions safariOptions = new SafariOptions();
+            SafariOptions safariOptions = configuredBrowserOptions.getSafariOptions(PipelineConfig.isBrowserHeadless, PipelineConfig.isBrowserIncognito);
             applyRemoteMetadata(safariOptions, platform, browserVersion);
             browserOptions = safariOptions;
         } else {
@@ -140,7 +141,7 @@ public class Setup {
             initializeManagedLocalDriver(
                     "Chrome",
                     () -> WebDriverManager.chromedriver()
-                            .capabilities(new BrowserOptions().getChromeOptions(PipelineConfig.isBrowserHeadless, true))
+                            .capabilities(new BrowserOptions().getChromeOptions(PipelineConfig.isBrowserHeadless, PipelineConfig.isBrowserIncognito))
                             .create()
             );
         } else if (browser.equalsIgnoreCase("safari")) {
@@ -149,7 +150,7 @@ public class Setup {
             initializeManagedLocalDriver(
                     "Firefox",
                     () -> WebDriverManager.firefoxdriver()
-                            .capabilities(new BrowserOptions().getFirefoxOptions(PipelineConfig.isBrowserHeadless, true))
+                            .capabilities(new BrowserOptions().getFirefoxOptions(PipelineConfig.isBrowserHeadless, PipelineConfig.isBrowserIncognito))
                             .create()
             );
         }
@@ -169,11 +170,39 @@ public class Setup {
         }
     }
 
+    public static boolean hasActiveUiSession() {
+        if (driver == null) {
+            return false;
+        }
+
+        try {
+            if (driver instanceof RemoteWebDriver remoteWebDriver && remoteWebDriver.getSessionId() == null) {
+                return false;
+            }
+            driver.getWindowHandle();
+            return true;
+        } catch (Exception exception) {
+            return false;
+        }
+    }
+
     private void configureHelperComponents() {
-        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(PipelineConfig.uiWaitTimeoutSeconds));
         JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driver;
         Go.initialize(driver, javascriptExecutor, wait);
         Finder.initialize(driver, wait);
+    }
+
+    private void configureBrowserWindow() {
+        try {
+            if (PipelineConfig.maximizeBrowserWindow && !PipelineConfig.isBrowserHeadless) {
+                driver.manage().window().maximize();
+            } else {
+                driver.manage().window().setSize(PipelineConfig.getBrowserWindowDimension());
+            }
+        } catch (Exception exception) {
+            System.out.println("Unable to apply browser window configuration: " + exception.getMessage());
+        }
     }
 
     private void resetSharedState() {

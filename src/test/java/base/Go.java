@@ -1,6 +1,7 @@
 package base;
 
 import com.github.javafaker.Faker;
+import configs.pipeline.PipelineConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -31,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -43,6 +45,7 @@ import static base.Setup.driver;
 
 
 public class Go {
+    private static final String ARTIFACTS_FOLDER = "screenshots/";
     public static Faker faker = new Faker();
     public static String testRunId;
     public static String location;
@@ -89,28 +92,11 @@ public class Go {
     }
 
     public static void click(WebElement element) {
-        boolean clicked = false;
-        scrollDownToElement(element);
-        try { // 1. Try native click
-            element.click();
-            clicked = true;
-        } catch (Exception e1) {
-            try { // 2. Try JS click
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
-                clicked = true;
-            } catch (JavascriptException e2) {
-                try { // 3. Try Actions click
-                    new Actions(driver).moveToElement(element).click().perform();
-                    clicked = true;
-                } catch (Exception e3) {
-                    //
-                }
-            }
-        }
+        click(element, "element");
+    }
 
-        if (!clicked) {
-            throw new RuntimeException("Failed to click on element");
-        }
+    public static void click(By locator) {
+        click(Finder.getClickable(locator), locator.toString());
     }
 
 
@@ -132,7 +118,7 @@ public class Go {
      */
     public static void moveToElement(WebElement element) {
         {
-            new Actions(webDriver).moveToElement(element);
+            new Actions(webDriver).moveToElement(element).perform();
         }
     }
 
@@ -387,12 +373,15 @@ public class Go {
      * @param element the target element
      */
     public static void highlightElement(WebElement element) {
-        for (int i = 0; i < 4; i++) {
-            javascriptExecutor.executeScript("arguments[0].setAttribute('style', arguments[1]);",
-                    element, "color: yellow; border: 4px solid blue;");
-            javascriptExecutor.executeScript("arguments[0].setAttribute('style’' arguments[1]);",
-                    element, "");
+        if (!PipelineConfig.highlightInteractions) {
+            return;
         }
+
+        String originalStyle = element.getAttribute("style");
+        javascriptExecutor.executeScript("arguments[0].setAttribute('style', arguments[1]);",
+                element, "border: 3px solid #0d6efd; background-color: rgba(13, 110, 253, 0.08);");
+        javascriptExecutor.executeScript("arguments[0].setAttribute('style', arguments[1]);",
+                element, originalStyle == null ? "" : originalStyle);
     }
 
 
@@ -409,11 +398,7 @@ public class Go {
      * @param locator locator of the target element
      */
     public static void waitForElementToBePresentBy(By locator) {
-        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-        } catch (TimeoutException e) {
-            System.out.println(" Element is not located in DOM");
-        }
+        Finder.waitForElementToBePresentBy(locator);
     }
 
     /**
@@ -422,7 +407,7 @@ public class Go {
      * @param locator locator of the target element
      */
     public static void waitForElementToBeVisibleBy(By locator) throws TimeoutException {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        Finder.waitForElementToBeVisibleBy(locator);
     }
 
     /**
@@ -431,7 +416,7 @@ public class Go {
      * @param element locator of the target element
      */
     public static void waitForElementToBeInVisibleBy(WebElement element) throws TimeoutException {
-        wait.until(ExpectedConditions.invisibilityOf(element));
+        Finder.waitForElementToBeInVisibleBy(element);
     }
 
     /**
@@ -440,7 +425,7 @@ public class Go {
      * @param locator locator of the target element
      */
     public static void waitForElementToBeClickableBy(By locator) throws TimeoutException {
-        wait.until(ExpectedConditions.elementToBeClickable(locator));
+        Finder.waitForElementToBeClickableBy(locator);
     }
 
     /**
@@ -449,7 +434,7 @@ public class Go {
      * @param element locator of the target element
      */
     public static void waitForElementToBeClickable(WebElement element) throws TimeoutException {
-        wait.until(ExpectedConditions.elementToBeClickable(element));
+        Finder.waitForElementToBeClickable(element);
     }
 
     /**
@@ -472,73 +457,17 @@ public class Go {
      */
 
     public static void clickUntilVisibilityOfBy(@NotNull WebElement element, @NotNull By locatorToBeVisible) {
-        int counter = 1;
-        try {
-            element.click();
-            System.out.println("Tries =" + counter);
+        retryUntil("click-until-visible", () -> {
+            click(element);
             waitForElementToBeVisibleBy(locatorToBeVisible);
-        } catch (Exception exception) {
-            screenShot("click try " + counter++ + "@");
-            Actions action = new Actions(webDriver);
-            action.click(element).perform();
-            try {
-                System.out.println("Tries =" + counter);
-                waitForElementToBeVisibleBy(locatorToBeVisible);
-            } catch (Exception exception1) {
-                screenShot("click try " + counter++ + "@");
-                Go.javascriptExecutor("arguments[0].click();", element);
-                try {
-                    System.out.println("Tries =" + counter);
-                    waitForElementToBeVisibleBy(locatorToBeVisible);
-                } catch (Exception exception2) {
-                    screenShot("click try " + counter++ + "@");
-                    Go.javascriptExecutor("arguments[0].scrollIntoView(true);", element);
-                    Go.javascriptExecutor("arguments[0].click();", element);
-                    try {
-                        System.out.println("Tries =" + counter);
-                        waitForElementToBeVisibleBy(locatorToBeVisible);
-                    } catch (Exception exception3) {
-                        screenShot("click try " + counter + "@");
-                        Finder.getByXpath(Finder.getElementXPath(element), true).click();
-                    }
-                }
-            }
-        }
+        });
     }
 
     public static void clickUntilInvisibility(@NotNull WebElement element) {
-        int counter = 1;
-        try {
-            element.click();
-            System.out.println("Tries =" + counter);
+        retryUntil("click-until-invisible", () -> {
+            click(element);
             waitForElementToBeInVisibleBy(element);
-        } catch (Exception exception) {
-            screenShot("click try " + counter++ + "@");
-            Actions action = new Actions(webDriver);
-            action.click(element).perform();
-            try {
-                System.out.println("Tries =" + counter);
-                waitForElementToBeInVisibleBy(element);
-            } catch (Exception exception1) {
-                screenShot("click try " + counter++ + "@");
-                Go.javascriptExecutor("arguments[0].click();", element);
-                try {
-                    System.out.println("Tries =" + counter);
-                    waitForElementToBeInVisibleBy(element);
-                } catch (Exception exception2) {
-                    screenShot("click try " + counter++ + "@");
-                    Go.javascriptExecutor("arguments[0].scrollIntoView(true);", element);
-                    Go.javascriptExecutor("arguments[0].click();", element);
-                    try {
-                        System.out.println("Tries =" + counter);
-                        waitForElementToBeInVisibleBy(element);
-                    } catch (Exception exception3) {
-                        screenShot("click try " + counter + "@");
-                        Finder.getByXpath(Finder.getElementXPath(element), true).click();
-                    }
-                }
-            }
-        }
+        });
     }
 
     /**
@@ -594,7 +523,7 @@ public class Go {
 
     public static boolean clickIfVisible(By locator) {
         if (isVisible(locator)) {
-            webDriver.findElement(locator).click();
+            click(locator);
             return true;
         }
         return false;
@@ -616,8 +545,32 @@ public class Go {
      */
     public static void clearText(WebElement element) {
         element.clear();
-        element.sendKeys(Keys.CONTROL + "a");
+        element.sendKeys(Keys.chord(getSelectAllModifier(), "a"));
         element.sendKeys(Keys.DELETE);
+    }
+
+    public static void type(WebElement element, String text) {
+        prepareForInteraction(element);
+        clearText(element);
+        element.sendKeys(text);
+        if (PipelineConfig.verifyTypedText) {
+            verifyTypedText(element, text);
+        }
+    }
+
+    public static void type(By locator, String text) {
+        type(Finder.get(locator), text);
+    }
+
+    public static void clickAndWaitForVisible(By clickableLocator, By visibleLocator) {
+        click(clickableLocator);
+        waitForElementToBeVisibleBy(visibleLocator);
+    }
+
+    public static void clickAndWaitForUrlContains(By clickableLocator, String urlPart, int timeoutSeconds) {
+        click(clickableLocator);
+        new WebDriverWait(webDriver, Duration.ofSeconds(timeoutSeconds))
+                .until(ExpectedConditions.urlContains(urlPart));
     }
 
 
@@ -819,10 +772,8 @@ public class Go {
      * @return File
      */
     public static File getShotAsFile(String shotName) {
-        final String folder = "screenshots/";
         File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
-        String currentTime = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss-S").format(new Date(System.currentTimeMillis()));
-        File shot = new File(folder + shotName + currentTime + ".png");
+        File shot = createArtifactFile(shotName, ".png");
         try {
             FileUtils.copyFile(scrFile, shot);
         } catch (IOException ex) {
@@ -838,6 +789,37 @@ public class Go {
      */
     public static String getShotAsBase64() {
         return ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.BASE64);
+    }
+
+    public static String getPageTitle() {
+        return webDriver.getTitle();
+    }
+
+    public static File getPageSourceAsFile(String artifactName) {
+        File pageSourceFile = createArtifactFile(artifactName + "-page-source", ".html");
+        try {
+            FileUtils.writeStringToFile(pageSourceFile, webDriver.getPageSource(), StandardCharsets.UTF_8);
+        } catch (IOException exception) {
+            throw new RuntimeException("Unable to save page source", exception);
+        }
+        return pageSourceFile;
+    }
+
+    public static String getPageSourceSnippet() {
+        String pageSource = webDriver.getPageSource();
+        int maxLength = Math.max(200, PipelineConfig.pageSourceSnippetLength);
+        if (pageSource.length() <= maxLength) {
+            return pageSource;
+        }
+        return pageSource.substring(0, maxLength) + "\n... page source truncated ...";
+    }
+
+    public static String describeFocusedElement() {
+        try {
+            return describeElement(getFocusedElement());
+        } catch (Exception exception) {
+            return "Focused element unavailable: " + exception.getMessage();
+        }
     }
 
     // Tabs Manager
@@ -1096,6 +1078,141 @@ public class Go {
 
     public static Dimension getWindowDimension() {
         return webDriver.manage().window().getSize();
+    }
+
+    private static void click(WebElement element, String interactionTarget) {
+        RuntimeException lastFailure = null;
+        int attempts = Math.max(1, PipelineConfig.uiInteractionRetryAttempts);
+        for (int attempt = 1; attempt <= attempts; attempt++) {
+            try {
+                prepareForInteraction(element);
+                if (tryNativeClick(element) || tryActionsClick(element) || tryJavaScriptClick(element)) {
+                    return;
+                }
+                throw new RuntimeException("No click strategy succeeded");
+            } catch (RuntimeException exception) {
+                lastFailure = new RuntimeException(
+                        String.format("Attempt %d/%d failed while clicking %s. %s",
+                                attempt, attempts, interactionTarget, describeElement(element)),
+                        exception
+                );
+                if (attempt < attempts) {
+                    pauseBetweenInteractionAttempts();
+                }
+            }
+        }
+        throw new RuntimeException("Failed to click " + interactionTarget + " after " + attempts + " attempts. "
+                + describeElement(element), lastFailure);
+    }
+
+    private static void prepareForInteraction(WebElement element) {
+        scrollDownToElement(element);
+        waitForElementToBeClickable(element);
+        highlightElement(element);
+    }
+
+    private static boolean tryNativeClick(WebElement element) {
+        try {
+            element.click();
+            return true;
+        } catch (WebDriverException exception) {
+            return false;
+        }
+    }
+
+    private static boolean tryActionsClick(WebElement element) {
+        try {
+            new Actions(driver).moveToElement(element).click().perform();
+            return true;
+        } catch (WebDriverException exception) {
+            return false;
+        }
+    }
+
+    private static boolean tryJavaScriptClick(WebElement element) {
+        try {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+            return true;
+        } catch (JavascriptException | StaleElementReferenceException exception) {
+            return false;
+        }
+    }
+
+    private static void retryUntil(String actionName, Runnable action) {
+        RuntimeException lastFailure = null;
+        int attempts = Math.max(1, PipelineConfig.uiInteractionRetryAttempts);
+        for (int attempt = 1; attempt <= attempts; attempt++) {
+            try {
+                action.run();
+                return;
+            } catch (RuntimeException exception) {
+                screenShot(actionName + "-attempt-" + attempt);
+                lastFailure = new RuntimeException(
+                        String.format("%s failed on attempt %d/%d", actionName, attempt, attempts),
+                        exception
+                );
+                if (attempt < attempts) {
+                    pauseBetweenInteractionAttempts();
+                }
+            }
+        }
+        throw new RuntimeException(actionName + " failed after " + attempts + " attempts", lastFailure);
+    }
+
+    private static void verifyTypedText(WebElement element, String expectedValue) {
+        String actualValue = element.getAttribute("value");
+        if (actualValue == null || actualValue.isBlank()) {
+            actualValue = element.getText();
+        }
+        if (!expectedValue.equals(actualValue)) {
+            throw new IllegalStateException("Typed text verification failed. Expected [" + expectedValue
+                    + "] but found [" + actualValue + "]");
+        }
+    }
+
+    private static void pauseBetweenInteractionAttempts() {
+        try {
+            Thread.sleep(PipelineConfig.uiInteractionRetryDelayMillis);
+        } catch (InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Interaction retry wait interrupted", exception);
+        }
+    }
+
+    private static Keys getSelectAllModifier() {
+        String osName = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+        return osName.contains("mac") ? Keys.COMMAND : Keys.CONTROL;
+    }
+
+    private static File createArtifactFile(String artifactName, String extension) {
+        File folder = new File(ARTIFACTS_FOLDER);
+        if (!folder.exists() && !folder.mkdirs()) {
+            throw new RuntimeException("Unable to create artifact directory at " + folder.getAbsolutePath());
+        }
+        String currentTime = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss-S").format(new Date(System.currentTimeMillis()));
+        String safeArtifactName = artifactName.replaceAll("[^a-zA-Z0-9._-]", "_");
+        return new File(folder, safeArtifactName + currentTime + extension);
+    }
+
+    private static String describeElement(WebElement element) {
+        try {
+            String tagName = element.getTagName();
+            String id = element.getAttribute("id");
+            String classes = element.getAttribute("class");
+            String text = element.getText();
+            String trimmedText = text == null ? "" : text.strip();
+            if (trimmedText.length() > 80) {
+                trimmedText = trimmedText.substring(0, 80) + "...";
+            }
+            return String.format("Element[tag=%s, id=%s, class=%s, text=%s]",
+                    tagName, valueOrDash(id), valueOrDash(classes), valueOrDash(trimmedText));
+        } catch (Exception exception) {
+            return "Element description unavailable: " + exception.getMessage();
+        }
+    }
+
+    private static String valueOrDash(String value) {
+        return value == null || value.isBlank() ? "-" : value;
     }
 
     public static void waitForSomeSeconds(int seconds) throws InterruptedException {

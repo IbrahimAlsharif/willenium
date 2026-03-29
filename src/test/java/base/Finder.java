@@ -1,5 +1,6 @@
 package base;
 
+import configs.pipeline.PipelineConfig;
 import io.appium.java_client.MobileBy;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -42,11 +43,8 @@ public class Finder {
      * @param locator locator of the target element
      */
     public static void waitForElementToBePresentBy(By locator) {
-        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-        } catch (TimeoutException e) {
-            System.out.println(" Element is not located in DOM");
-        }
+        getWait().ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
     /**
@@ -55,7 +53,8 @@ public class Finder {
      * @param locator locator of the target element
      */
     public static void waitForElementToBeVisibleBy(By locator) throws TimeoutException {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        getWait().ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     public static WebElement getFirstDisplayedByXpath(String xpath) {
@@ -79,7 +78,8 @@ public class Finder {
      * @param element locator of the target element
      */
     public static void waitForElementToBeInVisibleBy(WebElement element) throws TimeoutException {
-        wait.until(ExpectedConditions.invisibilityOf(element));
+        getWait().ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.invisibilityOf(element));
     }
 
     /**
@@ -88,7 +88,8 @@ public class Finder {
      * @param locator locator of the target element
      */
     public static void waitForElementToBeClickableBy(By locator) throws TimeoutException {
-        wait.until(ExpectedConditions.elementToBeClickable(locator));
+        getWait().ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.elementToBeClickable(locator));
     }
 
     /**
@@ -97,7 +98,25 @@ public class Finder {
      * @param element locator of the target element
      */
     public static void waitForElementToBeClickable(WebElement element) throws TimeoutException {
-        wait.until(ExpectedConditions.elementToBeClickable(element));
+        getWait().ignoring(StaleElementReferenceException.class)
+                .until(ExpectedConditions.elementToBeClickable(element));
+    }
+
+    public static WebElement get(By locator) {
+        return find(locator, false);
+    }
+
+    public static WebElement getClickable(By locator) {
+        return find(locator, true);
+    }
+
+    public static WebElement find(By locator, boolean isClickable) {
+        return getWait()
+                .ignoring(StaleElementReferenceException.class)
+                .ignoring(NoSuchElementException.class)
+                .until(driver -> isClickable
+                        ? ExpectedConditions.elementToBeClickable(locator).apply(driver)
+                        : ExpectedConditions.visibilityOfElementLocated(locator).apply(driver));
     }
 
     /**
@@ -138,11 +157,7 @@ public class Finder {
      */
     public static WebElement getByXpath(String xpath, @Optional boolean isClickable) {
         By byXpath = By.xpath(xpath);
-        waitForElementToBeVisibleBy(byXpath);
-        if (Boolean.TRUE.equals(isClickable)) {
-            waitForElementToBeClickableBy(byXpath);
-        }
-        return webDriver.findElement(byXpath);
+        return find(byXpath, Boolean.TRUE.equals(isClickable));
     }
 
     /**
@@ -155,11 +170,7 @@ public class Finder {
     public static WebElement getByClassWithIndex(String tagName, String className, int index, @Optional boolean isClickable) {
         String xpath = String.format("(//%s[@class='%s'])[%d]", tagName, className, index);
         By byXpath = By.xpath(xpath);
-
-        if (Boolean.TRUE.equals(isClickable)) {
-            waitForElementToBeClickableBy(byXpath);
-        }
-        return webDriver.findElement(byXpath);
+        return find(byXpath, Boolean.TRUE.equals(isClickable));
     }
 
     /**
@@ -172,12 +183,7 @@ public class Finder {
     public static WebElement getByNameWithIndex(String tagName, String Name, int index, @Optional boolean isClickable) {
         String xpath = String.format("(//%s[@name='%s'])[%d]", tagName, Name, index);
         By byXpath = By.xpath(xpath);
-
-        if (Boolean.TRUE.equals(isClickable)) {
-            waitForElementToBeClickableBy(byXpath);
-        }
-
-        return webDriver.findElement(byXpath);
+        return find(byXpath, Boolean.TRUE.equals(isClickable));
     }
 
     public static WebElement getByXpathInParent(String xpath, WebElement parent, @Optional boolean isClickable) {
@@ -271,11 +277,7 @@ public class Finder {
 
     public static WebElement getByName(String name, boolean isClickable) {
         By byXpath = By.name(name);
-        waitForElementToBeVisibleBy(byXpath);
-        if (isClickable) {
-            waitForElementToBeClickableBy(byXpath);
-        }
-        return webDriver.findElement(byXpath);
+        return find(byXpath, isClickable);
     }
 
     /**
@@ -289,11 +291,7 @@ public class Finder {
      */
     public static WebElement getById(String Id, boolean isClickable) {
         By byId = By.id(Id);
-        waitForElementToBeVisibleBy(byId);
-        if (isClickable) {
-            waitForElementToBeClickableBy(byId);
-        }
-        return webDriver.findElement(byId);
+        return find(byId, isClickable);
     }
 
     /**
@@ -308,11 +306,7 @@ public class Finder {
 
     public static WebElement getByClassName(String className, boolean isClickable) {
         By byClassName = By.className(className);
-        waitForElementToBeVisibleBy(byClassName);
-        if (isClickable) {
-            waitForElementToBeClickableBy(byClassName);
-        }
-        return webDriver.findElement(byClassName);
+        return find(byClassName, isClickable);
     }
 
     /**
@@ -326,11 +320,7 @@ public class Finder {
      */
     public static WebElement getByCssSelector(String cssSelector, boolean isClickable) {
         By byCssSelector = By.cssSelector(cssSelector);
-        waitForElementToBeVisibleBy(byCssSelector);
-        if (isClickable) {
-            waitForElementToBeClickableBy(byCssSelector);
-        }
-        return webDriver.findElement(byCssSelector);
+        return find(byCssSelector, isClickable);
     }
 
 
@@ -345,11 +335,7 @@ public class Finder {
      */
     public static WebElement getByAccessibilityId(String AccessibilityId, boolean isClickable) {
         By byAccessibilityId = MobileBy.AccessibilityId(AccessibilityId);
-        waitForElementToBeVisibleBy(byAccessibilityId);
-        if (isClickable) {
-            waitForElementToBeClickableBy(byAccessibilityId);
-        }
-        return webDriver.findElement(byAccessibilityId);
+        return find(byAccessibilityId, isClickable);
     }
 
     public static List<WebElement> getListByXpath(String xpath) {
@@ -361,11 +347,10 @@ public class Finder {
     public static WebElement visibleAndInteractiveInXSeconds(String xpath, @Optional boolean isClickable, int seconds) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
         By byXpath = By.xpath(xpath);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(byXpath));
-        if (isClickable) {
-            wait.until(ExpectedConditions.elementToBeClickable(byXpath));
-        }
-        return driver.findElement(byXpath);
+        return wait.ignoring(StaleElementReferenceException.class)
+                .until(browser -> isClickable
+                        ? ExpectedConditions.elementToBeClickable(byXpath).apply(browser)
+                        : ExpectedConditions.visibilityOfElementLocated(byXpath).apply(browser));
     }
 
 
@@ -381,11 +366,7 @@ public class Finder {
      */
     public static WebElement getByAboveElement(String targetTagName, WebElement element, boolean isClickable) {
         By relativeLocator = with(By.tagName(targetTagName)).below(element);
-        waitForElementToBeVisibleBy(relativeLocator);
-        if (isClickable) {
-            waitForElementToBeClickableBy(relativeLocator);
-        }
-        return webDriver.findElement(relativeLocator);
+        return find(relativeLocator, isClickable);
     }
 
     /**
@@ -400,11 +381,7 @@ public class Finder {
      */
     public static WebElement getByBelowElement(String targetTagName, WebElement referenceElement, boolean isClickable) {
         By relativeLocator = with(By.tagName(targetTagName)).above(referenceElement);
-        waitForElementToBeVisibleBy(relativeLocator);
-        if (isClickable) {
-            waitForElementToBeClickableBy(relativeLocator);
-        }
-        return webDriver.findElement(relativeLocator);
+        return find(relativeLocator, isClickable);
     }
 
 
@@ -420,11 +397,7 @@ public class Finder {
      */
     public static WebElement getByRightElement(String targetTagName, WebElement referenceElement, boolean isClickable) {
         By relativeLocator = with(By.tagName(targetTagName)).toLeftOf(referenceElement);
-        waitForElementToBeVisibleBy(relativeLocator);
-        if (isClickable) {
-            waitForElementToBeClickableBy(relativeLocator);
-        }
-        return webDriver.findElement(relativeLocator);
+        return find(relativeLocator, isClickable);
     }
 
     /**
@@ -439,11 +412,11 @@ public class Finder {
      */
     public static WebElement getByLeftElement(String targetTagName, WebElement referenceElement, boolean isClickable) {
         By relativeLocator = with(By.tagName(targetTagName)).toRightOf(referenceElement);
-        waitForElementToBeVisibleBy(relativeLocator);
-        if (isClickable) {
-            waitForElementToBeClickableBy(relativeLocator);
-        }
-        return webDriver.findElement(relativeLocator);
+        return find(relativeLocator, isClickable);
+    }
+
+    private static WebDriverWait getWait() {
+        return new WebDriverWait(webDriver, Duration.ofSeconds(PipelineConfig.uiWaitTimeoutSeconds));
     }
 
     public static int getRowNumberContainsText(String targetText) {

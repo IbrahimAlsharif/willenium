@@ -64,6 +64,7 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
 
         methodTest.log(Status.FAIL, "Test failed");
         methodTest.fail(result.getThrowable());
+        attachBrowserContext(methodTest);
 
         if (ApiContext.hasExchange()) {
             methodTest.info(ApiContext.buildReportDetails());
@@ -77,6 +78,9 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
                     methodTest.addScreenCaptureFromBase64String(screenshotBase64, "Screenshot");
                 }
                 screenShot = Go.getShotAsFile(result.getName());
+                File pageSource = Go.getPageSourceAsFile(result.getName());
+                methodTest.info("Page source saved to: " + pageSource.getAbsolutePath());
+                methodTest.info("Page source snippet:\n" + Go.getPageSourceSnippet());
             } catch (Exception screenshotError) {
                 methodTest.log(Status.WARNING, "Screenshot unavailable: " + screenshotError.getMessage());
             }
@@ -102,6 +106,9 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
         ExtentTest methodTest = testMap.get(result.getMethod().getMethodName());
         if (methodTest != null) {
             methodTest.log(Status.SKIP, "Test skipped");
+            if (result.getThrowable() != null) {
+                methodTest.skip(result.getThrowable());
+            }
         }
     }
 
@@ -137,6 +144,9 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
         ExtentTest methodTest = testMap.get(result.getMethod().getMethodName());
         if (methodTest != null) {
             methodTest.log(Status.PASS, "Test passed");
+            if (!isTearDownLifecycle(result)) {
+                attachBrowserContext(methodTest);
+            }
         }
         if (PipelineConfig.testRailReport) {
             try {
@@ -165,6 +175,28 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
     @Override
     public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
         // No action needed after invocation
+    }
+
+    private void attachBrowserContext(ExtentTest methodTest) {
+        if (!Setup.hasActiveUiSession()) {
+            String blockerMessage = getUiInitializationBlockerMessage();
+            if (blockerMessage != null) {
+                methodTest.info("UI initialization blocker: " + blockerMessage);
+            }
+            return;
+        }
+
+        try {
+            methodTest.info("Current URL: " + Setup.driver.getCurrentUrl());
+            methodTest.info("Page title: " + Go.getPageTitle());
+            methodTest.info("Focused element: " + Go.describeFocusedElement());
+        } catch (Exception exception) {
+            methodTest.log(Status.WARNING, "Browser context unavailable: " + exception.getMessage());
+        }
+    }
+
+    private boolean isTearDownLifecycle(ITestResult result) {
+        return result.getMethod().getTestClass().getName().equals("base.TearDownTest");
     }
 
 }

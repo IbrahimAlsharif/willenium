@@ -6,8 +6,10 @@ public class TearDownTest
 {
     @Test
     public void tearDown(){
-        if (Setup.driver != null) {
+        if (Setup.hasActiveUiSession()) {
             Setup.driver.quit();
         }
+        Setup.driver = null;
+        Setup.wait = null;
     }
     }

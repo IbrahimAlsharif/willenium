@@ -1,7 +1,7 @@
 package configs;
 
+import configs.pipeline.PipelineConfig;
 import configs.pipeline.RemoteExecutionConfig;
-import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.safari.SafariOptions;
@@ -12,6 +12,7 @@ public class BrowserOptions {
     public ChromeOptions getChromeOptions(boolean isHeadless, boolean isIncognito) {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled");
+        options.addArguments("--window-size=" + PipelineConfig.browserWindowSize);
 
         options.addArguments("--disable-web-security");
         // Disables web security features like the same-origin policy. Useful when testing websites that require cross-origin access.
@@ -19,7 +20,7 @@ public class BrowserOptions {
         options.addArguments("--allow-running-insecure-content");
         // Allows Chrome to load insecure (HTTP) content on secure (HTTPS) pages, often needed in testing environments.
 
-        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+        options.setPageLoadStrategy(PipelineConfig.browserPageLoadStrategy);
         // Sets the page load strategy to 'EAGER', meaning Selenium considers the page loaded once the initial HTML is loaded and parsed (before other resources like images or CSS load fully).
 
         if (isIncognito) {
@@ -62,7 +63,7 @@ public class BrowserOptions {
             options.addArguments("--headless");
             // Runs Chrome in headless mode (no GUI). Essential for running tests in environments like CI or when no display is available.
 
-            options.addArguments("window-size=1366x768");
+            options.addArguments("--window-size=" + PipelineConfig.browserWindowSize);
             // Sets the window size for the headless browser. Provides a consistent viewport for testing.
 
             options.addArguments("--disable-gpu");
@@ -92,7 +93,7 @@ public class BrowserOptions {
         SafariOptions options = new SafariOptions();
         options.setAutomaticInspection(false); // Disables automatic inspection of pages (useful for debugging)
         options.setAutomaticProfiling(false); // Disables automatic profiling (helps with performance)
-        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+        options.setPageLoadStrategy(PipelineConfig.browserPageLoadStrategy);
         return options;
     }
 
@@ -101,13 +102,15 @@ public class BrowserOptions {
         //Todo Add emulation device
         options.addPreference("security.fileuri.strict_origin_policy", false);
 
-        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+        options.setPageLoadStrategy(PipelineConfig.browserPageLoadStrategy);
         // Sets the page load strategy to 'EAGER', meaning Selenium considers the page loaded once the initial HTML is loaded and parsed (before other resources like images or CSS load fully).
 
         options.addArguments("--disable-blink-features=AutomationControlled");
+        options.addArguments("--width=" + PipelineConfig.getBrowserWindowDimension().width);
+        options.addArguments("--height=" + PipelineConfig.getBrowserWindowDimension().height);
 
         if (isIncognito) {
-            options.addArguments("--incognito");
+            options.addArguments("-private");
         }
         // Headless
         if (isHeadless) {
@@ -146,7 +149,7 @@ public class BrowserOptions {
             options.addArguments("--headless");
             // Runs Chrome in headless mode (no GUI). Essential for running tests in environments like CI or when no display is available.
 
-            options.addArguments("window-size=1366x768");
+            options.addArguments("--window-size=" + PipelineConfig.browserWindowSize);
             // Sets the window size for the headless browser. Provides a consistent viewport for testing.
 
             options.addArguments("--disable-gpu");
