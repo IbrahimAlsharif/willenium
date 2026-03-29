@@ -27,6 +27,7 @@ Produce framework-native Java Selenium TestNG and RestAssured TestNG changes for
 - Keep setup and driver lifecycle in `base.Setup` and `base.TearDownTest`.
 - Keep API setup in `base.ApiSetup` and shared request execution in `base.ApiClient`.
 - Reuse `base.Finder` and `base.Go` before writing raw Selenium code.
+- Prefer the higher-level `Finder`/`Go` helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before adding custom waits or retry logic.
 - Update JSON-backed test data instead of hardcoding user-facing strings when possible.
 - Register new coverage through TestNG XML suites under `flows/...`.
 - Add or regenerate a matching manually triggered GitHub Actions workflow for each new top-level flow/profile under `.github/workflows/`.
@@ -84,6 +85,7 @@ Do not commit personal credentials, cloud IDs, account IDs, or customer Jira sit
 - If a plan already exists, update that plan and the linked tests rather than creating duplicate plans or duplicate test classes.
 - When the first real project test is requested, create app-specific folders, flows, and JSON data; move or rename the examples first if that will keep the real project clearer.
 - Keep UI tests suite-driven; do not bypass setup/teardown assumptions.
+- Keep UI execution behavior property-driven through `configs.pipeline.PipelineConfig` instead of hardcoding browser or wait behavior in tests.
 - Keep API tests suite-driven; do not bypass `base.ApiSetup`.
 - When a new top-level flow/profile is added, also add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 - Keep expected text, URLs, and other assertion inputs dynamic in `src/test/java/configs/testdata/...` instead of hardcoding them in test methods.

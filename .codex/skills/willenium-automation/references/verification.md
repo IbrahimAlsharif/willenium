@@ -48,6 +48,7 @@ After verification, report:
 - what was run
 - what was not run
 - why the chosen validation depth was appropriate
+- notable evidence artifacts such as screenshots, page-source captures, or report paths when they materially help debugging
 - any residual risks or follow-up checks
 
 If the work is plan-only, say that code execution was not run yet.

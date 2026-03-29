@@ -6,24 +6,24 @@ Willenium is organized around suite-driven execution rather than isolated test c
 
 1. `base.Setup` loads test data, starts the browser, initializes shared helpers, and opens the app.
 2. Feature-level `*Test.java` classes run inside that initialized state.
-3. `base.TearDownTest` closes the driver.
+3. `base.TearDownTest` closes the driver and clears the shared UI session state.
 
 Because `Setup.driver`, `Setup.wait`, and `Setup.testData` are static shared state, UI test classes are expected to run through TestNG XML suites that include setup and teardown.
 
 ## Key Files
 
 - `src/test/java/base/Setup.java`
-  Starts local or remote browsers, creates `WebDriverWait`, and initializes `Go` and `Finder`.
+  Starts local or remote browsers, supports `auto|local|remote` execution behavior, creates `WebDriverWait`, and initializes `Go` and `Finder`.
 - `src/test/java/base/Finder.java`
-  Shared waits and element lookup helpers.
+  Shared waits and element lookup helpers, including higher-level `By`-based accessors such as `get(...)` and `getClickable(...)`.
 - `src/test/java/base/Go.java`
-  Shared browser interactions and utility actions.
+  Shared browser interactions and utility actions, including retry-aware click/type helpers and report artifacts such as screenshots and page-source snapshots.
 - `src/test/java/base/TearDownTest.java`
-  Closes the browser session.
+  Closes the browser session and clears shared driver references.
 - `src/test/java/configs/testdata/TestDataFactory.java`
   Maps `branch` + `language` to the correct JSON file.
 - `src/test/java/configs/pipeline/PipelineConfig.java`
-  Controls headless mode and TestRail reporting flags.
+  Controls browser/runtime behavior such as headless mode, incognito, window sizing, page-load strategy, UI wait/retry tuning, report auto-open, and TestRail flags through properties or environment variables.
 - `test-plans/TEMPLATE.md`
   Default template for plan-first coverage authoring.
 - `test-plans/README.md`
@@ -120,7 +120,8 @@ Real tests should:
 ## Practical Conventions
 
 - Reuse `Finder`/`Go` before adding raw Selenium code.
+- Prefer the higher-level `Finder`/`Go` helpers before writing custom waits or retry wrappers in feature helpers.
 - Favor explicit helper methods that encode intent, then assert in `*Test.java`.
 - Preserve suite-driven execution.
 - Keep new files in ASCII and match the repo's direct, utility-first style.
-- Be conservative with Java language features because `pom.xml` mixes Java 11 properties with a Java 17 compiler plugin; follow the existing code style unless a newer feature is clearly warranted.
+- Be conservative with Java language features even though the build is now aligned on Java 17; follow the existing code style unless a newer feature is clearly warranted.

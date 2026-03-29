@@ -79,10 +79,12 @@ Produce framework-native automation work for this repo:
 - When the target comes from Jira, keep the plan linked to the issue through metadata instead of burying the issue key in chat only.
 - For Jira bugs, analyze impact across existing plans, flows, helper classes, test classes, and JSON data before deciding whether new assets are warranted.
 - Reuse `base.Finder` and `base.Go` before introducing raw low-level Selenium code.
+- Prefer the higher-level `Finder`/`Go` methods such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before adding custom waits or retry logic.
 - Keep assertions in `*Test.java`.
 - Keep helper/action methods in the feature helper class.
 - For API work, keep assertions in `*ApiTest.java` and reusable request logic in `*Api.java`.
 - Prefer JSON test data over hardcoded user-facing strings, URLs, and inputs.
+- Keep UI execution and wait behavior property-driven through `configs.pipeline.PipelineConfig` instead of embedding browser/runtime flags in tests.
 - Prefer JSON test data over hardcoded endpoints, headers, payload fragments, and expected response values.
 - Keep test data dynamic: assertions should read expected values from the active JSON file.
 - If the product has English and Arabic variants, preserve separate language-specific test data and assertions that read from the selected language.

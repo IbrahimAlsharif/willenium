@@ -46,8 +46,10 @@ Keep:
 ## Generation Rules
 
 - reuse `Finder` and `Go` before adding raw Selenium code
+- prefer the higher-level shared helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before adding custom waits or retry blocks
 - keep assertions in `*Test.java`
 - keep helper classes focused on actions, locators, and small state checks
+- keep browser/runtime behavior property-driven through `configs.pipeline.PipelineConfig` instead of embedding wait or browser flags in feature code
 - put expected UI text, URLs, credentials, filters, and inputs in JSON instead of hardcoding them
 - preserve English/Arabic separation when the product supports both
 - update existing helper/test/flow assets when the plan says the behavior belongs there

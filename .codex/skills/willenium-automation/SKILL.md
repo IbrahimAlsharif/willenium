@@ -63,7 +63,9 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - For bug-driven work, prefer extending the smallest existing plan/flow/test that already owns the behavior before creating new artifacts.
 - Prefer existing helper patterns over introducing a new page-object architecture.
 - Reuse `Finder` and `Go` before adding direct `driver.findElement(...)` or custom wait code.
+- Prefer the higher-level shared helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before writing one-off synchronization or interaction fallback logic.
 - Keep assertions in `*Test.java`; helper classes should expose actions, locators, and small state checks.
+- Keep browser, wait, retry, and reporting toggles property-driven through `configs.pipeline.PipelineConfig` rather than hardcoding them in helper or test classes.
 - Put expected UI text, URLs, credentials, and other user-facing values in JSON test data rather than hardcoding them in assertions.
 - If the target app supports both English and Arabic, keep both language variants in test data and have assertions read from the active language file.
 - If only one language is known today, still preserve the JSON structure so the second language can be added cleanly later.
