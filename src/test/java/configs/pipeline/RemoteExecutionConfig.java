@@ -1,5 +1,7 @@
 package configs.pipeline;
 
+import java.util.Map;
+
 public final class RemoteExecutionConfig {
     private static final String DEFAULT_EXECUTION_MODE = "auto";
     private static final String DEFAULT_REMOTE_PLATFORM = "";
@@ -16,20 +18,24 @@ public final class RemoteExecutionConfig {
     private final String remoteProject;
     private final String remoteBuild;
 
-    private RemoteExecutionConfig() {
-        executionMode = readEnv("WILLENIUM_EXECUTION_MODE", DEFAULT_EXECUTION_MODE).toLowerCase();
-        remoteUrl = readEnv("WILLENIUM_REMOTE_URL", "");
-        remotePlatform = readEnv("WILLENIUM_REMOTE_PLATFORM", DEFAULT_REMOTE_PLATFORM);
-        remoteBrowserVersion = readEnv("WILLENIUM_REMOTE_BROWSER_VERSION", "");
-        remoteProvider = readEnv("WILLENIUM_REMOTE_PROVIDER", "");
-        remoteUsername = readEnv("WILLENIUM_REMOTE_USERNAME", "");
-        remoteAccessKey = readEnv("WILLENIUM_REMOTE_ACCESS_KEY", "");
-        remoteProject = readEnv("WILLENIUM_REMOTE_PROJECT", DEFAULT_REMOTE_PROJECT);
-        remoteBuild = readEnv("WILLENIUM_REMOTE_BUILD", DEFAULT_REMOTE_BUILD);
+    private RemoteExecutionConfig(Map<String, String> environment) {
+        executionMode = readValue(environment, "WILLENIUM_EXECUTION_MODE", DEFAULT_EXECUTION_MODE).toLowerCase();
+        remoteUrl = readValue(environment, "WILLENIUM_REMOTE_URL", "");
+        remotePlatform = readValue(environment, "WILLENIUM_REMOTE_PLATFORM", DEFAULT_REMOTE_PLATFORM);
+        remoteBrowserVersion = readValue(environment, "WILLENIUM_REMOTE_BROWSER_VERSION", "");
+        remoteProvider = readValue(environment, "WILLENIUM_REMOTE_PROVIDER", "");
+        remoteUsername = readValue(environment, "WILLENIUM_REMOTE_USERNAME", "");
+        remoteAccessKey = readValue(environment, "WILLENIUM_REMOTE_ACCESS_KEY", "");
+        remoteProject = readValue(environment, "WILLENIUM_REMOTE_PROJECT", DEFAULT_REMOTE_PROJECT);
+        remoteBuild = readValue(environment, "WILLENIUM_REMOTE_BUILD", DEFAULT_REMOTE_BUILD);
     }
 
     public static RemoteExecutionConfig fromEnvironment() {
-        return new RemoteExecutionConfig();
+        return new RemoteExecutionConfig(System.getenv());
+    }
+
+    static RemoteExecutionConfig fromMap(Map<String, String> environment) {
+        return new RemoteExecutionConfig(environment);
     }
 
     public String getExecutionMode() {
@@ -95,8 +101,8 @@ public final class RemoteExecutionConfig {
         return "Set WILLENIUM_REMOTE_URL and, for LambdaTest, also set WILLENIUM_REMOTE_USERNAME and WILLENIUM_REMOTE_ACCESS_KEY.";
     }
 
-    private static String readEnv(String key, String defaultValue) {
-        String value = System.getenv(key);
+    private static String readValue(Map<String, String> environment, String key, String defaultValue) {
+        String value = environment.get(key);
         return value == null ? defaultValue : value.trim();
     }
 }
