@@ -10,9 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public final class OpenApiContract {
-    private static boolean enabled;
-    private static String specificationLocation;
-    private static Filter validationFilter;
+    private static final ThreadLocal<ContractState> CONTRACT_STATE = ThreadLocal.withInitial(ContractState::new);
 
     private OpenApiContract() {
     }
@@ -25,8 +23,9 @@ public final class OpenApiContract {
         }
 
         JsonNode contractValidation = apiData.get("contractValidation");
-        enabled = contractValidation.path("enabled").asBoolean(false);
-        if (!enabled) {
+        ContractState contractState = CONTRACT_STATE.get();
+        contractState.enabled = contractValidation.path("enabled").asBoolean(false);
+        if (!contractState.enabled) {
             return;
         }
 
@@ -36,27 +35,25 @@ public final class OpenApiContract {
             throw new IllegalStateException("API contract validation is enabled but specificationPath is missing from the api.contractValidation test data.");
         }
 
-        specificationLocation = resolveSpecificationLocation(configuredSpecification);
-        OpenApiInteractionValidator validator = OpenApiInteractionValidator.createFor(specificationLocation).build();
-        validationFilter = new OpenApiValidationFilter(validator);
+        contractState.specificationLocation = resolveSpecificationLocation(configuredSpecification);
+        OpenApiInteractionValidator validator = OpenApiInteractionValidator.createFor(contractState.specificationLocation).build();
+        contractState.validationFilter = new OpenApiValidationFilter(validator);
     }
 
     public static Filter getValidationFilter() {
-        return validationFilter;
+        return CONTRACT_STATE.get().validationFilter;
     }
 
     public static boolean isEnabled() {
-        return enabled;
+        return CONTRACT_STATE.get().enabled;
     }
 
     public static String getSpecificationLocation() {
-        return specificationLocation;
+        return CONTRACT_STATE.get().specificationLocation;
     }
 
     public static void reset() {
-        enabled = false;
-        specificationLocation = null;
-        validationFilter = null;
+        CONTRACT_STATE.remove();
     }
 
     private static String resolveSpecificationLocation(String configuredSpecification) {
@@ -74,5 +71,11 @@ public final class OpenApiContract {
         }
 
         return specificationPath.toString();
+    }
+
+    private static final class ContractState {
+        private boolean enabled;
+        private String specificationLocation;
+        private Filter validationFilter;
     }
 }

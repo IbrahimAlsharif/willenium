@@ -108,24 +108,18 @@ public class Setup {
         String browserVersion = remoteExecutionConfig.getRemoteBrowserVersion();
         if (browser.equalsIgnoreCase("chrome")) {
             ChromeOptions chromeOptions = new ChromeOptions();
-            chromeOptions.setPlatformName(platform);
+            applyRemoteMetadata(chromeOptions, platform, browserVersion);
             if (!browserVersion.isBlank()) {
                 chromeOptions.setBrowserVersion(browserVersion);
             }
             browserOptions = chromeOptions;
         } else if (browser.equalsIgnoreCase("firefox")) {
             FirefoxOptions firefoxOptions = new FirefoxOptions();
-            firefoxOptions.setPlatformName(platform);
-            if (!browserVersion.isBlank()) {
-                firefoxOptions.setBrowserVersion(browserVersion);
-            }
+            applyRemoteMetadata(firefoxOptions, platform, browserVersion);
             browserOptions = firefoxOptions;
         } else if (browser.equalsIgnoreCase("safari")) {
             SafariOptions safariOptions = new SafariOptions();
-            safariOptions.setPlatformName(platform);
-            if (!browserVersion.isBlank()) {
-                safariOptions.setBrowserVersion(browserVersion);
-            }
+            applyRemoteMetadata(safariOptions, platform, browserVersion);
             browserOptions = safariOptions;
         } else {
             throw new IllegalArgumentException("Unsupported remote browser: " + browser);
@@ -143,19 +137,21 @@ public class Setup {
             Go.testRunId = testRailManager.createTestRun("Sentra", 2);
         }
         if (browser.equalsIgnoreCase("chrome")) {
-            validateLocalExecutionEnvironment("Chrome");
-            try {
-                driver = WebDriverManager.chromedriver()
-                        .capabilities(new BrowserOptions().getChromeOptions(PipelineConfig.isBrowserHeadless, true))
-                        .create();
-            } catch (RuntimeException exception) {
-                uiInitializationBlockerMessage = buildDriverStartupFailureMessage("Chrome", exception);
-                throw new IllegalStateException(uiInitializationBlockerMessage, exception);
-            }
+            initializeManagedLocalDriver(
+                    "Chrome",
+                    () -> WebDriverManager.chromedriver()
+                            .capabilities(new BrowserOptions().getChromeOptions(PipelineConfig.isBrowserHeadless, true))
+                            .create()
+            );
         } else if (browser.equalsIgnoreCase("safari")) {
             driver = new SafariDriver();
         } else {
-            driver = WebDriverManager.firefoxdriver().capabilities(new BrowserOptions().getFirefoxOptions(PipelineConfig.isBrowserHeadless, true)).create();
+            initializeManagedLocalDriver(
+                    "Firefox",
+                    () -> WebDriverManager.firefoxdriver()
+                            .capabilities(new BrowserOptions().getFirefoxOptions(PipelineConfig.isBrowserHeadless, true))
+                            .create()
+            );
         }
         configureHelperComponents();
     }
@@ -210,6 +206,16 @@ public class Setup {
         return String.format("%s local driver startup failed: %s", browserName, rootMessage);
     }
 
+    private void initializeManagedLocalDriver(String browserName, LocalDriverFactory localDriverFactory) {
+        validateLocalExecutionEnvironment(browserName);
+        try {
+            driver = localDriverFactory.create();
+        } catch (RuntimeException exception) {
+            uiInitializationBlockerMessage = buildDriverStartupFailureMessage(browserName, exception);
+            throw new IllegalStateException(uiInitializationBlockerMessage, exception);
+        }
+    }
+
     private boolean shouldFallbackToRemote(IllegalStateException exception, RemoteExecutionConfig remoteExecutionConfig) {
         if (!remoteExecutionConfig.isAutoMode() || !remoteExecutionConfig.isRemoteConfigured()) {
             return false;
@@ -250,6 +256,20 @@ public class Setup {
                     "Remote LambdaTest execution requires WILLENIUM_REMOTE_USERNAME and WILLENIUM_REMOTE_ACCESS_KEY."
             );
         }
+    }
+
+    private void applyRemoteMetadata(AbstractDriverOptions<?> browserOptions, String platform, String browserVersion) {
+        if (!platform.isBlank()) {
+            browserOptions.setPlatformName(platform);
+        }
+        if (!browserVersion.isBlank()) {
+            browserOptions.setBrowserVersion(browserVersion);
+        }
+    }
+
+    @FunctionalInterface
+    private interface LocalDriverFactory {
+        WebDriver create();
     }
 
     private void cleanScreenshotsDirectory() {

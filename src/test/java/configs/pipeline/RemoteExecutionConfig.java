@@ -2,7 +2,7 @@ package configs.pipeline;
 
 public final class RemoteExecutionConfig {
     private static final String DEFAULT_EXECUTION_MODE = "auto";
-    private static final String DEFAULT_REMOTE_PLATFORM = "Windows 10";
+    private static final String DEFAULT_REMOTE_PLATFORM = "";
     private static final String DEFAULT_REMOTE_PROJECT = "Willenium";
     private static final String DEFAULT_REMOTE_BUILD = "Local fallback";
 
