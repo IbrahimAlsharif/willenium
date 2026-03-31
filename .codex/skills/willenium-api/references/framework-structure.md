@@ -52,7 +52,7 @@ TestNG XML files remain the orchestration layer.
 - feature step suites:
   `flows/examples/steps/...`
 - composed API suites:
-  `flows/examples/wewill/RunExamplePublicApiEnglish.xml`
+  `flows/examples/wewill/ProtectExamplePublicApiContractEnglish.xml`
 
 If a new scenario needs a dedicated path, create a new XML suite that includes the appropriate API setup suite.
 
@@ -76,7 +76,7 @@ Real tests should:
 ## Execution Entry Points
 
 - Maven profile in `pom.xml`:
-  - `RunExamplePublicApiEnglish`
+  - `ProtectExamplePublicApiContractEnglish`
 
 ## Practical Conventions
 

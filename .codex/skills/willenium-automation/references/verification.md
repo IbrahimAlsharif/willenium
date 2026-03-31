@@ -21,8 +21,8 @@ The correct verification depth depends on the request:
 
 Current top-level examples:
 
-- `mvn test -PBrowseExampleWeWillEnglish`
-- `mvn test -PBrowseExampleWeWillArabic`
+- `mvn test -PProtectExampleHomeTrustEnglish`
+- `mvn test -PProtectExampleHomeTrustArabic`
 
 Shortest bundled smoke path:
 

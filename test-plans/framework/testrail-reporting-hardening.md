@@ -11,10 +11,10 @@ jira_issue_url:
 testrail_case_ids: []
 testrail_run_ids: []
 affected_flows:
-  - flows/examples/wewill/BrowseExampleWeWillEnglish.xml
-  - flows/examples/wewill/BrowseExampleWeWillArabic.xml
-  - flows/examples/wewill/RunExamplePublicApiEnglish.xml
-  - flows/examples/wewill/RunExamplePublicApiArabic.xml
+  - flows/examples/wewill/ProtectExampleHomeTrustEnglish.xml
+  - flows/examples/wewill/ProtectExampleHomeTrustArabic.xml
+  - flows/examples/wewill/ProtectExamplePublicApiContractEnglish.xml
+  - flows/examples/wewill/ProtectExamplePublicApiContractArabic.xml
 affected_tests:
   - src/test/java/base/Setup.java
   - src/test/java/base/ApiSetup.java
@@ -24,7 +24,7 @@ affected_tests:
   - src/test/java/tests/examples/wewill/home/WeWillHomePageTest.java
   - src/test/java/tests/examples/wewill/api/WeWillPublicApiTest.java
 affected_testdata: []
-flow_xml: flows/examples/wewill/BrowseExampleWeWillEnglish.xml
+flow_xml: flows/examples/wewill/ProtectExampleHomeTrustEnglish.xml
 java_helper: configs.testRail.TestRailManager
 java_test: configs.listeners.Listener
 testdata_sections: []
@@ -156,7 +156,7 @@ Primary hardening areas:
 ## Automation Mapping
 
 - Flow XML:
-  `flows/examples/wewill/BrowseExampleWeWillEnglish.xml`
+  `flows/examples/wewill/ProtectExampleHomeTrustEnglish.xml`
 - Java helper:
   `src/test/java/configs/testRail/TestRailManager.java`
 - Java test:
@@ -171,8 +171,8 @@ Primary hardening areas:
   - reporting enabled smoke run for one UI suite
   - reporting enabled smoke run for one API suite
 - primary suites to validate first:
-  - `BrowseExampleWeWillEnglish`
-  - `RunExamplePublicApiEnglish`
+  - `ProtectExampleHomeTrustEnglish`
+  - `ProtectExamplePublicApiContractEnglish`
 - additional focused checks:
   - invalid credential handling
   - missing case ID handling

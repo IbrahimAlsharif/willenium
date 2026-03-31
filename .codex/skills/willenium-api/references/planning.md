@@ -9,6 +9,8 @@ Read this reference when the task involves:
 - deciding plan scope or plan type
 - preparing a Markdown plan draft for user review
 
+If the source input is still a Lean Canvas, product idea, project description, MVP description, or feature list, create or update a Quality Canvas under `quality/plans/...` before drafting the executable API plan under `test-plans/...`.
+
 ## Planning Contract
 
 Before drafting or updating a plan, first determine the business and contract context, then determine the planning dimensions.
@@ -45,12 +47,13 @@ The first planning deliverable should be a Markdown draft on disk under:
 
 The expected sequence is:
 
-1. Confirm the business and contract context.
-2. Confirm scope and plan type.
-3. Inspect existing plans, flows, tests, and test data.
-4. Create or update the Markdown draft.
-5. Let the user review the draft direction.
-6. Generate or update automation from the approved plan.
+1. If needed, create or update the Quality Canvas for the target.
+2. Confirm the business and contract context.
+3. Confirm scope and plan type.
+4. Inspect existing plans, flows, tests, and test data.
+5. Create or update the Markdown draft.
+6. Let the user review the draft direction.
+7. Generate or update automation from the approved plan.
 
 ## Scope Guidance
 
@@ -93,6 +96,7 @@ Baseline fields:
 - `target_url`
 - `target_slug`
 - `app`
+- `quality_canvas`
 - `plan_scope`
 - `plan_type`
 - `business_goal`

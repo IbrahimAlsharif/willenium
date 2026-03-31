@@ -214,7 +214,7 @@
     </build>
     <profiles>
         <profile>
-            <id>BrowseExampleWeWillArabic</id>
+            <id>ProtectExampleHomeTrustArabic</id>
             <build>
                 <plugins>
                     <plugin>
@@ -223,7 +223,7 @@
                         <version>3.5.2</version>
                         <configuration>
                             <suiteXmlFiles>
-                                <suiteXmlFile>flows/examples/wewill/BrowseExampleWeWillArabic.xml</suiteXmlFile>
+                                <suiteXmlFile>flows/examples/wewill/ProtectExampleHomeTrustArabic.xml</suiteXmlFile>
                             </suiteXmlFiles>
                         </configuration>
                     </plugin>
@@ -231,7 +231,7 @@
             </build>
         </profile>
         <profile>
-            <id>BrowseExampleWeWillEnglish</id>
+            <id>ProtectExampleHomeTrustEnglish</id>
             <build>
                 <plugins>
                     <plugin>
@@ -240,7 +240,7 @@
                         <version>3.5.2</version>
                         <configuration>
                             <suiteXmlFiles>
-                                <suiteXmlFile>flows/examples/wewill/BrowseExampleWeWillEnglish.xml</suiteXmlFile>
+                                <suiteXmlFile>flows/examples/wewill/ProtectExampleHomeTrustEnglish.xml</suiteXmlFile>
                             </suiteXmlFiles>
                         </configuration>
                     </plugin>
@@ -248,7 +248,7 @@
             </build>
         </profile>
         <profile>
-            <id>RunExamplePublicApiEnglish</id>
+            <id>ProtectExamplePublicApiContractEnglish</id>
             <build>
                 <plugins>
                     <plugin>
@@ -257,7 +257,7 @@
                         <version>3.5.2</version>
                         <configuration>
                             <suiteXmlFiles>
-                                <suiteXmlFile>flows/examples/wewill/RunExamplePublicApiEnglish.xml</suiteXmlFile>
+                                <suiteXmlFile>flows/examples/wewill/ProtectExamplePublicApiContractEnglish.xml</suiteXmlFile>
                             </suiteXmlFiles>
                         </configuration>
                     </plugin>
@@ -265,7 +265,7 @@
             </build>
         </profile>
         <profile>
-            <id>RunExamplePublicApiArabic</id>
+            <id>ProtectExamplePublicApiContractArabic</id>
             <build>
                 <plugins>
                     <plugin>
@@ -274,7 +274,7 @@
                         <version>3.5.2</version>
                         <configuration>
                             <suiteXmlFiles>
-                                <suiteXmlFile>flows/examples/wewill/RunExamplePublicApiArabic.xml</suiteXmlFile>
+                                <suiteXmlFile>flows/examples/wewill/ProtectExamplePublicApiContractArabic.xml</suiteXmlFile>
                             </suiteXmlFiles>
                         </configuration>
                     </plugin>

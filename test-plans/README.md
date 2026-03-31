@@ -52,6 +52,14 @@ Each plan should include front matter with, at minimum:
 
 These fields keep the plan, XML, Java, and JSON assets tied together so later updates can find the right files.
 
+When the plan was informed by an earlier Quality Canvas, also include:
+
+- `quality_canvas`
+
+This field should point to the canonical canvas path such as:
+
+- `quality/plans/acme/checkout-quality-canvas.md`
+
 When the work starts from Jira, also include:
 
 - `jira_issue_key`
@@ -121,7 +129,14 @@ At a minimum, cover:
 Name flows and plans after the business journey they own whenever possible rather than after a generic technical grouping.
 Keep the main body of the plan business-first. Do not turn it into a file-structure checklist.
 
-The minimum business context should live directly in the plan front matter and body instead of a separate canvas layer.
-Use `quality/plans/` only when a broader strategy spans more than one owned journey or more than one executable plan.
+The minimum business context should still live directly in the plan front matter and body.
+When the work began from higher-level product inputs such as a Lean Canvas, product brief, MVP description, or feature list, the plan may also link back to a Quality Canvas under `quality/plans/`.
+
+Use `quality/plans/` for:
+
+- early strategic Quality Canvas artifacts
+- broader quality strategy that may inform more than one owned journey or executable plan
+
+Do not treat the Quality Canvas as a substitute for the business context that must still be restated in the executable `test-plans/...` file.
 
 The first planning deliverable should be a Markdown draft on disk for user review. Treat that reviewable draft as the checkpoint before broad generation work.

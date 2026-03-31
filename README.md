@@ -42,7 +42,7 @@ Run the starter suite:
 
 ```bash
 cd my-ui-tests
-mvn test -PBrowseExampleWeWillEnglish
+mvn test -PProtectExampleHomeTrustEnglish
 ```
 
 Optional examples:
@@ -107,19 +107,19 @@ The checked-in tests, flows, and JSON files are starter examples of framework st
 Use the included Maven profiles:
 
 ```bash
-mvn test -PBrowseExampleWeWillEnglish
-mvn test -PBrowseExampleWeWillArabic
-mvn test -PRunExamplePublicApiEnglish
-mvn test -PRunExamplePublicApiArabic
+mvn test -PProtectExampleHomeTrustEnglish
+mvn test -PProtectExampleHomeTrustArabic
+mvn test -PProtectExamplePublicApiContractEnglish
+mvn test -PProtectExamplePublicApiContractArabic
 npm run sync:flow-workflows
 ```
 
 Useful suite entry points:
 
-- `flows/examples/wewill/BrowseExampleWeWillEnglish.xml`
-- `flows/examples/wewill/BrowseExampleWeWillArabic.xml`
-- `flows/examples/wewill/RunExamplePublicApiEnglish.xml`
-- `flows/examples/wewill/RunExamplePublicApiArabic.xml`
+- `flows/examples/wewill/ProtectExampleHomeTrustEnglish.xml`
+- `flows/examples/wewill/ProtectExampleHomeTrustArabic.xml`
+- `flows/examples/wewill/ProtectExamplePublicApiContractEnglish.xml`
+- `flows/examples/wewill/ProtectExamplePublicApiContractArabic.xml`
 - `example_quick_path.xml`
 
 `example_quick_path.xml` is the shortest smoke path in the repo. It runs setup, a single public homepage example, and teardown.
@@ -174,6 +174,7 @@ Template safety notes:
 
 The project includes framework-aware agent files for Codex and Claude:
 
+- Quality Canvas skill: `.codex/skills/quality-canvas/SKILL.md`
 - UI execution skill: `.codex/skills/willenium-automation/SKILL.md`
 - API execution skill: `.codex/skills/willenium-api/SKILL.md`
 - Coaching skill: `.codex/skills/willenium-coach/SKILL.md`
@@ -188,6 +189,7 @@ Use them when you want AI assistance that follows the framework conventions:
 - keep API assertions in `*ApiTest.java`
 - update JSON-backed test data instead of hardcoding values
 - wire new coverage through TestNG XML suites under `flows/...`
+- use `quality/plans/...` for early strategic Quality Canvas artifacts when the input is still a Lean Canvas, product brief, MVP description, or feature list
 - ask the business questions before drafting a new plan:
   - business goal
   - primary user or actor
@@ -203,11 +205,13 @@ Use them when you want AI assistance that follows the framework conventions:
 - treat the bundled tests and data as examples, not the default product namespace to extend
 - keep Jira tenant configuration user-provided at runtime rather than committed in the template
 
+Use `quality-canvas` when you want a Lean Canvas, product idea, project description, MVP brief, or feature list turned into a reusable four-quadrant Quality Canvas artifact under `quality/plans/`.
 Use `willenium-coach` when you want help deciding what to ask for, what inputs to provide, or which workflow to use before the implementation work starts.
 Use `willenium-automation` when you want UI or browser automation work done through the execution skill.
 Use `willenium-api` when you want API or service automation work done through the execution skill.
 Use `willenium` when you want to reference the repo agent directly.
-For plan-first work, the expected flow is: confirm business context -> confirm scope and plan type -> write the Markdown draft under `test-plans/` focused on business scenarios and test cases -> let the user review -> then generate or update tests.
+For strategy-first work, the expected flow is: create or update the Quality Canvas under `quality/plans/` -> confirm business context for the owned journey -> confirm scope and plan type -> write the Markdown draft under `test-plans/` -> let the user review -> then generate or update tests.
+For direct plan-first work on an already-defined journey, the expected flow is: confirm business context -> confirm scope and plan type -> write the Markdown draft under `test-plans/` focused on business scenarios and test cases -> let the user review -> then generate or update tests.
 Selenium MCP is optional during planning and is most useful when the plan needs live page inspection rather than just the user's description and existing local artifacts.
 
 When the work is strategic rather than purely technical, include quality intent up front:
@@ -223,7 +227,7 @@ When the work is strategic rather than purely technical, include quality intent 
 Recommended strategy prompt:
 
 ```text
-Use willenium-coach to turn this initiative into a Willenium journey plan. Capture the business goal, user value, operational risks, unacceptable outcomes, scenario map, confidence target, and reporting expectations directly in test-plans/, then map the result to the owned flow, helper, test, and JSON artifacts.
+Use quality-canvas to turn this Lean Canvas or product brief into a four-quadrant Quality Canvas under quality/plans/. Then use willenium-coach or the execution skill to turn the most important journey into a linked plan under test-plans/.
 ```
 
 Typical prompts:
@@ -235,6 +239,19 @@ Use `willenium-automation` to create my first real product test and move the sta
 ```text
 Use `willenium-api` to create my first real API coverage slice, write the linked plan under test-plans/, and map it to ApiSetup, Api helpers, Api tests, JSON test data, and XML flows.
 ```
+
+```text
+Use `quality-canvas` to convert this product brief into a concise Quality Canvas artifact under quality/plans/ before test-planning starts.
+```
+
+Starter planning examples:
+
+- Quality Canvas:
+  `quality/plans/examples/wewill-starter-quality-canvas.md`
+- UI journey plan:
+  `test-plans/examples/wewill-home-trust-journey.md`
+- API contract plan:
+  `test-plans/examples/wewill-public-api-contract.md`
 
 ```text
 Follow `.github/agents/willenium.agent.md` and update the bundled WE WILL example flow.
@@ -301,7 +318,7 @@ UI flows follow the same pattern:
 
 Example:
 
-- `flows/examples/wewill/BrowseExampleWeWillEnglish.xml`
+- `flows/examples/wewill/ProtectExampleHomeTrustEnglish.xml`
   calls `flows/SetupEnglish.xml`
 - then `flows/examples/steps/wewill/home_journey.xml`
 - then `flows/TearDown.xml`
@@ -320,7 +337,7 @@ API flows follow a parallel suite-driven pattern:
 
 Example:
 
-- `flows/examples/wewill/RunExamplePublicApiEnglish.xml`
+- `flows/examples/wewill/ProtectExamplePublicApiContractEnglish.xml`
   calls `flows/SetupApiEnglish.xml`
 - then `flows/examples/steps/wewill/public_api_journey.xml`
 

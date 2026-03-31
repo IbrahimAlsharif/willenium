@@ -4,12 +4,14 @@ Use the `willenium` agent for framework-native automation work in this repositor
 
 Skill routing:
 
+- use `quality-canvas` when the work starts from a Lean Canvas, product idea, project description, MVP description, or feature list and needs a reusable quality artifact before test planning
 - use `willenium-automation` for UI/browser automation work
 - use `willenium-api` for API/service automation work
 - use `willenium-coach` when the user needs help choosing workflow, prompt shape, plan scope, or plan type
 
 Primary source files:
 
+- Codex quality canvas skill: `.codex/skills/quality-canvas/SKILL.md`
 - Codex execution skill: `.codex/skills/willenium-automation/SKILL.md`
 - Codex API execution skill: `.codex/skills/willenium-api/SKILL.md`
 - Codex coaching skill: `.codex/skills/willenium-coach/SKILL.md`
@@ -22,6 +24,7 @@ Produce framework-native Java Selenium TestNG and RestAssured TestNG changes for
 Treat each flow as a business journey that protects a user outcome and a business objective.
 The XML suite under `flows/...` is the executable representation of that journey, not just a bucket of tests.
 
+- Put early strategic quality artifacts in `quality/plans/<app>/<target-slug>-quality-canvas.md` by default.
 - Put planning artifacts in `test-plans/<app>/<target-slug>.md` by default.
 - Put reusable browser logic in `src/test/java/tests/.../<Feature>.java`.
 - Put assertions in `src/test/java/tests/.../<Feature>Test.java`.
@@ -103,7 +106,13 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 ## Working Rules
 
 - Inspect the sample assets to learn the framework structure, but do not assume the user wants new work built on top of the bundled WE WILL example domain.
+- When the work starts from a Lean Canvas, product idea, project description, MVP description, or feature list, treat `quality-canvas` as the recommended first step before detailed `test-plans/...` work starts.
+- Use the Quality Canvas to capture the early strategic layer in `quality/plans/...`, then use that artifact to inform later `test-plans/...` work.
+- Keep the Quality Canvas artifact-oriented: persist a Markdown file on disk instead of answering only in chat.
+- Keep the first version of the Quality Canvas lightweight: four quadrants, concise assumptions, no generated tests, and no quality matrix.
+- Do not force a Quality Canvas for every request. Small bug-driven updates or direct edits to an existing owned journey can proceed by updating the existing plan and linked coverage.
 - When the user asks to inspect a link, write a test plan, generate tests from a target, or update generated coverage, follow a plan-first workflow.
+- If test planning starts from high-level product inputs rather than an already-defined journey, create or update the Quality Canvas first, then ask or confirm the business questions for the specific executable plan.
 - Before drafting a plan, ask or confirm the business questions first:
   - business goal
   - primary user or actor
@@ -115,6 +124,7 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - Treat `journey` as the preferred scope when the user is describing a business outcome that spans one or more pages.
 - Use Selenium MCP during planning only when live inspection would materially improve the draft or the user explicitly asks to inspect the target link.
 - Create the canonical plan at `test-plans/<app>/<target-slug>.md` unless the user explicitly asks for a Markdown blueprint next to the flow XML under `flows/...`.
+- Create the canonical Quality Canvas at `quality/plans/<app>/<target-slug>-quality-canvas.md` unless the user explicitly asks for another location.
 - When the user asks for a plan, the work is not complete until the Markdown file is actually created or updated on disk.
 - Do not satisfy a planning request with a chat-only response. Persist the plan as a `.md` file and report the saved path in the final reply.
 - Treat the first planning deliverable as a draft Markdown plan for user review before broad generation starts.

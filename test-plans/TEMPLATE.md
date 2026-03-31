@@ -4,6 +4,7 @@ target_name: Replace With User Target Name
 target_url: https://example.com/path
 target_slug: target-slug
 app: app
+quality_canvas: quality/plans/app/target-slug-quality-canvas.md
 plan_scope: journey
 plan_type: full
 business_goal: Replace with the business objective this journey protects
@@ -32,6 +33,7 @@ status: draft
 Describe the business journey, why it matters, and what this plan intends to protect.
 
 Use `target_slug` as the canonical identifier for the target. Derive `flow_xml`, Java class names, and JSON sections from it using the repo's naming conventions.
+If this plan was informed by an earlier Quality Canvas, keep the canonical canvas path in `quality_canvas`.
 
 Record whether this is a smoke, regression, or full plan, and whether the scope is a page, flow, journey, feature area, or broader regression slice.
 Treat the linked flow XML as the executable representation of this business journey.

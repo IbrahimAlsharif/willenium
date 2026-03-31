@@ -21,7 +21,7 @@ The correct verification depth depends on the request:
 
 Current top-level API example:
 
-- `mvn test -PRunExamplePublicApiEnglish`
+- `mvn test -PProtectExamplePublicApiContractEnglish`
 
 ## Verification From Plan Type
 

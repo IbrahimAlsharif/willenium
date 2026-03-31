@@ -9,6 +9,7 @@ Use this skill when the user is unsure how to ask for work, what information to 
 
 This skill is for guidance and prompt shaping. It does not replace the execution skill:
 
+- use `quality-canvas` to create a reusable strategic quality artifact before detailed planning starts
 - use `willenium-coach` to orient the user
 - use `willenium-automation` for UI/browser work
 - use `willenium-api` for API/service work
@@ -19,6 +20,7 @@ This skill is for guidance and prompt shaping. It does not replace the execution
 - choosing the next best workflow
 - turning a vague request into a strong implementation prompt
 - identifying missing inputs before generation starts
+- deciding whether the work should start with a Quality Canvas before test planning
 - asking the right business questions before test planning starts
 - helping the user choose test plan scope and plan type
 - explaining the repo structure in plain language
@@ -30,6 +32,8 @@ Map the user to the smallest correct next step:
 
 - if they have a URL and want coverage:
   recommend plan-first work
+- if they have a Lean Canvas, product idea, project brief, MVP description, or feature list:
+  recommend `quality-canvas` first, then detailed planning
 - if they already have a plan:
   recommend generation or update of linked assets
 - if they have an endpoint or service and want coverage:
@@ -109,6 +113,7 @@ Fallback style when no structured UI is available:
 
 Explain the repo in simple terms:
 
+- `quality/plans/...` holds strategic quality artifacts such as a Quality Canvas
 - `test-plans/...` holds the source-of-truth plans
 - `flows/...` holds TestNG suite wiring
 - `src/test/java/tests/...` holds helper classes and `*Test.java` or `*ApiTest.java`
@@ -117,6 +122,7 @@ Explain the repo in simple terms:
 
 Remind the user that:
 
+- a Quality Canvas is a good first step when the input is still strategic and not yet journey-specific
 - plans come before generation for new or unclear targets
 - business intent should be clarified before plan scope and plan type are locked
 - plan scope and plan type should be chosen before writing the plan
@@ -130,6 +136,8 @@ Remind the user that:
 Offer direct prompt upgrades like these:
 
 - `Use willenium-coach to ask me the business questions for this journey in a clean UI before you write the test plan.`
+- `Use quality-canvas to turn this Lean Canvas into a Quality Canvas artifact under quality/plans/ before any test-planning work starts.`
+- `Use quality-canvas to convert this product brief into a four-quadrant Quality Canvas and keep assumptions clearly labeled.`
 - `Use willenium-automation to inspect this URL from a business-journey perspective, then create a test plan under test-plans/ focused on business scenarios and real test cases.`
 - `Use willenium-coach to clarify the business goal, user value, key risks, plan scope, and plan type before you write the Markdown draft.`
 - `Use willenium-coach to decide whether this planning task should inspect the live page with Selenium MCP first or whether the Markdown draft can be written from the current information.`

@@ -81,7 +81,7 @@ TestNG XML files are the orchestration layer.
 
 Example:
 
-- `flows/examples/wewill/BrowseExampleWeWillEnglish.xml`
+- `flows/examples/wewill/ProtectExampleHomeTrustEnglish.xml`
   includes setup, steps, and teardown.
 - `flows/examples/steps/wewill/home_journey.xml`
   runs the bundled public-site example test class.
@@ -116,8 +116,8 @@ Real tests should:
 ## Execution Entry Points
 
 - Maven profiles in `pom.xml`:
-  - `BrowseExampleWeWillEnglish`
-  - `BrowseExampleWeWillArabic`
+  - `ProtectExampleHomeTrustEnglish`
+  - `ProtectExampleHomeTrustArabic`
 - shortest existing smoke path:
   - `example_quick_path.xml`
 
