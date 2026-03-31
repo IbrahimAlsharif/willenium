@@ -29,7 +29,8 @@ Use this skill when the input is something like:
 - a feature list
 - an early initiative summary that is not yet ready for journey-level planning
 
-Use `willenium-automation` or `willenium-api` after the canvas exists and the next step is detailed planning for one owned journey or service.
+Use `willenium-consultant` after the canvas exists when the next step still needs governance, prioritization, or a decision about what should be planned or automated first.
+Use `willenium-automation` or `willenium-api` after the canvas exists when direction is already clear and the next step is detailed planning for one owned journey or service.
 
 ## Output Location
 
@@ -145,5 +146,11 @@ The Quality Canvas should help later planning answer:
 - which failures would be most damaging
 - which scenarios need measurable confidence
 - which improvements can wait
+
+The usual handoff is:
+
+1. `willenium-consultant` to judge business direction, risk priority, and decision usefulness when the next step is not yet obvious
+2. `willenium-coach` when the user needs help choosing scope, plan type, or prompt shape
+3. `willenium-automation` or `willenium-api` when execution planning is ready
 
 The canvas may point to future `test-plans/...` files, but it must not generate them directly.

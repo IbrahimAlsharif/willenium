@@ -9,15 +9,19 @@ Use this skill when the user is unsure how to ask for work, what information to 
 
 This skill is for guidance and prompt shaping. It does not replace the execution skill:
 
+- use `willenium-consultant` to challenge shallow requests, review planning quality, and decide whether the next step should be strategic framing, plan refinement, or execution
 - use `quality-canvas` to create a reusable strategic quality artifact before detailed planning starts
 - use `willenium-coach` to orient the user
 - use `willenium-automation` for UI/browser work
 - use `willenium-api` for API/service work
 - use the `willenium` agent when invoking the repo agent directly
 
+For Codex users, the practical control surface is the skill layer. Recommend direct skill invocation when that will make the next step clearer.
+
 ## What To Help With
 
 - choosing the next best workflow
+- deciding whether `willenium-consultant` should review the request before planning or generation
 - turning a vague request into a strong implementation prompt
 - identifying missing inputs before generation starts
 - deciding whether the work should start with a Quality Canvas before test planning
@@ -30,6 +34,8 @@ This skill is for guidance and prompt shaping. It does not replace the execution
 
 Map the user to the smallest correct next step:
 
+- if the request is shallow, risky, commercially vague, or likely to create false confidence:
+  recommend `willenium-consultant` first
 - if they have a URL and want coverage:
   recommend plan-first work
 - if they have a Lean Canvas, product idea, project brief, MVP description, or feature list:
@@ -122,6 +128,7 @@ Explain the repo in simple terms:
 
 Remind the user that:
 
+- `willenium-consultant` is the right first skill when they need business-direction, governance, or a strategic review before execution
 - a Quality Canvas is a good first step when the input is still strategic and not yet journey-specific
 - plans come before generation for new or unclear targets
 - business intent should be clarified before plan scope and plan type are locked
@@ -135,6 +142,9 @@ Remind the user that:
 
 Offer direct prompt upgrades like these:
 
+- `Use willenium-consultant to review this request first and tell me whether it creates real business confidence or false confidence.`
+- `Use willenium-consultant to upgrade this technical automation ask into a business-directed plan recommendation.`
+- `Use willenium-consultant to review this test plan before generation and recommend what to automate now versus what to defer or inspect manually.`
 - `Use willenium-coach to ask me the business questions for this journey in a clean UI before you write the test plan.`
 - `Use quality-canvas to turn this Lean Canvas into a Quality Canvas artifact under quality/plans/ before any test-planning work starts.`
 - `Use quality-canvas to convert this product brief into a four-quadrant Quality Canvas and keep assumptions clearly labeled.`

@@ -4,6 +4,7 @@ Use the `willenium` agent for framework-native automation work in this repositor
 
 Skill routing:
 
+- use `willenium-consultant` when the work needs a strategic governance layer that keeps automation aligned to business goals, upgrades shallow requests before execution, or reviews a Quality Canvas or test plan for decision usefulness and release confidence
 - use `quality-canvas` when the work starts from a Lean Canvas, product idea, project description, MVP description, or feature list and needs a reusable quality artifact before test planning
 - use `willenium-automation` for UI/browser automation work
 - use `willenium-api` for API/service automation work
@@ -11,6 +12,7 @@ Skill routing:
 
 Primary source files:
 
+- Codex consultant skill: `.codex/skills/willenium-consultant/SKILL.md`
 - Codex quality canvas skill: `.codex/skills/quality-canvas/SKILL.md`
 - Codex execution skill: `.codex/skills/willenium-automation/SKILL.md`
 - Codex API execution skill: `.codex/skills/willenium-api/SKILL.md`
@@ -40,6 +42,9 @@ The XML suite under `flows/...` is the executable representation of that journey
 - Add or regenerate a matching manually triggered GitHub Actions workflow for each new top-level flow/profile under `.github/workflows/`.
 
 Treat the checked-in tests, flows, GitHub workflows, and JSON data as starter examples of framework structure. Their website links, labels, and assertions are sample content unless the user confirms they are the real target application.
+
+Treat `willenium consultant` as the governance and direction layer above `quality-canvas`, `willenium-coach`, `willenium-automation`, and `willenium-api`.
+Use it to keep automation business-directed rather than only business-aware.
 
 ## Selenium MCP
 
@@ -106,6 +111,11 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 
 ## Working Rules
 
+- Use `willenium-consultant` when the request needs strategic framing, value/risk review, release-confidence judgment, or an upgrade from a shallow technical ask into a business-directed task.
+- Before broad planning or generation, let the consultant layer test whether the request names the business objective, user outcome, failure cost, main risks, and desired confidence signal clearly enough.
+- If a request is vague, commercially shallow, or likely to create false confidence, upgrade it first instead of implementing it literally.
+- Treat green tests as evidence, not as automatic proof of business readiness.
+- Distinguish what should be automated now from what should be explored manually, monitored, or deferred.
 - Inspect the sample assets to learn the framework structure, but do not assume the user wants new work built on top of the bundled WE WILL example domain.
 - When the work starts from a Lean Canvas, product idea, project description, MVP description, or feature list, treat `quality-canvas` as the recommended first step before detailed `test-plans/...` work starts.
 - Use the Quality Canvas to capture the early strategic layer in `quality/plans/...`, then use that artifact to inform later `test-plans/...` work.

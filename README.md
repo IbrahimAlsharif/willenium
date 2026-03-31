@@ -174,6 +174,7 @@ Template safety notes:
 
 The project includes framework-aware agent files for Codex and Claude:
 
+- Consultant skill: `.codex/skills/willenium-consultant/SKILL.md`
 - Quality Canvas skill: `.codex/skills/quality-canvas/SKILL.md`
 - UI execution skill: `.codex/skills/willenium-automation/SKILL.md`
 - API execution skill: `.codex/skills/willenium-api/SKILL.md`
@@ -205,12 +206,31 @@ Use them when you want AI assistance that follows the framework conventions:
 - treat the bundled tests and data as examples, not the default product namespace to extend
 - keep Jira tenant configuration user-provided at runtime rather than committed in the template
 
+For Codex users, the practical entry point is usually the skill, not the repo agent file.
+Call the skill directly when you want a specific operating mode, and treat `.github/agents/willenium.agent.md` as the repo's governing identity layer rather than the main user command surface.
+
+Use `willenium-consultant` when you want strategic governance before execution, such as reviewing business intent, judging whether a plan creates real release confidence, detecting false confidence, or upgrading a shallow automation ask into business-directed work.
 Use `quality-canvas` when you want a Lean Canvas, product idea, project description, MVP brief, or feature list turned into a reusable four-quadrant Quality Canvas artifact under `quality/plans/`.
 Use `willenium-coach` when you want help deciding what to ask for, what inputs to provide, or which workflow to use before the implementation work starts.
 Use `willenium-automation` when you want UI or browser automation work done through the execution skill.
 Use `willenium-api` when you want API or service automation work done through the execution skill.
 Use `willenium` when you want to reference the repo agent directly.
-For strategy-first work, the expected flow is: create or update the Quality Canvas under `quality/plans/` -> confirm business context for the owned journey -> confirm scope and plan type -> write the Markdown draft under `test-plans/` -> let the user review -> then generate or update tests.
+
+Typical Codex prompts:
+
+```text
+Use willenium-consultant to review this request before planning and tell me whether it creates real business confidence.
+```
+
+```text
+Use willenium-consultant to review this test plan, identify false confidence, and recommend what to automate now versus defer.
+```
+
+```text
+Use willenium-coach to help me choose whether I should start with willenium-consultant, quality-canvas, or a direct test plan.
+```
+
+For strategy-first work, the expected flow is: create or update the Quality Canvas under `quality/plans/` -> use `willenium-consultant` to judge direction, value, risk, and decision usefulness -> confirm business context for the owned journey -> confirm scope and plan type -> write the Markdown draft under `test-plans/` -> let the user review -> then generate or update tests.
 For direct plan-first work on an already-defined journey, the expected flow is: confirm business context -> confirm scope and plan type -> write the Markdown draft under `test-plans/` focused on business scenarios and test cases -> let the user review -> then generate or update tests.
 Selenium MCP is optional during planning and is most useful when the plan needs live page inspection rather than just the user's description and existing local artifacts.
 
@@ -227,7 +247,7 @@ When the work is strategic rather than purely technical, include quality intent 
 Recommended strategy prompt:
 
 ```text
-Use quality-canvas to turn this Lean Canvas or product brief into a four-quadrant Quality Canvas under quality/plans/. Then use willenium-coach or the execution skill to turn the most important journey into a linked plan under test-plans/.
+Use quality-canvas to turn this Lean Canvas or product brief into a four-quadrant Quality Canvas under quality/plans/. Then use willenium-consultant to decide what matters first and route the next step to willenium-coach or the right execution skill.
 ```
 
 Typical prompts:

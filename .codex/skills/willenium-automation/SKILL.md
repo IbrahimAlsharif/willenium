@@ -9,6 +9,7 @@ Use this skill for browser-test work in this repository. The implementation targ
 Treat flows as business journeys first and execution suites second.
 
 Use `willenium-api` instead when the task is primarily API coverage, API planning, API debugging, or RestAssured/TestNG work.
+Use `willenium-consultant` first when the request is vague, strategically weak, commercially shallow, high-risk, or likely to create false confidence before UI execution begins.
 
 Treat the checked-in tests, flows, and JSON data as starter examples of framework structure, not as the product under test. Their URLs, labels, and assertions are sample content unless the user explicitly says they are still the target application.
 
@@ -26,6 +27,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 
 1. Inspect the existing example feature, test data, suite wiring, and plan conventions before editing anything.
 2. Route the work by stage and load the matching reference:
+   - strategic review, request upgrade, or false-confidence check -> route first to `../willenium-consultant/SKILL.md`
    - planning or plan updates -> `references/planning.md`
    - Jira-linked work -> `references/jira-mcp.md`
    - generation or automation updates -> `references/generation.md`
@@ -58,6 +60,7 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Do not bypass `base.Setup`; UI tests assume shared static state (`driver`, `wait`, `testData`) is initialized by setup suites.
 - Treat the checked-in WE WILL example flows as examples of structure and conventions, not as the required product namespace to extend.
 - Prefer plan-first delivery when the user asks for planning, link inspection, or test generation from a target.
+- If the business objective, user outcome, risk posture, or confidence target is weak or missing, stop and route the work through `willenium-consultant` before drafting or generating.
 - Use `test-plans/` as the canonical planning area unless the user explicitly asks for a flow-local blueprint.
 - When the user asks for a plan, always create or update the actual Markdown file. A chat-only plan is insufficient.
 - Before drafting the plan, ask or confirm the business questions that define the journey:
@@ -69,6 +72,7 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Treat plan scope and plan type as required planning inputs, not optional polish.
 - Prefer asking those questions in a structured UI with short grouped prompts when the client supports it.
 - Do not default every plan to smoke coverage. Ask whether the user wants smoke, regression, or full coverage depth.
+- Do not treat rendered pages, clickable elements, or completed steps as sufficient proof of business success when trust, recovery, conversion, or support-cost risk still matters.
 - For plan-first work, write the Markdown draft for user review before large generation steps.
 - Use business-oriented naming for flow titles, plan titles, and coverage descriptions so they read like owned journeys.
 - Keep plan names and generated assets related through the same stable slug or `plan_id` so later updates remain deterministic.

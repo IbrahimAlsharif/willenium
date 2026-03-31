@@ -6,6 +6,7 @@ description: Use when creating, updating, or debugging Java RestAssured TestNG A
 # Willenium API TestNG
 
 Use this skill for API-test work in this repository. The implementation target is always the Java/TestNG framework in this repo, not ad hoc scripts in another language.
+Use `willenium-consultant` first when the request is vague, strategically weak, commercially shallow, high-risk, or likely to create false confidence before API execution begins.
 
 Treat the checked-in tests, flows, and JSON data as starter examples of framework structure, not as the product under test. Their URLs, endpoints, labels, and assertions are sample content unless the user explicitly says they are still the target application.
 
@@ -22,6 +23,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 
 1. Inspect the existing example API feature, test data, suite wiring, and plan conventions before editing anything.
 2. Route the work by stage and load the matching reference:
+   - strategic review, request upgrade, or false-confidence check -> route first to `../willenium-consultant/SKILL.md`
    - planning or plan updates -> `references/planning.md`
    - Jira-linked work -> `../willenium-automation/references/jira-mcp.md`
    - generation or automation updates -> `references/generation.md`
@@ -48,6 +50,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 - Do not bypass `base.ApiSetup`; API tests should assume shared API state is initialized by setup suites.
 - Treat the checked-in WE WILL example API flow as an example of structure and conventions, not as the required product namespace to extend.
 - Prefer plan-first delivery when the user asks for planning, service inspection, endpoint coverage, or test generation from an API target.
+- If the business objective, actor value, risk posture, or confidence target is weak or missing, stop and route the work through `willenium-consultant` before drafting or generating.
 - Use `test-plans/` as the canonical planning area unless the user explicitly asks for a flow-local blueprint.
 - When the user asks for a plan, always create or update the actual Markdown file. A chat-only plan is insufficient.
 - Before drafting the plan, ask or confirm the business questions behind the API coverage:
@@ -59,6 +62,7 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 - Treat plan scope and plan type as required planning inputs, not optional polish.
 - Prefer asking those questions in a structured UI with short grouped prompts when the client supports it.
 - Keep API plans focused on business behavior, contract scenarios, and real test cases. Treat helper/test/file mapping as secondary implementation detail.
+- Do not treat passing status codes or schema checks alone as sufficient proof of business readiness when the real risk lives in workflow integrity, error handling, compliance, or operational consequences.
 - When work starts from TestRail, keep related identifiers such as case IDs or run IDs in plan metadata so later updates stay traceable.
 - Keep assertions in `*ApiTest.java`; helper classes should expose request construction and execution helpers.
 - Add short plain-language comments in generated or updated `*ApiTest.java` files so low-code readers can follow what each request and assertion block is protecting.
