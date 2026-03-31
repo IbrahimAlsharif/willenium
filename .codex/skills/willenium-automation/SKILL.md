@@ -79,6 +79,7 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Reuse `Finder` and `Go` before adding direct `driver.findElement(...)` or custom wait code.
 - Prefer the higher-level shared helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before writing one-off synchronization or interaction fallback logic.
 - Keep assertions in `*Test.java`; helper classes should expose actions, locators, and small state checks.
+- Add short plain-language comments in generated or updated `*Test.java` files so low-code readers can follow what each test protects and what each assertion block is checking.
 - Keep browser, wait, retry, and reporting toggles property-driven through `configs.pipeline.PipelineConfig` rather than hardcoding them in helper or test classes.
 - Put expected UI text, URLs, credentials, and other user-facing values in JSON test data rather than hardcoding them in assertions.
 - Keep test plans focused on business context and actual test cases. Treat Java/XML/JSON mapping as secondary implementation detail, not the main body of the plan.

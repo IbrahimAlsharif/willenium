@@ -30,6 +30,7 @@ The XML suite under `flows/...` is the executable representation of that journey
 - Put assertions in `src/test/java/tests/.../<Feature>Test.java`.
 - Put reusable API logic in `src/test/java/tests/.../<Feature>Api.java`.
 - Put API assertions in `src/test/java/tests/.../<Feature>ApiTest.java`.
+- When writing or updating test classes, add short explanatory comments so low-code readers can follow the intent of the test steps and assertions.
 - Keep setup and driver lifecycle in `base.Setup` and `base.TearDownTest`.
 - Keep API setup in `base.ApiSetup` and shared request execution in `base.ApiClient`.
 - Reuse `base.Finder` and `base.Go` before writing raw Selenium code.
@@ -139,6 +140,7 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - If a plan already exists, update that plan and the linked tests rather than creating duplicate plans or duplicate test classes.
 - When the first real project test is requested, create app-specific folders, flows, and JSON data; move or rename the examples first if that will keep the real project clearer.
 - Keep UI tests suite-driven; do not bypass setup/teardown assumptions.
+- Prefer one short comment per test or assertion block that explains the business intent in plain language, not only the code action.
 - Keep UI execution behavior property-driven through `configs.pipeline.PipelineConfig` instead of hardcoding browser or wait behavior in tests.
 - Keep API tests suite-driven; do not bypass `base.ApiSetup`.
 - When a new top-level flow/profile is added, also add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.

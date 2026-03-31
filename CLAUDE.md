@@ -39,21 +39,23 @@ Treat flows as business journeys first and TestNG execution assets second.
 5. Use the matching framework conventions for the task:
    - UI: `base.Setup`, `base.Finder`, `base.Go`, and `base.TearDownTest`
    - API: `base.ApiSetup`, `base.ApiClient`, and `configs.api.ApiContext`
-6. Use the repo's `atlassian` MCP server when Jira bugs should drive planning, bug filing, or test generation.
-7. For Jira bugs, inspect which existing plans, flows, classes, and JSON data already own the affected journey before deciding whether to extend or create coverage.
-8. Use the repo's `selenium` MCP server during planning or debugging only when live browser validation would materially improve the work.
-9. When Selenium MCP is used, inspect user intent, trust signals, conversion blockers, and recovery paths before drilling down to selectors.
-10. For the first real project test, create app-specific test data, flows, and classes instead of extending the bundled WE WILL example assets by default.
-11. Move or rename the sample assets first if that keeps the real project clearer.
-12. Translate any MCP findings into framework-native Java/TestNG changes.
-13. Run the smallest relevant suite or profile when feasible.
-14. When a new top-level flow/profile is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow under `.github/workflows/`.
+6. When writing or updating test classes, add short explanatory comments so users with limited coding experience can understand the purpose of each test and the main assertion blocks.
+7. Use the repo's `atlassian` MCP server when Jira bugs should drive planning, bug filing, or test generation.
+8. For Jira bugs, inspect which existing plans, flows, classes, and JSON data already own the affected journey before deciding whether to extend or create coverage.
+9. Use the repo's `selenium` MCP server during planning or debugging only when live browser validation would materially improve the work.
+10. When Selenium MCP is used, inspect user intent, trust signals, conversion blockers, and recovery paths before drilling down to selectors.
+11. For the first real project test, create app-specific test data, flows, and classes instead of extending the bundled WE WILL example assets by default.
+12. Move or rename the sample assets first if that keeps the real project clearer.
+13. Translate any MCP findings into framework-native Java/TestNG changes.
+14. Run the smallest relevant suite or profile when feasible.
+15. When a new top-level flow/profile is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow under `.github/workflows/`.
 
 ## Guardrails
 
 - Do not produce standalone scripts in another language as the final artifact.
 - Do not turn the Quality Canvas into a detailed test plan or a quality matrix.
 - Do not bypass suite-driven setup assumptions for UI tests or API tests.
+- Do not leave generated test classes uncommented; include short plain-language comments that help non-coders follow the intent.
 - Do not hardcode user-facing strings, URLs, or expected assertions if they belong in JSON test data.
 - Do not hardcode API endpoints, headers, payload fragments, or expected response values if they belong in JSON test data.
 - Do not hardcode customer Jira site URLs, personal credentials, or tenant-specific identifiers into this public template.

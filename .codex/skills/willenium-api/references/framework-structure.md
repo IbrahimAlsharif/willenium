@@ -81,5 +81,6 @@ Real tests should:
 ## Practical Conventions
 
 - Favor explicit helper methods that encode API intent, then assert in `*ApiTest.java`.
+- Add short plain-language comments in `*ApiTest.java` so low-code readers can understand the purpose of each request and major assertion block.
 - Preserve suite-driven execution.
 - Keep new files in ASCII and match the repo's direct, utility-first style.

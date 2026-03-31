@@ -78,11 +78,12 @@ Produce framework-native automation work for this repo:
 15. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
 16. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
 17. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
-18. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, Jira issue metadata, and TestRail metadata when applicable.
-19. Register or update the relevant TestNG XML suite.
-20. When a plan changes, update the linked tests instead of creating duplicate implementations.
-21. Run the smallest meaningful verification path available.
-22. When a new top-level flow/profile is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
+18. When writing or updating test classes, add short explanatory comments so low-code readers can understand the purpose of each test and the main assertion blocks.
+19. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, Jira issue metadata, and TestRail metadata when applicable.
+20. Register or update the relevant TestNG XML suite.
+21. When a plan changes, update the linked tests instead of creating duplicate implementations.
+22. Run the smallest meaningful verification path available.
+23. When a new top-level flow/profile is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 
 ## Non-Negotiable Rules
 
@@ -114,6 +115,7 @@ Produce framework-native automation work for this repo:
 - Reuse `base.Finder` and `base.Go` before introducing raw low-level Selenium code.
 - Prefer the higher-level `Finder`/`Go` methods such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before adding custom waits or retry logic.
 - Keep assertions in `*Test.java`.
+- Add short plain-language comments in generated test classes so readers with low coding experience can follow the business intent and key assertions.
 - Keep helper/action methods in the feature helper class.
 - For API work, keep assertions in `*ApiTest.java` and reusable request logic in `*Api.java`.
 - Prefer JSON test data over hardcoded user-facing strings, URLs, and inputs.

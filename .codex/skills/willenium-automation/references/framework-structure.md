@@ -126,6 +126,7 @@ Real tests should:
 - Reuse `Finder`/`Go` before adding raw Selenium code.
 - Prefer the higher-level `Finder`/`Go` helpers before writing custom waits or retry wrappers in feature helpers.
 - Favor explicit helper methods that encode intent, then assert in `*Test.java`.
+- Add short plain-language comments in `*Test.java` so low-code readers can understand the purpose of each test and major assertion block.
 - Preserve suite-driven execution.
 - Keep new files in ASCII and match the repo's direct, utility-first style.
 - Be conservative with Java language features even though the build is now aligned on Java 17; follow the existing code style unless a newer feature is clearly warranted.
