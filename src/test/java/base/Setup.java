@@ -4,6 +4,7 @@ import configs.BrowserOptions;
 import configs.pipeline.PipelineConfig;
 import configs.pipeline.RemoteExecutionConfig;
 import configs.testRail.APIException;
+import configs.testRail.TestRailCase;
 import configs.testRail.TestRailManager;
 import configs.testdata.TestData;
 import configs.testdata.TestDataFactory;
@@ -38,15 +39,14 @@ public class Setup {
     public static WebDriver driver;
     public static TestData testData;
     public static WebDriverWait wait;
-    public static String testCaseId;
     public static final TestRailManager testRail = new TestRailManager();
     private static String uiInitializationBlockerMessage;
 
 
+    @TestRailCase("9379")
     @Test(priority = 1)
     @Parameters({"language", "branch", "browser"})
     public void setUpLocalDriver(String language, String branch, String browser) throws Exception {
-        testCaseId = "9379";
         resetSharedState();
         cleanScreenshotsDirectory();
         testData = TestDataFactory.getTestData(branch, language);
@@ -54,22 +54,22 @@ public class Setup {
         Assert.assertTrue(true);
     }
 
+    @TestRailCase("9380")
     @Test(priority = 2, groups = {"haltWhenFail"})
     @Parameters({"language"})
     public void openWebsite(String language){
         if (driver == null || testData == null) {
             throw new SkipException("Skipping openWebsite because setup did not initialize driver and test data");
         }
-        testCaseId = "9380";
         driver.get(testData.getBaseUrl(language).asText());
         Go.setMainTab();
         configureBrowserWindow();
     }
 
+    @TestRailCase("9381")
     @Test(priority = 1)
     @Parameters({"language", "branch", "browser"})
     public void setUpRemoteDriver(String language, String branch, String browser) throws Exception {
-        testCaseId = "9381";
         resetSharedState();
         cleanScreenshotsDirectory();
         testData = TestDataFactory.getTestData(branch, language);

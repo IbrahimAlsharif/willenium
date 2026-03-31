@@ -9,6 +9,7 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import configs.api.ApiContext;
 import configs.pipeline.PipelineConfig;
 import configs.testRail.APIException;
+import configs.testRail.TestRailCase;
 import configs.testRail.TestRailManager;
 import org.testng.IExecutionListener;
 import org.testng.ITestContext;
@@ -20,12 +21,12 @@ import org.testng.IInvokedMethodListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import static base.Go.testRunId;
 import static base.Setup.getUiInitializationBlockerMessage;
-import static base.Setup.testCaseId;
 import static base.Setup.testRail;
 
 public class Listener implements ITestListener, IInvokedMethodListener, IExecutionListener {
@@ -86,13 +87,7 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
             }
         }
 
-        if (PipelineConfig.testRailReport && screenShot != null) {
-            try {
-                testRail.setResult(testRunId, testCaseId, TestRailManager.FAILED, screenShot.getAbsolutePath());
-            } catch (IOException | APIException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        publishTestRailResult(result, TestRailManager.FAILED, screenShot != null ? screenShot.getAbsolutePath() : null);
         for (String tag : result.getMethod().getGroups()) {
             if (tag.equalsIgnoreCase("haltWhenFail")) {
                 halt = true;
@@ -148,13 +143,7 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
                 attachBrowserContext(methodTest);
             }
         }
-        if (PipelineConfig.testRailReport) {
-            try {
-                testRail.setResult(testRunId, testCaseId, TestRailManager.PASSED, null);
-            } catch (IOException | APIException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        publishTestRailResult(result, TestRailManager.PASSED, null);
     }
 
     @Override
@@ -197,6 +186,37 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
 
     private boolean isTearDownLifecycle(ITestResult result) {
         return result.getMethod().getTestClass().getName().equals("base.TearDownTest");
+    }
+
+    private void publishTestRailResult(ITestResult result, int status, String screenshotPath) {
+        if (!PipelineConfig.testRailReport) {
+            return;
+        }
+
+        String testCaseId = getAnnotatedTestRailCaseId(result);
+        if (testCaseId == null) {
+            return;
+        }
+
+        try {
+            testRail.setResult(testRunId, testCaseId, status, screenshotPath);
+        } catch (IOException | APIException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getAnnotatedTestRailCaseId(ITestResult result) {
+        Method javaMethod = result.getMethod().getConstructorOrMethod().getMethod();
+        if (javaMethod == null) {
+            return null;
+        }
+
+        TestRailCase testRailCase = javaMethod.getAnnotation(TestRailCase.class);
+        if (testRailCase == null || testRailCase.value().isBlank()) {
+            return null;
+        }
+
+        return testRailCase.value();
     }
 
 }

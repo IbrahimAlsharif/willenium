@@ -1,18 +1,19 @@
 package tests.examples.wewill.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import configs.testRail.TestRailCase;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static base.ApiSetup.testData;
-import static base.Setup.testCaseId;
 
 public class WeWillPublicApiTest {
 
+    @TestRailCase("API-0001")
     @Test(priority = 1)
     public void verifyExamplePostContract() {
-        testCaseId = "API-0001";
+        // This checks the read contract still returns the expected example record and metadata.
         JsonNode getOnePostData = testData.getApiData().get("posts").get("getOne");
         Response response = WeWillPublicApi.getExamplePost();
 
@@ -37,9 +38,10 @@ public class WeWillPublicApiTest {
         );
     }
 
+    @TestRailCase("API-0002")
     @Test(priority = 2)
     public void verifyExamplePostCreationContract() {
-        testCaseId = "API-0002";
+        // This verifies the create contract echoes the expected fields for a valid request.
         JsonNode createPostData = testData.getApiData().get("posts").get("createOne");
         Response response = WeWillPublicApi.createExamplePost();
 

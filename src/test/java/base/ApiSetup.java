@@ -23,7 +23,6 @@ public class ApiSetup {
     @Parameters({"language", "branch"})
     public void setUpApiClient(String language, String branch) {
         ApiContext.clear();
-        Setup.testCaseId = null;
         testData = TestDataFactory.getTestData(branch, language);
 
         JsonNode apiData = testData.getApiData();

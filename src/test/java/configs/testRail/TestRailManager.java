@@ -41,11 +41,13 @@ public class TestRailManager {
     public void setResult(String testRunId, String testCaseID, int status, String shotPTH) throws IOException,APIException {
             Map data = new HashMap<>();
             data.put("status_id", status);
-            data.put("comment", shotPTH);
-            data.put("attachment", (shotPTH));
+            if (shotPTH != null && !shotPTH.isBlank()) {
+                data.put("comment", shotPTH);
+                data.put("attachment", shotPTH);
+            }
             JSONObject r = (JSONObject) client.sendPost("add_result_for_case/" + testRunId + "/" + testCaseID + "", data);
             // Add attachment in case of fail
-            if (status == TestRailManager.FAILED) {
+            if (status == TestRailManager.FAILED && shotPTH != null && !shotPTH.isBlank()) {
                 String result_id = r.get("id").toString();
                 client.sendPost("add_attachment_to_result/" + result_id, shotPTH);
             }
@@ -61,5 +63,4 @@ public class TestRailManager {
         return response.get("id").toString();
     }
 }
-
 
