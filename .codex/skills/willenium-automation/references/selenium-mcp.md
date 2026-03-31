@@ -20,6 +20,15 @@ Selenium MCP is best used as a live browser probe:
 
 It is not the final artifact. The final artifact in this repo should still be Java/TestNG code plus any needed suite and test-data updates.
 
+When using Selenium MCP for planning or refinement, inspect the experience from a business view before dropping to locators:
+
+- what user intent the page is serving
+- what action or decision the business needs next
+- which trust signals or proof points are visible
+- where hesitation or drop-off is likely
+- what would count as a misleading success state
+- what recovery path exists when the ideal path fails
+
 ## Tool Surface
 
 For the pinned `@angiejones/mcp-selenium` package, the public docs describe tools in four practical groups:
@@ -48,12 +57,13 @@ The package docs show `start_browser` examples for Chrome and Firefox. The upstr
 
 1. Inspect the Java framework first so you know where the eventual code belongs.
 2. Use Selenium MCP only for the unknown or risky part of the flow.
-3. Translate the validated interaction back into repo-native code:
+3. Record business checkpoints as well as UI checkpoints.
+4. Translate the validated interaction back into repo-native code:
    - helper methods in `tests/.../<Feature>.java`
    - assertions in `tests/.../<Feature>Test.java`
    - JSON keys in test data
    - XML suite registration under `flows/...`
-4. Close the MCP session once you have the evidence you need.
+5. Close the MCP session once you have the evidence you need.
 
 ## Source Notes
 

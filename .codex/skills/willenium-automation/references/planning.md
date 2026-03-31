@@ -11,7 +11,18 @@ Read this reference when the task involves:
 
 ## Planning Contract
 
-Before drafting or updating a plan, determine two inputs:
+Before drafting or updating a plan, first determine the business context, then determine the planning dimensions.
+
+Business questions to answer first:
+
+- what business outcome this journey protects
+- who the primary user is
+- what value the user must successfully receive
+- what unacceptable outcome or failure matters most
+- what decision the team needs the resulting coverage to support
+- which journey path matters most in the first pass
+
+Then determine two planning inputs:
 
 - `plan_scope`
   Example values: `component`, `page`, `flow`, `journey`, `feature-area`, `multi-flow-regression`
@@ -19,6 +30,14 @@ Before drafting or updating a plan, determine two inputs:
   Example values: `smoke`, `happy-path`, `regression`, `full`
 
 If either is unclear, ask a concise follow-up before proceeding.
+
+Interpret `flow` as a business flow and prefer `journey` when the requested coverage is really about an end-to-end user outcome that serves a business goal.
+
+Prefer asking these questions in a structured UI when the client supports it:
+
+- keep the business questions in one short group
+- keep scope and depth in a second short group
+- avoid leading with implementation or file-structure questions
 
 ## Draft-First Rule
 
@@ -30,11 +49,12 @@ Do not jump straight from discovery into broad test generation when the plan dir
 
 The expected sequence is:
 
-1. Confirm scope and plan type.
-2. Inspect existing plans, flows, tests, and test data.
-3. Create or update the Markdown draft.
-4. Let the user review the draft direction.
-5. Generate or update automation from the approved plan.
+1. Confirm the business context.
+2. Confirm scope and plan type.
+3. Inspect existing plans, flows, tests, and test data.
+4. Create or update the Markdown draft.
+5. Let the user review the draft direction.
+6. Generate or update automation from the approved plan.
 
 ## When Planning Should Use Selenium MCP
 
@@ -42,10 +62,11 @@ Planning does not automatically require Selenium MCP.
 
 Default approach:
 
-1. confirm scope and plan type
-2. inspect local plans, flows, tests, and test data
-3. draft the Markdown plan
-4. use Selenium MCP only if live browser evidence would materially improve the plan
+1. confirm business context
+2. confirm scope and plan type
+3. inspect local plans, flows, tests, and test data
+4. draft the Markdown plan
+5. use Selenium MCP only if live browser evidence would materially improve the plan
 
 Use Selenium MCP during planning when:
 
@@ -65,7 +86,7 @@ Practical examples:
 - `Write a full test plan for this page`
   Selenium MCP may be useful if the page needs inspection.
 - `Update this existing plan for Jira bug ABC-123`
-  often no Selenium MCP at first; confirm the desired scope and plan type with the user, then decide whether live inspection is actually needed.
+  often no Selenium MCP at first; confirm the business context, desired scope, and plan type with the user, then decide whether live inspection is actually needed.
 - `Inspect this target link and create the plan`
   Selenium MCP is likely useful.
 
@@ -114,6 +135,12 @@ Baseline fields:
 - `app`
 - `plan_scope`
 - `plan_type`
+- `business_goal`
+- `user_value`
+- `confidence_target`
+- `unacceptable_outcomes`
+- `scenario_map`
+- `intensity_level`
 - `flow_xml`
 - `java_helper`
 - `java_test`
@@ -133,20 +160,26 @@ For Jira-linked work, also include:
 A reviewable draft should cover:
 
 - summary
+- business goal
+- user value
+- confidence target
 - scope
 - plan type
 - out-of-scope boundaries
 - assumptions and open questions
+- unacceptable outcomes
 - impact analysis when relevant
 - environment and setup needs
 - test data needs
-- happy paths
-- negative paths
-- edge cases
+- business test cases for the primary path, alternate paths, negative paths, and edge cases
+- scenario map
 - localization
-- automation mapping
+- secondary implementation notes
 - verification strategy
 - review status
+
+Keep the plan centered on business scenarios and actual test cases.
+Do not let file paths, class names, or XML wiring dominate the main body of the plan.
 
 ## Update-vs-Create Rule
 

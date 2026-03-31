@@ -19,6 +19,9 @@ Primary source files:
 
 Produce framework-native Java Selenium TestNG and RestAssured TestNG changes for this repo.
 
+Treat each flow as a business journey that protects a user outcome and a business objective.
+The XML suite under `flows/...` is the executable representation of that journey, not just a bucket of tests.
+
 - Put planning artifacts in `test-plans/<app>/<target-slug>.md` by default.
 - Put reusable browser logic in `src/test/java/tests/.../<Feature>.java`.
 - Put assertions in `src/test/java/tests/.../<Feature>Test.java`.
@@ -44,6 +47,16 @@ Use Selenium MCP only when live browser exploration materially helps:
 - inspect a dynamic page flow
 - reproduce a flaky UI issue
 - confirm rendered text, visibility, or navigation
+- understand the business intent of the page or journey
+- identify trust signals, conversion blockers, misleading success states, or recovery paths
+
+When Selenium MCP is used for planning or refinement, analyze the page from a business view first:
+
+- what user intent brought the visitor here
+- what the business needs the user to accomplish next
+- which signals build or reduce trust
+- where drop-off is likely
+- which checkpoints matter more than raw element presence
 
 Do not treat MCP interactions as the final deliverable. Translate findings back into Java/TestNG framework code.
 
@@ -91,15 +104,25 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 
 - Inspect the sample assets to learn the framework structure, but do not assume the user wants new work built on top of the bundled WE WILL example domain.
 - When the user asks to inspect a link, write a test plan, generate tests from a target, or update generated coverage, follow a plan-first workflow.
-- Before drafting a plan, ask for or confirm the user's desired plan scope and plan type.
+- Before drafting a plan, ask or confirm the business questions first:
+  - business goal
+  - primary user or actor
+  - user value
+  - key risk or unacceptable outcome
+  - confidence target
+- Then ask for or confirm the user's desired plan scope and plan type.
+- Prefer a clean, structured question UI with short grouped prompts when the client supports it.
+- Treat `journey` as the preferred scope when the user is describing a business outcome that spans one or more pages.
 - Use Selenium MCP during planning only when live inspection would materially improve the draft or the user explicitly asks to inspect the target link.
 - Create the canonical plan at `test-plans/<app>/<target-slug>.md` unless the user explicitly asks for a Markdown blueprint next to the flow XML under `flows/...`.
 - When the user asks for a plan, the work is not complete until the Markdown file is actually created or updated on disk.
 - Do not satisfy a planning request with a chat-only response. Persist the plan as a `.md` file and report the saved path in the final reply.
 - Treat the first planning deliverable as a draft Markdown plan for user review before broad generation starts.
-- Make the plan comprehensive enough to drive later generation: include scope, assumptions, setup, test data, happy paths, negative paths, edge cases, localization notes, and explicit mapping to XML, Java, and JSON artifacts.
+- Make the plan comprehensive enough to drive later generation: include business goal, user value, scope, assumptions, setup, test data, actual test cases, localization notes, unacceptable outcomes, scenario mapping, and only the minimum secondary implementation notes needed to connect it to the framework.
 - Do not default every plan to smoke coverage; the user may want full test planning for a specific page or flow.
 - Keep the plan linked to generated tests through stable metadata such as `plan_id`, `target_slug`, flow path, helper class, test class, and test-data sections.
+- Prefer business-care naming for flows and plans so the name reads like the owned journey rather than a technical grouping.
+- Keep the main body of the plan focused on business scenarios and test cases rather than file structure.
 - When the target comes from Jira, also persist `jira_issue_key` and `jira_issue_url` in the plan metadata so later updates can find the same bug-linked assets.
 - When the target comes from TestRail, also persist `testrail_case_ids` and `testrail_run_ids` in the plan metadata so later updates can find the same TestRail-linked assets.
 - For Jira bugs, update the existing plan and linked coverage when the behavior already belongs to an existing journey; create new artifacts only when there is no clean owner yet.

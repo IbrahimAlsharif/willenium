@@ -1,7 +1,30 @@
 # Willenium
 
-Willenium is a Java Selenium TestNG starter framework built for suite-driven UI and API automation.
-It gives you reusable setup and helper layers, JSON-backed test data, XML flow composition, and AI guidance files that match the framework structure.
+Willenium is a Java Selenium TestNG starter framework for suite-driven UI and API automation that is evolving into a quality-governed automation framework.
+It gives you reusable setup and helper layers, JSON-backed test data, XML flow composition, AI guidance files, and now a first strategic scaffold for business-aware planning, risk-aware coverage, and decision-useful reporting.
+
+## Strategic Direction
+
+Willenium is designed to move beyond script-first automation.
+
+The framework direction is:
+
+- automation should begin from business goals, user value, operational risk, and release confidence needs
+- coverage should be organized around meaningful scenarios and business journeys instead of test accumulation
+- planning should be treated as a first-class framework artifact
+- reporting should communicate covered risks, remaining exposure, and confidence level, not only pass/fail counts
+- AI should guide users toward stronger quality decisions, not only faster code generation
+- flow names should describe the business-care path they own, not just the test grouping they execute
+
+The initial scaffold for this direction now lives in two places:
+
+- `test-plans/` for executable planning plus the minimum business context each owned journey needs
+- `quality/plans/` for cross-cutting quality planning that can feed one or more executable test plans
+- `quality/contracts/` for future behavior contracts
+- `quality/reports/` for risk-based reporting models
+
+`test-plans/` remains the canonical source of truth for automation-linked executable planning and now also carries the minimum business context for each owned journey.
+`flows/` remains the executable layer, but each flow should represent a business journey with a clear user and business outcome.
 
 ## Quick Start
 
@@ -126,7 +149,7 @@ Willenium includes a root `.mcp.json` that registers browser, Jira, and test-man
 
 Use them for different jobs:
 
-- `selenium`: inspect a real page, validate a locator, or reproduce a UI issue before translating the result into Java/TestNG code
+- `selenium`: inspect a real page, understand the business journey, validate a locator, or reproduce a UI issue before translating the result into Java/TestNG code
 - `atlassian`: read Jira bugs before planning automation, create Jira bugs from failures, or update Jira issues with generated test artifact paths
 - `testrail`: read TestRail cases, plans, or runs before planning automation, map framework artifacts to TestRail IDs, or coordinate reporting expectations
 
@@ -165,10 +188,18 @@ Use them when you want AI assistance that follows the framework conventions:
 - keep API assertions in `*ApiTest.java`
 - update JSON-backed test data instead of hardcoding values
 - wire new coverage through TestNG XML suites under `flows/...`
-- ask for test plan scope and plan type before drafting a new plan when those are not already clear
+- ask the business questions before drafting a new plan:
+  - business goal
+  - primary user or actor
+  - user value
+  - key risk or unacceptable outcome
+  - confidence target
+- then ask for test plan scope and plan type when those are not already clear
+- prefer a clean, structured question UI with short grouped prompts when the client supports it
 - when work starts from a Jira bug, read the issue first and keep the resulting plan linked to that bug
 - for Jira bugs, analyze which existing plans, flows, tests, and JSON sections should be updated before deciding to add new coverage
 - use the `selenium` MCP server only when live browser exploration or locator validation is actually needed
+- when using Selenium MCP, analyze user intent, trust signals, journey checkpoints, and drop-off risks before focusing on selectors
 - treat the bundled tests and data as examples, not the default product namespace to extend
 - keep Jira tenant configuration user-provided at runtime rather than committed in the template
 
@@ -176,8 +207,24 @@ Use `willenium-coach` when you want help deciding what to ask for, what inputs t
 Use `willenium-automation` when you want UI or browser automation work done through the execution skill.
 Use `willenium-api` when you want API or service automation work done through the execution skill.
 Use `willenium` when you want to reference the repo agent directly.
-For plan-first work, the expected flow is: confirm scope and plan type -> write the Markdown draft under `test-plans/` -> let the user review -> then generate or update tests.
+For plan-first work, the expected flow is: confirm business context -> confirm scope and plan type -> write the Markdown draft under `test-plans/` focused on business scenarios and test cases -> let the user review -> then generate or update tests.
 Selenium MCP is optional during planning and is most useful when the plan needs live page inspection rather than just the user's description and existing local artifacts.
+
+When the work is strategic rather than purely technical, include quality intent up front:
+
+- business goal
+- user value
+- operational risk
+- unacceptable outcomes
+- scenario map
+- confidence target
+- desired intensity level
+
+Recommended strategy prompt:
+
+```text
+Use willenium-coach to turn this initiative into a Willenium journey plan. Capture the business goal, user value, operational risks, unacceptable outcomes, scenario map, confidence target, and reporting expectations directly in test-plans/, then map the result to the owned flow, helper, test, and JSON artifacts.
+```
 
 Typical prompts:
 

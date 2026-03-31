@@ -20,6 +20,7 @@ Before generation starts:
 
 Treat the plan as the source of truth for:
 
+- business journey ownership
 - owned user journeys
 - intended coverage depth
 - artifact mapping
@@ -62,6 +63,7 @@ Keep:
 When generating from a plan, verify that each area is reflected in code:
 
 - target slug matches the file naming scheme
+- flow naming reflects the business journey rather than a generic technical grouping
 - helper class path matches the plan
 - test class path matches the plan
 - flow XML path matches the plan
@@ -77,6 +79,7 @@ When the plan updates an already-owned journey:
 - strengthen weak assertions instead of duplicating the same path elsewhere
 - add new JSON keys instead of hardcoding patch-specific values
 - keep the XML wiring obvious and minimal
+- preserve the business-journey meaning of the flow so later reporting remains decision-useful
 
 ## New Coverage
 

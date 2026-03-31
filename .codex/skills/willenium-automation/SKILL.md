@@ -6,6 +6,7 @@ description: Use when creating, updating, or debugging Java Selenium TestNG UI c
 # Willenium UI Selenium TestNG
 
 Use this skill for browser-test work in this repository. The implementation target is always the Java/TestNG framework in this repo, not ad hoc scripts in another language.
+Treat flows as business journeys first and execution suites second.
 
 Use `willenium-api` instead when the task is primarily API coverage, API planning, API debugging, or RestAssured/TestNG work.
 
@@ -32,19 +33,20 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
    - verification -> `references/verification.md`
    - TestRail-linked work -> inspect the relevant TestRail cases or runs before creating duplicate framework assets
 3. Keep the plan as the source of truth for later generation and update work.
-4. Keep the framework split intact:
+4. Treat `flows/...` as the executable expression of a business journey, not merely a grouping of tests.
+5. Keep the framework split intact:
    - setup/driver lifecycle in `base.Setup` and `base.TearDownTest`
    - reusable browser actions in `base.Go`
    - reusable element lookup helpers in `base.Finder`
    - page/feature helpers in `tests/.../<Feature>.java`
    - assertions in `tests/.../<Feature>Test.java`
-5. When the user asks for the first real test for a new product, create app-specific test data, helper classes, test classes, flows, and plans instead of building on the sample app names and sample URLs.
-6. If keeping the examples in place would make the real project confusing, move or rename the sample assets so they are clearly marked as examples or starter content before adding the first real coverage.
-7. Add or update JSON-backed test data before hardcoding user-facing strings, URLs, credentials, or inputs.
-8. Register new or changed coverage in the appropriate TestNG XML suite under `flows/steps/...` or a composed suite under `flows/...`.
-9. When a new top-level flow/profile is added, add or regenerate the matching manually triggered GitHub Actions workflow under `.github/workflows/`.
-10. When a plan already exists for the target, update the linked plan and tests instead of creating duplicates.
-11. Run the smallest relevant verification path that matches the plan type and request.
+6. When the user asks for the first real test for a new product, create app-specific test data, helper classes, test classes, flows, and plans instead of building on the sample app names and sample URLs.
+7. If keeping the examples in place would make the real project confusing, move or rename the sample assets so they are clearly marked as examples or starter content before adding the first real coverage.
+8. Add or update JSON-backed test data before hardcoding user-facing strings, URLs, credentials, or inputs.
+9. Register new or changed coverage in the appropriate TestNG XML suite under `flows/steps/...` or a composed suite under `flows/...`.
+10. When a new top-level flow/profile is added, add or regenerate the matching manually triggered GitHub Actions workflow under `.github/workflows/`.
+11. When a plan already exists for the target, update the linked plan and tests instead of creating duplicates.
+12. Run the smallest relevant verification path that matches the plan type and request.
 
 ## Jira MCP Rules
 
@@ -58,9 +60,17 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Prefer plan-first delivery when the user asks for planning, link inspection, or test generation from a target.
 - Use `test-plans/` as the canonical planning area unless the user explicitly asks for a flow-local blueprint.
 - When the user asks for a plan, always create or update the actual Markdown file. A chat-only plan is insufficient.
+- Before drafting the plan, ask or confirm the business questions that define the journey:
+  - business goal
+  - primary user
+  - user value
+  - key risk or unacceptable outcome
+  - confidence target
 - Treat plan scope and plan type as required planning inputs, not optional polish.
+- Prefer asking those questions in a structured UI with short grouped prompts when the client supports it.
 - Do not default every plan to smoke coverage. Ask whether the user wants smoke, regression, or full coverage depth.
 - For plan-first work, write the Markdown draft for user review before large generation steps.
+- Use business-oriented naming for flow titles, plan titles, and coverage descriptions so they read like owned journeys.
 - Keep plan names and generated assets related through the same stable slug or `plan_id` so later updates remain deterministic.
 - When work starts from TestRail, keep related identifiers such as case IDs or run IDs in plan metadata so later updates stay traceable.
 - For bug-driven work, prefer extending the smallest existing plan/flow/test that already owns the behavior before creating new artifacts.
@@ -71,6 +81,7 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Keep assertions in `*Test.java`; helper classes should expose actions, locators, and small state checks.
 - Keep browser, wait, retry, and reporting toggles property-driven through `configs.pipeline.PipelineConfig` rather than hardcoding them in helper or test classes.
 - Put expected UI text, URLs, credentials, and other user-facing values in JSON test data rather than hardcoding them in assertions.
+- Keep test plans focused on business context and actual test cases. Treat Java/XML/JSON mapping as secondary implementation detail, not the main body of the plan.
 - If the target app supports both English and Arabic, keep environment-and-language variants in test data and have assertions read from the active file selected by `branch` + `language`.
 - For new flow generation, default to creating and updating four JSON files together: production arabic, production english, staging arabic, and staging english.
 - When production and staging values are not separately specified, duplicate the same language's content across both environment files by default.
@@ -78,5 +89,6 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Keep all four JSON files structurally identical even when their values differ.
 - If only one language is known today, still preserve the JSON structure so the second language can be added cleanly later.
 - Use the existing JSON files only as examples of shape; do not treat their sample website links or labels as canonical values for a new client project.
+- When using Selenium MCP, start by understanding the business goal, user intent, trust signals, and drop-off risks before drilling into technical selectors.
 - Do not commit personal Jira credentials, cloud IDs, account IDs, or customer tenant URLs into this public template; Jira tenant details should come from the user's authorized MCP client at runtime.
 - Do not commit personal TestRail URLs, usernames, API keys, or project-specific identifiers into this public template; TestRail access belongs to workspace MCP config and runtime reporting configuration.

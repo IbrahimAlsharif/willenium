@@ -11,7 +11,18 @@ Read this reference when the task involves:
 
 ## Planning Contract
 
-Before drafting or updating a plan, determine two inputs:
+Before drafting or updating a plan, first determine the business and contract context, then determine the planning dimensions.
+
+Business questions to answer first:
+
+- what business workflow or system outcome this API coverage protects
+- who the primary actor or consuming system is
+- what value or contract must be preserved
+- what unacceptable outcome matters most
+- what decision the team needs the resulting coverage to support
+- which request or integration path matters most in the first pass
+
+Then determine two planning inputs:
 
 - `plan_scope`
   Example values: `endpoint`, `service`, `contract`, `integration-flow`, `multi-service-regression`
@@ -19,6 +30,12 @@ Before drafting or updating a plan, determine two inputs:
   Example values: `smoke`, `happy-path`, `regression`, `negative-path`, `full`
 
 If either is unclear, ask a concise follow-up before proceeding.
+
+Prefer asking these questions in a structured UI when the client supports it:
+
+- keep business and contract questions together
+- keep scope and depth in a second short group
+- avoid leading with helper names, flow files, or suite structure
 
 ## Draft-First Rule
 
@@ -28,11 +45,12 @@ The first planning deliverable should be a Markdown draft on disk under:
 
 The expected sequence is:
 
-1. Confirm scope and plan type.
-2. Inspect existing plans, flows, tests, and test data.
-3. Create or update the Markdown draft.
-4. Let the user review the draft direction.
-5. Generate or update automation from the approved plan.
+1. Confirm the business and contract context.
+2. Confirm scope and plan type.
+3. Inspect existing plans, flows, tests, and test data.
+4. Create or update the Markdown draft.
+5. Let the user review the draft direction.
+6. Generate or update automation from the approved plan.
 
 ## Scope Guidance
 
@@ -77,6 +95,12 @@ Baseline fields:
 - `app`
 - `plan_scope`
 - `plan_type`
+- `business_goal`
+- `user_value`
+- `confidence_target`
+- `unacceptable_outcomes`
+- `scenario_map`
+- `intensity_level`
 - `flow_xml`
 - `java_helper`
 - `java_test`
@@ -90,17 +114,23 @@ For API work, make the Java and test data fields point to `*Api.java`, `*ApiTest
 A reviewable API draft should cover:
 
 - summary
+- business goal
+- user value
+- confidence target
 - scope
 - plan type
 - out-of-scope boundaries
 - assumptions and open questions
+- unacceptable outcomes
 - impact analysis when relevant
 - environment and setup needs
 - auth and header needs
 - request data and payload needs
-- happy paths
-- negative paths
-- edge cases
-- automation mapping
+- business and contract test cases for primary, alternate, negative, and edge paths
+- scenario map
+- secondary implementation notes
 - verification strategy
 - review status
+
+Keep the plan centered on behavior, contracts, and real test cases.
+Do not let file structure or framework mapping dominate the plan body.

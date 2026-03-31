@@ -4,8 +4,14 @@ target_name: Replace With User Target Name
 target_url: https://example.com/path
 target_slug: target-slug
 app: app
-plan_scope: flow
+plan_scope: journey
 plan_type: full
+business_goal: Replace with the business objective this journey protects
+user_value: Replace with the user outcome this journey delivers
+confidence_target: Replace with the decision this plan should support
+unacceptable_outcomes: []
+scenario_map: []
+intensity_level: high
 jira_issue_key:
 jira_issue_url:
 affected_flows: []
@@ -23,11 +29,32 @@ status: draft
 
 ## Summary
 
-Describe the user target, why it matters, and what this plan intends to verify.
+Describe the business journey, why it matters, and what this plan intends to protect.
 
 Use `target_slug` as the canonical identifier for the target. Derive `flow_xml`, Java class names, and JSON sections from it using the repo's naming conventions.
 
 Record whether this is a smoke, regression, or full plan, and whether the scope is a page, flow, journey, feature area, or broader regression slice.
+Treat the linked flow XML as the executable representation of this business journey.
+
+## Business Goal
+
+- Describe what the business needs this journey to achieve.
+
+## User Value
+
+- Describe what the user is trying to accomplish and how the experience should help them succeed.
+
+## Confidence Target
+
+- Record which release, launch, or operational decision this plan is meant to support.
+
+## Business Questions Answered
+
+- Who is the primary user or actor?
+- What outcome are they trying to achieve?
+- What outcome does the business need from this journey?
+- What failure would be unacceptable?
+- What decision should this coverage support?
 
 ## Scope
 
@@ -46,6 +73,10 @@ Record whether this is a smoke, regression, or full plan, and whether the scope 
 ## Assumptions
 
 - Record environment assumptions, login assumptions, content stability, and any expected feature flags.
+
+## Unacceptable Outcomes
+
+- List the user or business failures that would be unacceptable even if a low-level technical assertion still passed.
 
 ## Open Questions
 
@@ -76,27 +107,34 @@ Record whether this is a smoke, regression, or full plan, and whether the scope 
 - Credentials or user types needed
 - URLs, labels, filters, and inputs that should remain dynamic
 
-## Happy Paths
+## Test Cases
 
-1. Describe the primary successful user journeys.
-2. For each journey, list the expected checkpoints and assertions.
-
-## Negative Paths
-
-1. Describe the main failure, validation, or denied-access paths.
-2. Note expected messages, disabled states, or recovery behavior.
-
-## Edge Cases
-
-1. Describe boundary conditions, empty states, or dynamic-content risks.
-2. Note any timing or rendering concerns that may need locator validation.
+1. Primary path:
+   Describe the main business journey and list the expected business checkpoints and assertions.
+2. Alternate path:
+   Describe the next most valuable success variant and what should still succeed.
+3. Negative path:
+   Describe the main failure, validation, or denied-access path and the expected recovery or guardrail.
+4. Edge case:
+   Describe a boundary condition, empty state, or dynamic-content risk that deserves explicit coverage.
 
 ## Localization
 
 - Note English and Arabic expectations when the product supports both.
 - Identify any user-facing strings that should be stored separately by language.
 
-## Automation Mapping
+## Scenario Map
+
+- Primary success path
+- High-value alternate path
+- Highest-risk failure path
+- Recovery path
+
+## Intensity Level
+
+- Record the intended automation intensity such as light, medium, or high based on business criticality and risk.
+
+## Secondary Implementation Notes
 
 - Flow XML:
   `flows/app/steps/target_slug.xml`

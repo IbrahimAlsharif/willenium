@@ -50,7 +50,15 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
 - Prefer plan-first delivery when the user asks for planning, service inspection, endpoint coverage, or test generation from an API target.
 - Use `test-plans/` as the canonical planning area unless the user explicitly asks for a flow-local blueprint.
 - When the user asks for a plan, always create or update the actual Markdown file. A chat-only plan is insufficient.
+- Before drafting the plan, ask or confirm the business questions behind the API coverage:
+  - business goal
+  - user or system actor
+  - value or contract that must be preserved
+  - key failure or unacceptable outcome
+  - confidence target
 - Treat plan scope and plan type as required planning inputs, not optional polish.
+- Prefer asking those questions in a structured UI with short grouped prompts when the client supports it.
+- Keep API plans focused on business behavior, contract scenarios, and real test cases. Treat helper/test/file mapping as secondary implementation detail.
 - When work starts from TestRail, keep related identifiers such as case IDs or run IDs in plan metadata so later updates stay traceable.
 - Keep assertions in `*ApiTest.java`; helper classes should expose request construction and execution helpers.
 - Put endpoints, headers, payload fragments, credentials, and expected values in JSON test data rather than hardcoding them in assertions.
