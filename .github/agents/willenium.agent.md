@@ -60,7 +60,10 @@ Produce framework-native automation work for this repo:
 - assertion-focused API TestNG classes under `src/test/java/tests/...`
 - JSON-backed test data updates under `src/test/java/configs/testdata/...`
 - suite wiring under `flows/...`
-- manually triggered GitHub Actions workflow files under `.github/workflows/...` for each top-level flow/profile
+- manually triggered GitHub Actions workflow files under `.github/workflows/...` for every new flow
+
+For each new plan, create fresh app-specific JSON test data files instead of reusing the bundled example JSON files.
+When usernames or passwords are needed in test data files, store them as plain text in the JSON instead of reading them from environment variables.
 
 ## Workflow
 
@@ -86,17 +89,19 @@ Produce framework-native automation work for this repo:
 15. Keep the resulting plan linked through metadata such as `jira_issue_key`, `jira_issue_url`, `testrail_case_ids`, `testrail_run_ids`, `plan_scope`, `plan_type`, and impacted artifacts when applicable.
 16. Decide whether Selenium MCP is actually needed.
 17. If live UI exploration is needed, use the `selenium` MCP server to validate the page, flow, text, or locator.
-18. When using Selenium MCP, inspect the experience from the user's and the business's perspective before focusing on selectors.
+18. When using Selenium MCP, prefer headed mode whenever possible and inspect the experience from the user's and the business's perspective before focusing on selectors.
 19. When TestRail linkage matters, keep the mapping at the agent/client layer or in plan metadata and reporting configuration rather than embedding TestRail calls into Java tests.
 20. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
-21. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
-22. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
-23. When writing or updating test classes, add short explanatory comments so low-code readers can understand the purpose of each test and the main assertion blocks.
-24. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, Jira issue metadata, and TestRail metadata when applicable.
-25. Register or update the relevant TestNG XML suite.
-26. When a plan changes, update the linked tests instead of creating duplicate implementations.
-27. Run the smallest meaningful verification path available.
-28. When a new top-level flow/profile is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
+21. For each new plan, create fresh app-specific JSON test data files rather than reusing the bundled example JSON files.
+22. When test data files need usernames or passwords for the covered journey, keep those credentials as plain text in the JSON file rather than environment-variable placeholders.
+23. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
+24. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
+25. When writing or updating test classes, add short explanatory comments so low-code readers can understand the purpose of each test and the main assertion blocks.
+26. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, Jira issue metadata, and TestRail metadata when applicable.
+27. Register or update the relevant TestNG XML suite.
+28. When a plan changes, update the linked tests instead of creating duplicate implementations.
+29. Run the smallest meaningful verification path available.
+30. When a new flow is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 
 ## Non-Negotiable Rules
 
@@ -139,6 +144,8 @@ Produce framework-native automation work for this repo:
 - Keep helper/action methods in the feature helper class.
 - For API work, keep assertions in `*ApiTest.java` and reusable request logic in `*Api.java`.
 - Prefer JSON test data over hardcoded user-facing strings, URLs, and inputs.
+- For each new plan, create fresh app-specific JSON test data files instead of reusing the bundled example JSON files.
+- When test data files need usernames or passwords for the covered journey, keep those credentials as plain text in the JSON file rather than environment-variable placeholders.
 - Keep test plans focused on business scenarios and actual test cases. Treat technical file mapping as secondary detail.
 - Keep UI execution and wait behavior property-driven through `configs.pipeline.PipelineConfig` instead of embedding browser/runtime flags in tests.
 - Prefer JSON test data over hardcoded endpoints, headers, payload fragments, and expected response values.
@@ -160,6 +167,8 @@ Use Selenium MCP when:
 - navigation or text rendering needs confirmation
 - the business journey needs clarification through real user-facing signals, trust cues, or drop-off analysis
 
+When Selenium MCP is used for website exploration, prefer headed mode whenever possible.
+
 Do not use Selenium MCP when local source inspection already answers the question.
 
 ## When To Use TestRail MCP
@@ -178,4 +187,4 @@ Do not use TestRail MCP as a substitute for framework-native Java assertions, XM
 - Keep code concise and readable.
 - Prefer the smallest suite/profile that proves the change.
 - When you add a new flow, make the suite wiring obvious and maintainable.
-- When you add a new top-level flow/profile, keep the matching manual GitHub Actions workflow in sync.
+- When you add a new flow, keep the matching manual GitHub Actions workflow in sync.

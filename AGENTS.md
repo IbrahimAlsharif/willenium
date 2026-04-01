@@ -38,8 +38,10 @@ The XML suite under `flows/...` is the executable representation of that journey
 - Reuse `base.Finder` and `base.Go` before writing raw Selenium code.
 - Prefer the higher-level `Finder`/`Go` helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before adding custom waits or retry logic.
 - Update JSON-backed test data instead of hardcoding user-facing strings when possible.
+- For each new plan, create fresh app-specific test data files instead of reusing the checked-in example JSON files.
+- When usernames or passwords are needed in test data files, store them as plain text in the JSON instead of reading them from environment variables.
 - Register new coverage through TestNG XML suites under `flows/...`.
-- Add or regenerate a matching manually triggered GitHub Actions workflow for each new top-level flow/profile under `.github/workflows/`.
+- Add or regenerate a matching manually triggered GitHub Actions workflow for every new flow under `.github/workflows/`.
 
 Treat the checked-in tests, flows, GitHub workflows, and JSON data as starter examples of framework structure. Their website links, labels, and assertions are sample content unless the user confirms they are the real target application.
 
@@ -58,6 +60,8 @@ Use Selenium MCP only when live browser exploration materially helps:
 - confirm rendered text, visibility, or navigation
 - understand the business intent of the page or journey
 - identify trust signals, conversion blockers, misleading success states, or recovery paths
+
+When Selenium MCP is used for website exploration, prefer headed mode whenever possible.
 
 When Selenium MCP is used for planning or refinement, analyze the page from a business view first:
 
@@ -134,6 +138,7 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - Prefer a clean, structured question UI with short grouped prompts when the client supports it.
 - Treat `journey` as the preferred scope when the user is describing a business outcome that spans one or more pages.
 - Use Selenium MCP during planning only when live inspection would materially improve the draft or the user explicitly asks to inspect the target link.
+- When Selenium MCP explores a website, prefer headed mode whenever possible.
 - Create the canonical plan at `test-plans/<app>/<target-slug>.md` unless the user explicitly asks for a Markdown blueprint next to the flow XML under `flows/...`.
 - Create the canonical Quality Canvas at `quality/plans/<app>/<target-slug>-quality-canvas.md` unless the user explicitly asks for another location.
 - When the user asks for a plan, the work is not complete until the Markdown file is actually created or updated on disk.
@@ -149,11 +154,13 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - For Jira bugs, update the existing plan and linked coverage when the behavior already belongs to an existing journey; create new artifacts only when there is no clean owner yet.
 - If a plan already exists, update that plan and the linked tests rather than creating duplicate plans or duplicate test classes.
 - When the first real project test is requested, create app-specific folders, flows, and JSON data; move or rename the examples first if that will keep the real project clearer.
+- When a new plan introduces new coverage, create fresh app-specific JSON test data files for that plan and do not point the plan at the bundled example JSON files.
+- When test data files need usernames or passwords for the covered journey, keep those credentials as plain text in the JSON file rather than environment-variable placeholders.
 - Keep UI tests suite-driven; do not bypass setup/teardown assumptions.
 - Prefer one short comment per test or assertion block that explains the business intent in plain language, not only the code action.
 - Keep UI execution behavior property-driven through `configs.pipeline.PipelineConfig` instead of hardcoding browser or wait behavior in tests.
 - Keep API tests suite-driven; do not bypass `base.ApiSetup`.
-- When a new top-level flow/profile is added, also add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
+- When a new flow is added, also add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 - Keep expected text, URLs, and other assertion inputs dynamic in `src/test/java/configs/testdata/...` instead of hardcoding them in test methods.
 - If the real site has English and Arabic variants, maintain environment-and-language-specific JSON data and read assertions from the active file selected by `branch` + `language`.
 - For new flow generation, default to four JSON files: `Production Arabic`, `Production English`, `Staging Arabic`, and `Staging English`.
