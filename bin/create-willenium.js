@@ -278,7 +278,7 @@ function updateReadme(projectDir, projectName) {
 
 \`\`\`bash
 cd ${projectName}
-mvn test -PBrowseExampleWeWillEnglish
+mvn test -PProtectExampleHomeTrustEnglish
 \`\`\`
 `
     )
@@ -349,7 +349,7 @@ Created ${projectName} in ${destination}
 
 Next steps:
   cd ${destination}
-  mvn test -PBrowseExampleWeWillEnglish
+  mvn test -PProtectExampleHomeTrustEnglish
 `);
 }
 

@@ -1,12 +1,20 @@
 package tests.examples.wewill.home;
 
+import base.Setup;
 import configs.testRail.TestRailCase;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static base.Setup.testData;
 
 public class WeWillHomePageTest {
+
+    @BeforeMethod
+    public void ensureExampleHomeJourneyIsReady() {
+        // This keeps setup failures visible as framework-level setup issues instead of null-pointer noise.
+        Setup.ensureUiSessionReady();
+    }
 
     @TestRailCase("0001")
     @Test(priority = 1)
