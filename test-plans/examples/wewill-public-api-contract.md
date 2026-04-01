@@ -110,10 +110,8 @@ Its purpose is to show how even a lightweight public API example can stay linked
 
 ## Impact Analysis
 
-- The owned execution path is `flows/examples/steps/wewill/public_api_journey.xml`
-- The main assertion owner is `tests.examples.wewill.api.WeWillPublicApiTest`
-- The contract values live in the `api.posts.getOne` and `api.posts.createOne` JSON sections
-- The current example should stay concentrated in one small helper and one small test class
+- Keep this starter example concentrated in one simple owned contract journey instead of duplicating the same behavior across multiple example assets.
+- Keep the current example owner and strengthen or split coverage there if the contract checkpoints grow.
 
 ## Environment And Setup
 
@@ -133,13 +131,13 @@ Its purpose is to show how even a lightweight public API example can stay linked
 ## Test Cases
 
 1. Primary path:
-   Read one example post and confirm the expected contract fields.
+   Read one example post and confirm the core contract needed for a consumer to trust the response.
 2. Alternate path:
-   Create one example post and confirm the echoed fields match the configured request data.
+   Create one example post and confirm the service echoes the configured business data clearly enough for a consumer to rely on it.
 3. Negative path:
    A contract field changes while the endpoint still returns a technically successful response.
 4. Edge case:
-   Content type remains JSON while individual expected fields drift.
+   The response keeps a successful status while one important payload field drifts from the expected contract.
 
 ## Localization
 
@@ -160,9 +158,6 @@ Its purpose is to show how even a lightweight public API example can stay linked
 
 - Flow XML:
   `flows/examples/steps/wewill/public_api_journey.xml`
-- Top-level suites:
-  `flows/examples/wewill/ProtectExamplePublicApiContractEnglish.xml`
-  `flows/examples/wewill/ProtectExamplePublicApiContractArabic.xml`
 - Java helper:
   `src/test/java/tests/examples/wewill/api/WeWillPublicApi.java`
 - Java test:

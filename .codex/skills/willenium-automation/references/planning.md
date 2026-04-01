@@ -26,11 +26,13 @@ Business questions to answer first:
 
 Then determine two planning inputs:
 
+- the intended user journey steps or the specific feature being planned
 - `plan_scope`
   Example values: `component`, `page`, `flow`, `journey`, `feature-area`, `multi-flow-regression`
 - `plan_type`
-  Example values: `smoke`, `happy-path`, `regression`, `full`
+  Example values: `smoke`, `happy-path`, `negative-path`, `edge-case-focused`, `regression`, `full`
 
+For every new test plan request, explicitly ask for or confirm the journey steps or feature and the plan type before proceeding.
 If either is unclear, ask a concise follow-up before proceeding.
 
 Interpret `flow` as a business flow and prefer `journey` when the requested coverage is really about an end-to-end user outcome that serves a business goal.
@@ -38,7 +40,7 @@ Interpret `flow` as a business flow and prefer `journey` when the requested cove
 Prefer asking these questions in a structured UI when the client supports it:
 
 - keep the business questions in one short group
-- keep scope and depth in a second short group
+- keep journey steps or feature plus plan type in a second short group
 - avoid leading with implementation or file-structure questions
 
 ## Draft-First Rule
@@ -53,7 +55,7 @@ The expected sequence is:
 
 1. If needed, create or update the Quality Canvas for the target.
 2. Confirm the business context.
-3. Confirm scope and plan type.
+3. Confirm the journey steps or feature and the plan type.
 4. Inspect existing plans, flows, tests, and test data.
 5. Create or update the Markdown draft.
 6. Let the user review the draft direction.
@@ -66,10 +68,10 @@ Planning does not automatically require Selenium MCP.
 Default approach:
 
 1. confirm business context
-2. confirm scope and plan type
+2. confirm the journey steps or feature and the plan type
 3. inspect local plans, flows, tests, and test data
-4. draft the Markdown plan
-5. use Selenium MCP only if live browser evidence would materially improve the plan
+4. use Selenium MCP to navigate and investigate the intended journey only when live evidence would materially improve the plan
+5. draft the Markdown plan with Selenium findings aligned to the business cases
 
 Use Selenium MCP during planning when:
 
@@ -77,19 +79,27 @@ Use Selenium MCP during planning when:
 - the page structure or behavior is unclear from the user's description
 - rendered text, navigation, visibility, or dynamic content needs confirmation
 - live exploration would meaningfully improve the plan's accuracy
+- the team needs the actual journey steps, decision points, or recovery paths confirmed before finalizing the test cases
 
 Do not use Selenium MCP during planning when:
 
 - the user's description is already sufficient to draft the plan
 - the task is mainly updating an existing plan from a known bug or known coverage area
-- scope and plan type are still undecided and live browsing would be premature
+- journey steps or feature focus and plan type are still undecided and live browsing would be premature
+
+When Selenium MCP is used during planning:
+
+- navigate the journey in the same order the plan is expected to cover
+- capture the real steps, decision points, trust signals, blockers, and recovery paths
+- use those findings to sharpen the business test cases, not just to collect selectors
+- align exploration depth with the chosen plan type so a smoke plan stays lean and a full plan investigates deeper paths
 
 Practical examples:
 
 - `Write a full test plan for this page`
   Selenium MCP may be useful if the page needs inspection.
 - `Update this existing plan for Jira bug ABC-123`
-  often no Selenium MCP at first; confirm the business context, desired scope, and plan type with the user, then decide whether live inspection is actually needed.
+  often no Selenium MCP at first; confirm the business context, intended journey steps or feature, and desired plan type with the user, then decide whether live inspection is actually needed.
 - `Inspect this target link and create the plan`
   Selenium MCP is likely useful.
 
@@ -184,6 +194,9 @@ A reviewable draft should cover:
 
 Keep the plan centered on business scenarios and actual test cases.
 Do not let file paths, class names, or XML wiring dominate the main body of the plan.
+Keep implementation mapping brief and secondary.
+Prefer a larger number of focused business test cases over a smaller number of broad cases that bundle many expectations together.
+Each planned test case should protect one clear business behavior, outcome, or failure mode.
 
 ## Update-vs-Create Rule
 

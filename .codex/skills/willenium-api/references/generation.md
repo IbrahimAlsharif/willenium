@@ -43,6 +43,9 @@ Translate the plan into the repo's native API structure:
 - reuse `base.ApiClient` before hand-writing duplicated RestAssured request setup in feature tests
 - keep assertions in `*ApiTest.java`
 - keep helper classes focused on request construction and execution intent
+- prefer multiple focused API tests over one assert-heavy test method
+- keep each API test responsible for one contract promise, business rule, or failure mode
+- avoid bundling several contract expectations into one test just because they share the same endpoint setup
 - put endpoints, headers, payload fragments, auth inputs, and expected values in JSON instead of hardcoding them
 - keep flow ownership obvious and minimal
 - update existing helper or test assets when the plan says the behavior belongs there

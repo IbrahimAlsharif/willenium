@@ -69,7 +69,9 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
   - user value
   - key risk or unacceptable outcome
   - confidence target
+- For every new UI test plan request, explicitly ask for or confirm the intended user journey steps or the specific feature being planned.
 - Treat plan scope and plan type as required planning inputs, not optional polish.
+- For every new UI test plan request, explicitly ask for or confirm the plan type such as smoke, happy-path, negative-path, edge-case-focused, regression, or full.
 - Prefer asking those questions in a structured UI with short grouped prompts when the client supports it.
 - Do not default every plan to smoke coverage. Ask whether the user wants smoke, regression, or full coverage depth.
 - Do not treat rendered pages, clickable elements, or completed steps as sufficient proof of business success when trust, recovery, conversion, or support-cost risk still matters.
@@ -84,9 +86,13 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Prefer the higher-level shared helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before writing one-off synchronization or interaction fallback logic.
 - Keep assertions in `*Test.java`; helper classes should expose actions, locators, and small state checks.
 - Add short plain-language comments in generated or updated `*Test.java` files so low-code readers can follow what each test protects and what each assertion block is checking.
+- Prefer many focused business tests over one large test with many assertions.
+- Keep each test centered on one business outcome, checkpoint, or failure mode.
+- Split a long journey into multiple tests when that makes failures clearer and reporting more useful.
 - Keep browser, wait, retry, and reporting toggles property-driven through `configs.pipeline.PipelineConfig` rather than hardcoding them in helper or test classes.
 - Put expected UI text, URLs, credentials, and other user-facing values in JSON test data rather than hardcoding them in assertions.
-- Keep test plans focused on business context and actual test cases. Treat Java/XML/JSON mapping as secondary implementation detail, not the main body of the plan.
+- Keep test plans focused on business context and focused test cases. Treat Java/XML/JSON mapping as secondary implementation detail, not the main body of the plan.
+- Keep file structure and artifact mapping brief so the plan stays decision-useful for non-developers too.
 - If the target app supports both English and Arabic, keep environment-and-language variants in test data and have assertions read from the active file selected by `branch` + `language`.
 - For new flow generation, default to creating and updating four JSON files together: production arabic, production english, staging arabic, and staging english.
 - When production and staging values are not separately specified, duplicate the same language's content across both environment files by default.
@@ -95,5 +101,6 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - If only one language is known today, still preserve the JSON structure so the second language can be added cleanly later.
 - Use the existing JSON files only as examples of shape; do not treat their sample website links or labels as canonical values for a new client project.
 - When using Selenium MCP, start by understanding the business goal, user intent, trust signals, and drop-off risks before drilling into technical selectors.
+- When using Selenium MCP for planning, navigate the requested journey steps or feature area intentionally and align the findings back to the planned business cases and selected plan type.
 - Do not commit personal Jira credentials, cloud IDs, account IDs, or customer tenant URLs into this public template; Jira tenant details should come from the user's authorized MCP client at runtime.
 - Do not commit personal TestRail URLs, usernames, API keys, or project-specific identifiers into this public template; TestRail access belongs to workspace MCP config and runtime reporting configuration.

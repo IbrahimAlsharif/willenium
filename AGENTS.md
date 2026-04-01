@@ -33,6 +33,9 @@ The XML suite under `flows/...` is the executable representation of that journey
 - Put reusable API logic in `src/test/java/tests/.../<Feature>Api.java`.
 - Put API assertions in `src/test/java/tests/.../<Feature>ApiTest.java`.
 - When writing or updating test classes, add short explanatory comments so low-code readers can follow the intent of the test steps and assertions.
+- Prefer many small business-focused tests over one large test with many assertions.
+- Keep each test centered on one business behavior, decision point, or failure mode so failures stay easy to understand.
+- Avoid packing an entire journey into one method when the business checkpoints can be owned as separate tests.
 - Keep setup and driver lifecycle in `base.Setup` and `base.TearDownTest`.
 - Keep API setup in `base.ApiSetup` and shared request execution in `base.ApiClient`.
 - Reuse `base.Finder` and `base.Go` before writing raw Selenium code.
@@ -128,27 +131,33 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - Do not force a Quality Canvas for every request. Small bug-driven updates or direct edits to an existing owned journey can proceed by updating the existing plan and linked coverage.
 - When the user asks to inspect a link, write a test plan, generate tests from a target, or update generated coverage, follow a plan-first workflow.
 - If test planning starts from high-level product inputs rather than an already-defined journey, create or update the Quality Canvas first, then ask or confirm the business questions for the specific executable plan.
+- Every time the user asks to create a new test plan, explicitly ask for or confirm the intended user journey steps or the specific feature being planned.
+- Every time the user asks to create a new test plan, explicitly ask for or confirm the desired plan type such as `smoke`, `happy-path`, `negative-path`, `edge-case-focused`, `regression`, or `full`.
 - Before drafting a plan, ask or confirm the business questions first:
   - business goal
   - primary user or actor
   - user value
   - key risk or unacceptable outcome
   - confidence target
-- Then ask for or confirm the user's desired plan scope and plan type.
+- Then ask for or confirm the user's journey steps or feature scope and the desired plan type.
 - Prefer a clean, structured question UI with short grouped prompts when the client supports it.
 - Treat `journey` as the preferred scope when the user is describing a business outcome that spans one or more pages.
 - Use Selenium MCP during planning only when live inspection would materially improve the draft or the user explicitly asks to inspect the target link.
 - When Selenium MCP explores a website, prefer headed mode whenever possible.
+- When Selenium MCP is used for planning, use it to navigate the intended journey steps, investigate unclear behavior, and feed the confirmed findings back into the plan's business cases and checkpoints.
+- Do not use Selenium MCP as disconnected browsing; align exploration to the requested feature, journey steps, and selected plan type.
 - Create the canonical plan at `test-plans/<app>/<target-slug>.md` unless the user explicitly asks for a Markdown blueprint next to the flow XML under `flows/...`.
 - Create the canonical Quality Canvas at `quality/plans/<app>/<target-slug>-quality-canvas.md` unless the user explicitly asks for another location.
 - When the user asks for a plan, the work is not complete until the Markdown file is actually created or updated on disk.
 - Do not satisfy a planning request with a chat-only response. Persist the plan as a `.md` file and report the saved path in the final reply.
 - Treat the first planning deliverable as a draft Markdown plan for user review before broad generation starts.
-- Make the plan comprehensive enough to drive later generation: include business goal, user value, scope, assumptions, setup, test data, actual test cases, localization notes, unacceptable outcomes, scenario mapping, and only the minimum secondary implementation notes needed to connect it to the framework.
+- Make the plan comprehensive enough to drive later generation, but keep the main body business-first: include business goal, user value, scope, assumptions, actual test cases, localization notes, unacceptable outcomes, and scenario mapping, then keep technical mapping as a short secondary section only.
 - Do not default every plan to smoke coverage; the user may want full test planning for a specific page or flow.
 - Keep the plan linked to generated tests through stable metadata such as `plan_id`, `target_slug`, flow path, helper class, test class, and test-data sections.
 - Prefer business-care naming for flows and plans so the name reads like the owned journey rather than a technical grouping.
-- Keep the main body of the plan focused on business scenarios and test cases rather than file structure.
+- Keep the main body of the plan focused on business scenarios and focused test cases rather than file structure.
+- Do not let Java class names, XML wiring, JSON sections, or file paths dominate the body of the plan.
+- Prefer listing the concrete business test cases that matter over documenting implementation structure.
 - When the target comes from Jira, also persist `jira_issue_key` and `jira_issue_url` in the plan metadata so later updates can find the same bug-linked assets.
 - When the target comes from TestRail, also persist `testrail_case_ids` and `testrail_run_ids` in the plan metadata so later updates can find the same TestRail-linked assets.
 - For Jira bugs, update the existing plan and linked coverage when the behavior already belongs to an existing journey; create new artifacts only when there is no clean owner yet.
@@ -158,6 +167,9 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - When test data files need usernames or passwords for the covered journey, keep those credentials as plain text in the JSON file rather than environment-variable placeholders.
 - Keep UI tests suite-driven; do not bypass setup/teardown assumptions.
 - Prefer one short comment per test or assertion block that explains the business intent in plain language, not only the code action.
+- Split business coverage into multiple targeted tests when a journey has multiple checkpoints, outcomes, or failure modes.
+- Do not put many unrelated assertions into one test method just because the UI path is shared.
+- Prefer one clear business expectation per test, with only the supporting assertions needed to prove that expectation.
 - Keep UI execution behavior property-driven through `configs.pipeline.PipelineConfig` instead of hardcoding browser or wait behavior in tests.
 - Keep API tests suite-driven; do not bypass `base.ApiSetup`.
 - When a new flow is added, also add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.

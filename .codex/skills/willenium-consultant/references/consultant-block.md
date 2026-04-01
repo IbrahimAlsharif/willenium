@@ -10,6 +10,7 @@ Required posture:
 - frame each flow as a business decision-support artifact
 - judge coverage by business intent, user value, risk, trust, recovery, and release-confidence value
 - detect false confidence and say when green tests would still be misleading
+- require explicit confirmation of the intended journey steps or feature and the plan type for every new test plan
 - recommend whether to automate now, refresh the Quality Canvas, upgrade the test plan, explore manually, monitor, or defer
 
 Default response order:

@@ -100,11 +100,14 @@ Before drafting the plan, confirm:
 - the user value or contract that must succeed
 - the key risk or unacceptable outcome
 - the decision or confidence target the coverage should support
+- the intended user journey steps or the specific feature being planned
 - the desired plan scope such as page, flow, journey, feature area, or regression slice
-- the desired plan type such as smoke, happy-path, regression, or full coverage
+- the desired plan type such as smoke, happy-path, negative-path, edge-case-focused, regression, or full coverage
 
 Ask the business questions first.
 Prefer a clean, structured question UI with short grouped prompts when the client supports it.
+For every new test plan request, explicitly ask for or confirm the journey steps or feature and the plan type before writing the draft.
+If the plan will be informed by live inspection, use Selenium MCP to walk the intended journey, investigate unclear behavior, and align findings back to the planned business cases.
 
 Do not assume every plan is a smoke plan. A user may want a full page-level or flow-level plan even before any code is generated.
 
@@ -128,6 +131,8 @@ At a minimum, cover:
 
 Name flows and plans after the business journey they own whenever possible rather than after a generic technical grouping.
 Keep the main body of the plan business-first. Do not turn it into a file-structure checklist.
+Keep technical mapping brief and secondary.
+Prefer more focused business test cases over fewer oversized cases that combine many expectations.
 
 The minimum business context should still live directly in the plan front matter and body.
 When the work began from higher-level product inputs such as a Lean Canvas, product brief, MVP description, or feature list, the plan may also link back to a Quality Canvas under `quality/plans/`.

@@ -59,13 +59,18 @@ Treat the checked-in tests, flows, and JSON data as starter examples of framewor
   - value or contract that must be preserved
   - key failure or unacceptable outcome
   - confidence target
+- For every new API test plan request, explicitly ask for or confirm the intended feature, contract slice, or integration steps being planned.
 - Treat plan scope and plan type as required planning inputs, not optional polish.
+- For every new API test plan request, explicitly ask for or confirm the plan type such as smoke, happy-path, negative-path, edge-case-focused, regression, or full.
 - Prefer asking those questions in a structured UI with short grouped prompts when the client supports it.
 - Keep API plans focused on business behavior, contract scenarios, and real test cases. Treat helper/test/file mapping as secondary implementation detail.
+- Keep technical mapping brief so the plan stays focused on business value and focused test cases.
 - Do not treat passing status codes or schema checks alone as sufficient proof of business readiness when the real risk lives in workflow integrity, error handling, compliance, or operational consequences.
 - When work starts from TestRail, keep related identifiers such as case IDs or run IDs in plan metadata so later updates stay traceable.
 - Keep assertions in `*ApiTest.java`; helper classes should expose request construction and execution helpers.
 - Add short plain-language comments in generated or updated `*ApiTest.java` files so low-code readers can follow what each request and assertion block is protecting.
+- Prefer many focused business or contract tests over one assert-heavy API test.
+- Keep each API test responsible for one business rule, contract promise, or failure mode.
 - Put endpoints, headers, payload fragments, credentials, and expected values in JSON test data rather than hardcoding them in assertions.
 - Preserve environment separation in test data so production and staging API values remain cleanly isolated.
 - For hybrid UI plus API work, keep API setup and assertions in the API layer and only use the UI skill where browser behavior genuinely belongs.

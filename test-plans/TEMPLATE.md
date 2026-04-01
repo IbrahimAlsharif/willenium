@@ -36,7 +36,7 @@ Use `target_slug` as the canonical identifier for the target. Derive `flow_xml`,
 If this plan was informed by an earlier Quality Canvas, keep the canonical canvas path in `quality_canvas`.
 
 Record whether this is a smoke, regression, or full plan, and whether the scope is a page, flow, journey, feature area, or broader regression slice.
-Treat the linked flow XML as the executable representation of this business journey.
+Keep this summary business-first. Do not spend the main plan body explaining file structure or framework wiring.
 
 ## Business Goal
 
@@ -58,14 +58,21 @@ Treat the linked flow XML as the executable representation of this business jour
 - What failure would be unacceptable?
 - What decision should this coverage support?
 
+## Journey Steps Or Feature
+
+- Record the intended user journey steps in order, or name the exact feature being planned.
+- This should come from explicit user confirmation for every new test plan.
+- If the user provided a feature instead of steps, describe the main user path that feature must support.
+
 ## Scope
 
 - List the pages, features, or user journeys this plan covers.
 - Note what should be automated in the first pass.
+- Keep scope phrased in business language, not repository structure.
 
 ## Plan Type
 
-- Record the chosen depth such as smoke, happy-path, regression, or full coverage.
+- Record the chosen depth such as smoke, happy-path, negative-path, edge-case-focused, regression, or full coverage.
 - Explain why this depth is the right fit for the user's request.
 
 ## Out Of Scope
@@ -96,6 +103,12 @@ Treat the linked flow XML as the executable representation of this business jour
 - Explain whether the right move is to extend existing coverage or create a new path, and why.
 - If multiple journeys are affected, list the primary owner and any secondary suites that need follow-up coverage.
 
+## Selenium MCP Findings
+
+- Record only when live browser investigation materially informed the plan.
+- Summarize the confirmed journey steps, key decision points, trust signals, blockers, and recovery paths found during investigation.
+- Keep this section aligned to the selected plan type and the planned business cases, not to raw locator notes.
+
 ## Environment And Setup
 
 - Base URL or environment source
@@ -111,14 +124,22 @@ Treat the linked flow XML as the executable representation of this business jour
 
 ## Test Cases
 
+List focused business test cases. Prefer many small cases over one large case with many assertions.
+
 1. Primary path:
-   Describe the main business journey and list the expected business checkpoints and assertions.
+   Describe one focused success outcome and the business proof needed for it.
 2. Alternate path:
-   Describe the next most valuable success variant and what should still succeed.
+   Describe one focused success variant and the business proof needed for it.
 3. Negative path:
-   Describe the main failure, validation, or denied-access path and the expected recovery or guardrail.
+   Describe one focused failure or validation path and the expected guardrail or recovery.
 4. Edge case:
-   Describe a boundary condition, empty state, or dynamic-content risk that deserves explicit coverage.
+   Describe one focused boundary condition or dynamic-content risk that deserves explicit coverage.
+
+For each test case:
+
+- name the business behavior being protected
+- keep the expected outcome specific and easy to prove
+- avoid combining several business expectations into one oversized case
 
 ## Localization
 
@@ -138,6 +159,7 @@ Treat the linked flow XML as the executable representation of this business jour
 
 ## Secondary Implementation Notes
 
+- Keep this section short. It is only to connect the plan to framework artifacts after the business cases are clear.
 - Flow XML:
   `flows/app/steps/target_slug.xml`
 - Java helper:
@@ -152,6 +174,7 @@ Treat the linked flow XML as the executable representation of this business jour
 - Smallest suite to run after implementation
 - Any focused smoke checks
 - Areas that may need Selenium MCP validation before coding
+- If Selenium MCP was used during planning, note how the investigation supported the plan and what still remains unconfirmed
 - If the bug affects more than one flow, note which path is the primary regression check and which paths can be follow-up validation
 
 ## Review Status

@@ -79,7 +79,7 @@ When usernames or passwords are needed in test data files, store them as plain t
 5. Decide whether the next step should be `quality-canvas`, `willenium-coach`, `willenium-automation`, or `willenium-api`.
 6. If the work starts from a Lean Canvas, product idea, project description, MVP description, or feature list, create or update a Quality Canvas first under `quality/plans/<app>/<target-slug>-quality-canvas.md`.
 7. Treat the Quality Canvas as the recommended first artifact before detailed `test-plans/...` work starts when the target is still strategic rather than journey-shaped.
-8. If the user asks to inspect a link, write a plan, generate tests from a target, or update generated coverage, ask the business questions first, then determine the desired plan scope and plan type.
+8. If the user asks to inspect a link, write a plan, generate tests from a target, or update generated coverage, ask the business questions first, then explicitly confirm the intended journey steps or feature and the desired plan type.
 9. Use `test-plans/<app>/<target-slug>.md` as the default plan location. Only place a Markdown blueprint near `flows/...` when the user explicitly asks for that layout.
 10. For planning requests, the task is not complete until the Markdown file has actually been created or updated on disk. Do not stop at a chat response.
 11. Write the plan as a draft for user review before broad generation begins.
@@ -97,11 +97,14 @@ When usernames or passwords are needed in test data files, store them as plain t
 23. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
 24. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
 25. When writing or updating test classes, add short explanatory comments so low-code readers can understand the purpose of each test and the main assertion blocks.
-26. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, Jira issue metadata, and TestRail metadata when applicable.
-27. Register or update the relevant TestNG XML suite.
-28. When a plan changes, update the linked tests instead of creating duplicate implementations.
-29. Run the smallest meaningful verification path available.
-30. When a new flow is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
+26. Prefer multiple focused business tests over one large test method with many assertions.
+27. Keep each test responsible for one clear business outcome, checkpoint, or failure mode so failures stay easy to diagnose.
+28. Split journeys into separate tests when the business checkpoints deserve independent reporting.
+29. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, Jira issue metadata, and TestRail metadata when applicable.
+30. Register or update the relevant TestNG XML suite.
+31. When a plan changes, update the linked tests instead of creating duplicate implementations.
+32. Run the smallest meaningful verification path available.
+33. When a new flow is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 
 ## Non-Negotiable Rules
 
@@ -122,6 +125,8 @@ When usernames or passwords are needed in test data files, store them as plain t
   - user value
   - key risk or unacceptable outcome
   - confidence target
+- For every new test plan request, explicitly ask for or confirm the intended user journey steps or the specific feature being planned.
+- For every new test plan request, explicitly ask for or confirm the desired plan type such as smoke, happy-path, negative-path, edge-case-focused, regression, or full.
 - Prefer a clean, structured question UI with short grouped prompts when the client supports it.
 - Treat each requested flow as a business decision-support artifact, not only an execution artifact.
 - Detect false confidence, especially when coverage proves rendering or technical completion without proving meaningful user success.
@@ -129,7 +134,7 @@ When usernames or passwords are needed in test data files, store them as plain t
 - Prefer business-journey wording for flow names and plan names so ownership stays clear to product and quality readers.
 - Use `test-plans/` as the canonical planning area unless the user explicitly asks for a flow-local blueprint.
 - When the user asks for a plan, always create or update the actual Markdown file and report its saved path.
-- Ask for plan scope and plan type before drafting the plan when they are not already clear.
+- Ask for journey steps or feature focus and plan type before drafting the plan when they are not already clear.
 - Do not assume a smoke-only plan when the user may need full coverage for a page or flow.
 - Draft the Markdown plan for user review before large generation steps.
 - Keep plan names and generated assets related through a stable slug or `plan_id` so later updates remain deterministic.
@@ -141,12 +146,15 @@ When usernames or passwords are needed in test data files, store them as plain t
 - Prefer the higher-level `Finder`/`Go` methods such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before adding custom waits or retry logic.
 - Keep assertions in `*Test.java`.
 - Add short plain-language comments in generated test classes so readers with low coding experience can follow the business intent and key assertions.
+- Prefer many focused business tests over one assert-heavy test.
+- Do not bundle several business expectations into one test just because they share setup or navigation.
 - Keep helper/action methods in the feature helper class.
 - For API work, keep assertions in `*ApiTest.java` and reusable request logic in `*Api.java`.
 - Prefer JSON test data over hardcoded user-facing strings, URLs, and inputs.
 - For each new plan, create fresh app-specific JSON test data files instead of reusing the bundled example JSON files.
 - When test data files need usernames or passwords for the covered journey, keep those credentials as plain text in the JSON file rather than environment-variable placeholders.
-- Keep test plans focused on business scenarios and actual test cases. Treat technical file mapping as secondary detail.
+- Keep test plans focused on business scenarios and focused test cases. Treat technical file mapping as secondary detail.
+- Keep technical mapping brief so the main body stays readable to product and quality stakeholders.
 - Keep UI execution and wait behavior property-driven through `configs.pipeline.PipelineConfig` instead of embedding browser/runtime flags in tests.
 - Prefer JSON test data over hardcoded endpoints, headers, payload fragments, and expected response values.
 - Keep test data dynamic: assertions should read expected values from the active JSON file.
@@ -166,8 +174,10 @@ Use Selenium MCP when:
 - a flaky UI behavior needs reproduction
 - navigation or text rendering needs confirmation
 - the business journey needs clarification through real user-facing signals, trust cues, or drop-off analysis
+- the real journey steps, branching points, or recovery paths need confirmation before finalizing the plan
 
 When Selenium MCP is used for website exploration, prefer headed mode whenever possible.
+When Selenium MCP is used during planning, navigate the requested journey intentionally and align the findings back to the selected plan type and planned business cases.
 
 Do not use Selenium MCP when local source inspection already answers the question.
 

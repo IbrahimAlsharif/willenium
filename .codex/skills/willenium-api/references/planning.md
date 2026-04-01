@@ -26,17 +26,19 @@ Business questions to answer first:
 
 Then determine two planning inputs:
 
+- the intended feature, contract slice, or integration steps being planned
 - `plan_scope`
   Example values: `endpoint`, `service`, `contract`, `integration-flow`, `multi-service-regression`
 - `plan_type`
-  Example values: `smoke`, `happy-path`, `regression`, `negative-path`, `full`
+  Example values: `smoke`, `happy-path`, `negative-path`, `edge-case-focused`, `regression`, `full`
 
+For every new API test plan request, explicitly ask for or confirm the intended feature, contract slice, or integration steps and the plan type before proceeding.
 If either is unclear, ask a concise follow-up before proceeding.
 
 Prefer asking these questions in a structured UI when the client supports it:
 
 - keep business and contract questions together
-- keep scope and depth in a second short group
+- keep feature or integration steps plus plan type in a second short group
 - avoid leading with helper names, flow files, or suite structure
 
 ## Draft-First Rule
@@ -49,7 +51,7 @@ The expected sequence is:
 
 1. If needed, create or update the Quality Canvas for the target.
 2. Confirm the business and contract context.
-3. Confirm scope and plan type.
+3. Confirm the feature, contract slice, or integration steps and the plan type.
 4. Inspect existing plans, flows, tests, and test data.
 5. Create or update the Markdown draft.
 6. Let the user review the draft direction.
@@ -138,3 +140,6 @@ A reviewable API draft should cover:
 
 Keep the plan centered on behavior, contracts, and real test cases.
 Do not let file structure or framework mapping dominate the plan body.
+Keep implementation mapping brief and secondary.
+Prefer a larger number of focused business or contract test cases over a smaller number of broad cases that bundle many expectations together.
+Each planned API test case should protect one clear contract promise, business behavior, or failure mode.

@@ -17,6 +17,7 @@ Selenium MCP is best used as a live browser probe:
 - validate selectors before encoding them in Java
 - confirm navigation, visibility, and text behavior
 - reproduce UI failures interactively
+- confirm the real journey steps and branching points before finalizing a new test plan
 
 It is not the final artifact. The final artifact in this repo should still be Java/TestNG code plus any needed suite and test-data updates.
 
@@ -56,14 +57,31 @@ The package docs show `start_browser` examples for Chrome and Firefox. The upstr
 ## Recommended Usage Pattern
 
 1. Inspect the Java framework first so you know where the eventual code belongs.
-2. Use Selenium MCP only for the unknown or risky part of the flow.
-3. Record business checkpoints as well as UI checkpoints.
-4. Translate the validated interaction back into repo-native code:
+2. Confirm the intended journey steps or feature and the selected plan type before opening the browser for a new plan.
+3. Use Selenium MCP only for the unknown or risky part of the flow.
+4. Navigate the journey in the same order the plan is expected to cover.
+5. Record business checkpoints as well as UI checkpoints.
+6. Capture what the investigation clarified:
+   - real journey steps
+   - key decision points
+   - trust signals
+   - blockers or drop-off points
+   - recovery paths
+7. Align the investigation depth to the chosen plan type so smoke work stays lean and fuller plans investigate more paths.
+8. Translate the validated interaction back into repo-native code and planning artifacts:
    - helper methods in `tests/.../<Feature>.java`
    - assertions in `tests/.../<Feature>Test.java`
    - JSON keys in test data
    - XML suite registration under `flows/...`
-5. Close the MCP session once you have the evidence you need.
+   - plan sections and business test cases in `test-plans/...`
+9. Close the MCP session once you have the evidence you need.
+
+## Planning Guardrails
+
+- Do not start Selenium MCP browsing for a new plan before the user has confirmed the journey steps or feature and the plan type.
+- Do not browse aimlessly; every navigation step should support a planned business case or open question.
+- Do not treat Selenium MCP as a selector-hunting exercise during planning.
+- Do use Selenium MCP to reduce ambiguity in the plan when real behavior matters more than assumptions.
 
 ## Source Notes
 

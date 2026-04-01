@@ -120,10 +120,8 @@ The owned journey is simple:
 
 ## Impact Analysis
 
-- The owned execution path is `flows/examples/steps/wewill/home_journey.xml`
-- The main assertion owner is `tests.examples.wewill.home.WeWillHomePageTest`
-- The expected values live in the `wewillHome` JSON section across the example environment files
-- The correct move is to keep one simple existing journey owner rather than create more example UI classes
+- Keep this starter example in one simple owned journey instead of spreading the same business intent across duplicate example assets.
+- Keep the existing example owner and strengthen or split coverage there if the business checkpoints grow.
 
 ## Environment And Setup
 
@@ -143,13 +141,15 @@ The owned journey is simple:
 ## Test Cases
 
 1. Primary path:
-   A visitor lands on the homepage and sees the hero heading and primary CTA.
+   A visitor lands on the homepage and clearly sees the hero value message.
 2. Alternate path:
-   A visitor scrolls through the page and still sees methodology and bilingual-offering cues.
+   A visitor can find the primary CTA without confusion after understanding the first-screen message.
 3. Negative path:
-   Key trust content is absent even though the page loads.
+   Key trust content is absent even though the page still loads.
 4. Edge case:
-   Footer brand promise remains visible after other page content shifts.
+   Trust and positioning cues remain visible deeper in the page, including methodology and bilingual signals.
+5. Edge case:
+   The footer still reinforces the brand promise after the visitor scrolls through the rest of the page.
 
 ## Localization
 
@@ -171,9 +171,6 @@ The owned journey is simple:
 
 - Flow XML:
   `flows/examples/steps/wewill/home_journey.xml`
-- Top-level suites:
-  `flows/examples/wewill/ProtectExampleHomeTrustEnglish.xml`
-  `flows/examples/wewill/ProtectExampleHomeTrustArabic.xml`
 - Java helper:
   `src/test/java/tests/examples/wewill/home/WeWillHomePage.java`
 - Java test:

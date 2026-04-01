@@ -120,6 +120,8 @@ Judge whether the plan:
 - gives release owners a reliable confidence signal
 - distinguishes critical coverage from low-value accumulation
 - remains maintainable as the journey becomes more sensitive, scaled, or regulated
+- keeps technical mapping brief instead of letting file structure dominate the plan
+- breaks coverage into focused business test cases instead of oversized cases with bundled expectations
 
 Reject or upgrade plans that are technically organized but commercially shallow.
 
@@ -195,6 +197,7 @@ Keep the language readable for technical and low-code stakeholders. Be direct, f
 - do not let reporting imply certainty that the evidence does not support
 - distinguish between verification of rendering, verification of behavior, and verification of business success
 - favor smaller high-signal coverage over larger low-signal suites
+- favor smaller focused business tests over large assert-heavy tests
 - keep recommendations practical and immediately usable inside Willenium's existing plan-first workflow
 
 ## Reusable Consultant Block

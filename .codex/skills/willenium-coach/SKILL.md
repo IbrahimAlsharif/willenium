@@ -74,6 +74,11 @@ Before those planning dimensions are finalized, help the user answer the busines
 - what decision or confidence target the resulting coverage should support
 - which path matters most for the first planning pass
 
+For every new test plan request, explicitly help the user confirm:
+
+- the intended user journey steps or the specific feature being planned
+- the desired plan type such as smoke, happy-path, negative-path, edge-case-focused, regression, or full
+
 ## Inputs To Ask For
 
 When useful, guide the user to provide:
@@ -87,6 +92,7 @@ When useful, guide the user to provide:
 - decision the team needs to make with the resulting coverage
 - desired plan scope
 - desired plan type
+- intended user journey steps or feature scope
 - auth or header requirements
 - language coverage needed
 - login or seeded-data requirements
@@ -108,6 +114,7 @@ Preferred style:
 - prefer labeled fields or short structured choices over a long paragraph of questions
 - ask business questions before technical planning questions
 - avoid asking about file names, Java classes, XML paths, or JSON sections during the initial planning conversation unless the user explicitly wants implementation details
+- steer the user toward focused business test cases instead of broad assert-heavy test ideas
 
 Fallback style when no structured UI is available:
 
@@ -132,8 +139,8 @@ Remind the user that:
 - a Quality Canvas is a good first step when the input is still strategic and not yet journey-specific
 - plans come before generation for new or unclear targets
 - business intent should be clarified before plan scope and plan type are locked
-- plan scope and plan type should be chosen before writing the plan
-- Selenium MCP is optional during planning and should be used when live inspection would materially improve the draft
+- journey steps or feature focus and plan type should be chosen before writing the plan
+- Selenium MCP is optional during planning and should be used when live inspection would materially improve the draft and help align the real journey to the plan
 - user-facing values should live in JSON, not hardcoded assertions
 - API endpoints, headers, payload fragments, and expected response values should also live in JSON rather than test methods
 - existing plans and flows should be updated before creating duplicates
@@ -149,6 +156,7 @@ Offer direct prompt upgrades like these:
 - `Use quality-canvas to turn this Lean Canvas into a Quality Canvas artifact under quality/plans/ before any test-planning work starts.`
 - `Use quality-canvas to convert this product brief into a four-quadrant Quality Canvas and keep assumptions clearly labeled.`
 - `Use willenium-automation to inspect this URL from a business-journey perspective, then create a test plan under test-plans/ focused on business scenarios and real test cases.`
+- `Use willenium-automation to create a business-first test plan under test-plans/ with focused test cases and only brief technical mapping.`
 - `Use willenium-coach to clarify the business goal, user value, key risks, plan scope, and plan type before you write the Markdown draft.`
 - `Use willenium-coach to decide whether this planning task should inspect the live page with Selenium MCP first or whether the Markdown draft can be written from the current information.`
 - `Use willenium-automation to update the existing plan and linked tests for this regression instead of creating duplicate coverage.`
@@ -164,6 +172,7 @@ Offer direct prompt upgrades like these:
 - Do not jump straight to generation when the user still needs orientation.
 - Do not jump straight to technical mapping when the business questions are still unanswered.
 - Do not let planning default to smoke coverage when the user may need a fuller plan.
+- Do not encourage one large test with many assertions when several focused business tests would be clearer.
 - Do not invent tenant-specific Jira configuration for the user.
 - Do not invent tenant-specific TestRail configuration for the user.
 - Do not encourage hardcoded data or duplicate flows.
