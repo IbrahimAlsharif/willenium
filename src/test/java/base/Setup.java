@@ -4,7 +4,6 @@ import configs.BrowserOptions;
 import configs.pipeline.PipelineConfig;
 import configs.pipeline.RemoteExecutionConfig;
 import configs.testRail.APIException;
-import configs.testRail.TestRailCase;
 import configs.testRail.TestRailManager;
 import configs.testdata.TestData;
 import configs.testdata.TestDataFactory;
@@ -43,7 +42,6 @@ public class Setup {
     private static String uiInitializationBlockerMessage;
 
 
-    @TestRailCase("9379")
     @Test(priority = 1)
     @Parameters({"language", "branch", "browser"})
     public void setUpLocalDriver(String language, String branch, String browser) throws Exception {
@@ -54,7 +52,6 @@ public class Setup {
         Assert.assertTrue(true);
     }
 
-    @TestRailCase("9380")
     @Test(priority = 2, groups = {"haltWhenFail"})
     @Parameters({"language"})
     public void openWebsite(String language){
@@ -66,7 +63,6 @@ public class Setup {
         configureBrowserWindow();
     }
 
-    @TestRailCase("9381")
     @Test(priority = 1)
     @Parameters({"language", "branch", "browser"})
     public void setUpRemoteDriver(String language, String branch, String browser) throws Exception {
@@ -98,10 +94,6 @@ public class Setup {
     }
 
     private void initializeRemoteDriver(String browser, RemoteExecutionConfig remoteExecutionConfig) throws IOException, APIException {
-        if (PipelineConfig.testRailReport) {
-            TestRailManager testRailManager = new TestRailManager();
-            Go.testRunId = testRailManager.createTestRun("Sentra", 2);
-        }
         ensureRemoteExecutionConfigured(remoteExecutionConfig);
         BrowserOptions configuredBrowserOptions = new BrowserOptions();
         AbstractDriverOptions<?> browserOptions = null;
@@ -129,32 +121,16 @@ public class Setup {
             browserOptions.setCapability("LT:Options", new BrowserOptions().getLambdaTestOptions(remoteExecutionConfig));
         }
         driver = new RemoteWebDriver(new URL(remoteExecutionConfig.getRemoteUrl()), browserOptions);
-        configureHelperComponents();
+        completeSuccessfulUiInitialization();
     }
 
     private void initializeLocalDriver(String browser, String url) throws APIException, IOException {
-        if (PipelineConfig.testRailReport) {
-            TestRailManager testRailManager = new TestRailManager();
-            Go.testRunId = testRailManager.createTestRun("Sentra", 2);
-        }
-        if (browser.equalsIgnoreCase("chrome")) {
-            initializeManagedLocalDriver(
-                    "Chrome",
-                    () -> WebDriverManager.chromedriver()
-                            .capabilities(new BrowserOptions().getChromeOptions(PipelineConfig.isBrowserHeadless, PipelineConfig.isBrowserIncognito))
-                            .create()
-            );
-        } else if (browser.equalsIgnoreCase("safari")) {
-            driver = new SafariDriver();
-        } else {
-            initializeManagedLocalDriver(
-                    "Firefox",
-                    () -> WebDriverManager.firefoxdriver()
-                            .capabilities(new BrowserOptions().getFirefoxOptions(PipelineConfig.isBrowserHeadless, PipelineConfig.isBrowserIncognito))
-                            .create()
-            );
-        }
-        configureHelperComponents();
+        LocalDriverRequest localDriverRequest = getLocalDriverRequest(browser);
+        initializeManagedLocalDriver(
+                localDriverRequest.browserName(),
+                localDriverRequest.localDriverFactory(),
+                this::completeSuccessfulUiInitialization
+        );
     }
 
     public static String getUiInitializationBlockerMessage() {
@@ -191,6 +167,23 @@ public class Setup {
         JavascriptExecutor javascriptExecutor = (JavascriptExecutor) driver;
         Go.initialize(driver, javascriptExecutor, wait);
         Finder.initialize(driver, wait);
+    }
+
+    private void completeSuccessfulUiInitialization() {
+        startTestRailRunIfEnabled();
+        configureHelperComponents();
+    }
+
+    private void startTestRailRunIfEnabled() {
+        if (!PipelineConfig.testRailReport) {
+            return;
+        }
+        try {
+            TestRailManager testRailManager = new TestRailManager();
+            Go.testRunId = testRailManager.createTestRun("Sentra", 2);
+        } catch (IOException | APIException exception) {
+            throw new IllegalStateException("Failed to create the TestRail run after UI driver startup", exception);
+        }
     }
 
     private void configureBrowserWindow() {
@@ -236,9 +229,19 @@ public class Setup {
     }
 
     private void initializeManagedLocalDriver(String browserName, LocalDriverFactory localDriverFactory) {
+        initializeManagedLocalDriver(browserName, localDriverFactory, () -> {
+        });
+    }
+
+    private void initializeManagedLocalDriver(String browserName, LocalDriverFactory localDriverFactory, Runnable onDriverReady) {
         validateLocalExecutionEnvironment(browserName);
+        startManagedLocalDriver(localDriverFactory, onDriverReady, browserName);
+    }
+
+    private void startManagedLocalDriver(LocalDriverFactory localDriverFactory, Runnable onDriverReady, String browserName) {
         try {
             driver = localDriverFactory.create();
+            onDriverReady.run();
         } catch (RuntimeException exception) {
             uiInitializationBlockerMessage = buildDriverStartupFailureMessage(browserName, exception);
             throw new IllegalStateException(uiInitializationBlockerMessage, exception);
@@ -299,6 +302,32 @@ public class Setup {
     @FunctionalInterface
     private interface LocalDriverFactory {
         WebDriver create();
+    }
+
+    private record LocalDriverRequest(String browserName, LocalDriverFactory localDriverFactory) {
+    }
+
+    private LocalDriverRequest getLocalDriverRequest(String browser) {
+        if (browser.equalsIgnoreCase("chrome")) {
+            return new LocalDriverRequest(
+                    "Chrome",
+                    () -> WebDriverManager.chromedriver()
+                            .capabilities(new BrowserOptions().getChromeOptions(PipelineConfig.isBrowserHeadless, PipelineConfig.isBrowserIncognito))
+                            .create()
+            );
+        }
+        if (browser.equalsIgnoreCase("firefox")) {
+            return new LocalDriverRequest(
+                    "Firefox",
+                    () -> WebDriverManager.firefoxdriver()
+                            .capabilities(new BrowserOptions().getFirefoxOptions(PipelineConfig.isBrowserHeadless, PipelineConfig.isBrowserIncognito))
+                            .create()
+            );
+        }
+        if (browser.equalsIgnoreCase("safari")) {
+            return new LocalDriverRequest("Safari", SafariDriver::new);
+        }
+        throw new IllegalArgumentException("Unsupported local browser: " + browser);
     }
 
     private void cleanScreenshotsDirectory() {
