@@ -55,12 +55,13 @@ Map the user to the smallest correct next step:
 
 Always help the user clarify two planning dimensions before execution work starts:
 
+- ask the user for a short description of the target system before locking the plan so the agent understands what the product does and what journey or feature matters
 - plan scope:
-  for UI work use values like page, component, flow, journey, feature area, or multi-flow regression area
+  for UI work explicitly ask the user to choose a scope such as journey or feature, then refine further only if needed
 - plan scope:
   for API work use values like endpoint, service, contract, integration-flow, or multi-service regression
 - plan type:
-  for UI work use values like smoke, happy-path, regression, or full coverage
+  for UI work explicitly ask the user to choose a test type such as smoke, regression, or full coverage including negative and edge cases
 - plan type:
   for API work also consider negative-path coverage when validation of rejected requests or error contracts matters
 
@@ -76,7 +77,9 @@ Before those planning dimensions are finalized, help the user answer the busines
 
 For every new test plan request, explicitly help the user confirm:
 
+- a short description of the target system
 - the intended user journey steps or the specific feature being planned
+- whether the scope should be treated as a journey or a feature
 - the desired plan type such as smoke, happy-path, negative-path, edge-case-focused, regression, or full
 
 ## Inputs To Ask For
@@ -84,6 +87,7 @@ For every new test plan request, explicitly help the user confirm:
 When useful, guide the user to provide:
 
 - target app or feature name
+- short description of the target system
 - URL or environment
 - endpoint, service name, or API base URL
 - business goal or business outcome
@@ -140,7 +144,12 @@ Remind the user that:
 - plans come before generation for new or unclear targets
 - business intent should be clarified before plan scope and plan type are locked
 - journey steps or feature focus and plan type should be chosen before writing the plan
-- Selenium MCP is optional during planning and should be used when live inspection would materially improve the draft and help align the real journey to the plan
+- Selenium MCP is mandatory during planning for UI work and should inspect the live site first in headed mode before the Markdown draft is written
+- when planning or generating UI tests, treat the rendered live state as the source of truth for expected behavior while still translating the outcome back into framework-native Java/TestNG assets
+- write step-by-step business test cases with at most two assertions per test so failures stay easy to diagnose
+- avoid brittle hardcoded result assumptions and prefer resilient expectations backed by JSON test data and stable business signals
+- account for dynamic UI behavior such as cookie banners, delayed rendering, and skeleton loaders in both planning notes and generated coverage
+- run the relevant suite and fix failures before stopping, rather than stopping after code generation alone
 - user-facing values should live in JSON, not hardcoded assertions
 - API endpoints, headers, payload fragments, and expected response values should also live in JSON rather than test methods
 - existing plans and flows should be updated before creating duplicates
@@ -158,7 +167,7 @@ Offer direct prompt upgrades like these:
 - `Use willenium-automation to inspect this URL from a business-journey perspective, then create a test plan under test-plans/ focused on business scenarios and real test cases.`
 - `Use willenium-automation to create a business-first test plan under test-plans/ with focused test cases and only brief technical mapping.`
 - `Use willenium-coach to clarify the business goal, user value, key risks, plan scope, and plan type before you write the Markdown draft.`
-- `Use willenium-coach to decide whether this planning task should inspect the live page with Selenium MCP first or whether the Markdown draft can be written from the current information.`
+- `Use willenium-coach to inspect the live page with Selenium MCP in headed mode first, then clarify the business goal, plan scope, and plan type before writing the Markdown draft.`
 - `Use willenium-automation to update the existing plan and linked tests for this regression instead of creating duplicate coverage.`
 - `Use willenium-api to ask the business and contract questions for this endpoint first, then create a test plan under test-plans/ focused on coverage scenarios and test cases.`
 - `Use willenium-api to update the existing API plan and linked tests for this service regression instead of creating duplicate coverage.`
@@ -173,6 +182,9 @@ Offer direct prompt upgrades like these:
 - Do not jump straight to technical mapping when the business questions are still unanswered.
 - Do not let planning default to smoke coverage when the user may need a fuller plan.
 - Do not encourage one large test with many assertions when several focused business tests would be clearer.
+- Do not skip the live Selenium MCP inspection step for UI planning work.
+- Do not write tests with more than two assertions.
+- Do not hardcode brittle expected results that should come from rendered truth or JSON-backed data.
 - Do not invent tenant-specific Jira configuration for the user.
 - Do not invent tenant-specific TestRail configuration for the user.
 - Do not encourage hardcoded data or duplicate flows.

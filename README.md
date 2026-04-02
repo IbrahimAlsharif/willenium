@@ -230,9 +230,9 @@ Use willenium-consultant to review this test plan, identify false confidence, an
 Use willenium-coach to help me choose whether I should start with willenium-consultant, quality-canvas, or a direct test plan.
 ```
 
-For strategy-first work, the expected flow is: create or update the Quality Canvas under `quality/plans/` -> use `willenium-consultant` to judge direction, value, risk, and decision usefulness -> confirm business context for the owned journey -> confirm scope and plan type -> write the Markdown draft under `test-plans/` -> let the user review -> then generate or update tests.
-For direct plan-first work on an already-defined journey, the expected flow is: confirm business context -> confirm scope and plan type -> write the Markdown draft under `test-plans/` focused on business scenarios and test cases -> let the user review -> then generate or update tests.
-Selenium MCP is optional during planning and is most useful when the plan needs live page inspection rather than just the user's description and existing local artifacts.
+For strategy-first work, the expected flow is: create or update the Quality Canvas under `quality/plans/` -> use `willenium-consultant` to judge direction, value, risk, and decision usefulness -> ask for a short description of the target system -> confirm business context for the owned journey -> confirm scope as `journey` or `feature` -> confirm test type such as `smoke`, `regression`, or `full` including negative and edge cases -> inspect the live site first with Selenium MCP in headed mode -> write the Markdown draft under `test-plans/` -> let the user review -> then generate or update tests.
+For direct plan-first work on an already-defined journey, the expected flow is: ask for a short description of the target system -> confirm business context -> confirm scope as `journey` or `feature` -> confirm test type -> inspect the live site first with Selenium MCP in headed mode -> write the Markdown draft under `test-plans/` focused on business scenarios and test cases -> let the user review -> then generate or update tests.
+During UI planning and generation, Selenium MCP is a required first step. Use the live headed session to inspect the rendered experience, treat rendered state as truth, avoid brittle assumptions, account for dynamic UI such as cookie banners and skeleton loaders, and keep tests step-by-step with at most two assertions each.
 
 When the work is strategic rather than purely technical, include quality intent up front:
 

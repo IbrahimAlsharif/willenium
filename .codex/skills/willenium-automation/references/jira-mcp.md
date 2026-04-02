@@ -59,7 +59,7 @@ When a user wants automated coverage for a Jira bug:
    - assertions in `src/test/java/tests/.../<Feature>Test.java`
    - JSON-backed expectations in `src/test/java/configs/testdata/...`
    - XML suite wiring under `flows/...`
-7. Run the smallest meaningful verification path.
+7. Run the relevant suite for the changed flow and fix failures before stopping.
 8. If the user asks, update or comment on the Jira issue with the generated artifact paths, impacted flows, and verification outcome.
 
 ## Impact Analysis Heuristics

@@ -87,9 +87,9 @@ When usernames or passwords are needed in test data files, store them as plain t
 13. If the request starts from a Jira bug, use the `atlassian` MCP server to read the issue first and inspect which existing plans, flows, tests, and JSON sections already cover the affected journey.
 14. If the request starts from existing TestRail coverage, use the `testrail` MCP server to inspect the owning cases, runs, or plan entries before deciding whether to update existing automation or create new assets.
 15. Keep the resulting plan linked through metadata such as `jira_issue_key`, `jira_issue_url`, `testrail_case_ids`, `testrail_run_ids`, `plan_scope`, `plan_type`, and impacted artifacts when applicable.
-16. Decide whether Selenium MCP is actually needed.
-17. If live UI exploration is needed, use the `selenium` MCP server to validate the page, flow, text, or locator.
-18. When using Selenium MCP, prefer headed mode whenever possible and inspect the experience from the user's and the business's perspective before focusing on selectors.
+16. Use Selenium MCP as a mandatory first step for UI planning and UI generation work.
+17. Inspect the live site first with the `selenium` MCP server in headed mode before drafting the plan or generating UI coverage.
+18. Treat the rendered state as truth during planning and generation, and inspect the experience from the user's and the business's perspective before focusing on selectors.
 19. When TestRail linkage matters, keep the mapping at the agent/client layer or in plan metadata and reporting configuration rather than embedding TestRail calls into Java tests.
 20. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
 21. For each new plan, create fresh app-specific JSON test data files rather than reusing the bundled example JSON files.
@@ -97,13 +97,13 @@ When usernames or passwords are needed in test data files, store them as plain t
 23. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
 24. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
 25. When writing or updating test classes, add short explanatory comments so low-code readers can understand the purpose of each test and the main assertion blocks.
-26. Prefer multiple focused business tests over one large test method with many assertions.
+26. Prefer multiple focused business tests over one large test method with many assertions, and keep each test to at most two assertions.
 27. Keep each test responsible for one clear business outcome, checkpoint, or failure mode so failures stay easy to diagnose.
 28. Split journeys into separate tests when the business checkpoints deserve independent reporting.
 29. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, Jira issue metadata, and TestRail metadata when applicable.
 30. Register or update the relevant TestNG XML suite.
 31. When a plan changes, update the linked tests instead of creating duplicate implementations.
-32. Run the smallest meaningful verification path available.
+32. Run the relevant suite for the changed flow and fix failures before stopping.
 33. When a new flow is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 
 ## Non-Negotiable Rules
@@ -125,7 +125,9 @@ When usernames or passwords are needed in test data files, store them as plain t
   - user value
   - key risk or unacceptable outcome
   - confidence target
+- For every new test plan request, explicitly ask for or confirm a short description of the target system.
 - For every new test plan request, explicitly ask for or confirm the intended user journey steps or the specific feature being planned.
+- For every new test plan request, explicitly ask whether the scope should be treated as a journey or a feature.
 - For every new test plan request, explicitly ask for or confirm the desired plan type such as smoke, happy-path, negative-path, edge-case-focused, regression, or full.
 - Prefer a clean, structured question UI with short grouped prompts when the client supports it.
 - Treat each requested flow as a business decision-support artifact, not only an execution artifact.
@@ -147,15 +149,18 @@ When usernames or passwords are needed in test data files, store them as plain t
 - Keep assertions in `*Test.java`.
 - Add short plain-language comments in generated test classes so readers with low coding experience can follow the business intent and key assertions.
 - Prefer many focused business tests over one assert-heavy test.
+- Write step-by-step business test cases and keep each test to at most two assertions.
 - Do not bundle several business expectations into one test just because they share setup or navigation.
 - Keep helper/action methods in the feature helper class.
 - For API work, keep assertions in `*ApiTest.java` and reusable request logic in `*Api.java`.
 - Prefer JSON test data over hardcoded user-facing strings, URLs, and inputs.
+- Avoid brittle hardcoded result assumptions and favor expectations grounded in rendered truth and stable business signals.
 - For each new plan, create fresh app-specific JSON test data files instead of reusing the bundled example JSON files.
 - When test data files need usernames or passwords for the covered journey, keep those credentials as plain text in the JSON file rather than environment-variable placeholders.
 - Keep test plans focused on business scenarios and focused test cases. Treat technical file mapping as secondary detail.
 - Keep technical mapping brief so the main body stays readable to product and quality stakeholders.
 - Keep UI execution and wait behavior property-driven through `configs.pipeline.PipelineConfig` instead of embedding browser/runtime flags in tests.
+- Account for dynamic UI behavior such as cookie banners, delayed rendering, and skeleton loaders in plans and generated coverage.
 - Prefer JSON test data over hardcoded endpoints, headers, payload fragments, and expected response values.
 - Keep test data dynamic: assertions should read expected values from the active JSON file.
 - If the product has English and Arabic variants, preserve separate language-specific test data and assertions that read from the selected language.
@@ -167,7 +172,9 @@ When usernames or passwords are needed in test data files, store them as plain t
 
 ## When To Use Selenium MCP
 
-Use Selenium MCP when:
+Use Selenium MCP first for all UI planning and UI generation work. Use the live headed session to inspect the real journey before writing the plan or tests.
+
+Use Selenium MCP to:
 
 - the DOM or interaction is unclear from source alone
 - a locator needs live validation
@@ -175,11 +182,12 @@ Use Selenium MCP when:
 - navigation or text rendering needs confirmation
 - the business journey needs clarification through real user-facing signals, trust cues, or drop-off analysis
 - the real journey steps, branching points, or recovery paths need confirmation before finalizing the plan
+- dynamic UI behavior such as cookie banners, delayed rendering, or skeleton loaders must be understood before finalizing expectations
 
-When Selenium MCP is used for website exploration, prefer headed mode whenever possible.
-When Selenium MCP is used during planning, navigate the requested journey intentionally and align the findings back to the selected plan type and planned business cases.
+When Selenium MCP is used for website exploration, use headed mode by default.
+When Selenium MCP is used during planning, navigate the requested journey intentionally, treat the rendered state as truth, and align the findings back to the selected plan type and planned business cases.
 
-Do not use Selenium MCP when local source inspection already answers the question.
+Do not skip Selenium MCP for UI planning or UI generation work, even when local source inspection provides partial answers.
 
 ## When To Use TestRail MCP
 

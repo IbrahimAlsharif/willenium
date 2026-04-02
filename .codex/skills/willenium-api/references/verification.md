@@ -6,16 +6,16 @@ Read this reference when the task reaches validation, smoke checking, or decidin
 
 ## Verification Principle
 
-Prefer the smallest meaningful verification path that proves the change.
+Run the relevant suite for the changed API flow and fix failures before stopping.
 
 The correct verification depth depends on the request:
 
 - plan-only work
   validate the Markdown draft quality and linkage
 - localized API automation update
-  run the smallest relevant API flow or suite
+  run the relevant owned API flow or suite and fix failures before stopping
 - broader regression update
-  run the primary owned API flow and note follow-up paths when needed
+  run the primary owned API flow, fix failures, and note follow-up paths when needed
 
 ## Existing Entry Points
 
@@ -28,15 +28,15 @@ Current top-level API example:
 Use plan type to shape validation expectations:
 
 - `smoke`
-  smallest owned path is usually enough
+  run the owned smoke path for the changed flow and fix failures before stopping
 - `happy-path`
-  run the main successful request path and confirm the core assertions
+  run the main successful request path, confirm the core assertions, and fix failures before stopping
 - `regression`
-  run the owned path that proves the fix and any nearby risky branch if feasible
+  run the owned path that proves the fix, fix failures, and cover any nearby risky branch if feasible
 - `negative-path`
-  run the failing or rejected request path that proves the contract behavior
+  run the failing or rejected request path that proves the contract behavior and fix failures before stopping
 - `full`
-  validate the primary owned path and note any additional paths that should follow if not run now
+  validate the primary owned path, fix failures, and note any additional paths that should follow if not run now
 
 ## What To Record
 

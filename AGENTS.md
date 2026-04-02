@@ -55,7 +55,9 @@ Use it to keep automation business-directed rather than only business-aware.
 
 This repo includes a workspace MCP server in `.mcp.json` named `selenium`.
 
-Use Selenium MCP only when live browser exploration materially helps:
+Use Selenium MCP as a required first step for UI planning and UI generation work. Inspect the live site first in headed mode and use that rendered experience to ground the plan and resulting coverage.
+
+Use Selenium MCP to:
 
 - validate a locator
 - inspect a dynamic page flow
@@ -63,8 +65,9 @@ Use Selenium MCP only when live browser exploration materially helps:
 - confirm rendered text, visibility, or navigation
 - understand the business intent of the page or journey
 - identify trust signals, conversion blockers, misleading success states, or recovery paths
+- handle dynamic UI behavior such as cookie banners, delayed rendering, and skeleton loaders before locking test expectations
 
-When Selenium MCP is used for website exploration, prefer headed mode whenever possible.
+When Selenium MCP is used for website exploration, use headed mode by default.
 
 When Selenium MCP is used for planning or refinement, analyze the page from a business view first:
 
@@ -73,6 +76,8 @@ When Selenium MCP is used for planning or refinement, analyze the page from a bu
 - which signals build or reduce trust
 - where drop-off is likely
 - which checkpoints matter more than raw element presence
+
+Treat the rendered live state as the source of truth when planning or generating UI tests. Do not rely on stale assumptions from static source or prior sample content when the live rendered experience shows otherwise.
 
 Do not treat MCP interactions as the final deliverable. Translate findings back into Java/TestNG framework code.
 
@@ -131,7 +136,9 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - Do not force a Quality Canvas for every request. Small bug-driven updates or direct edits to an existing owned journey can proceed by updating the existing plan and linked coverage.
 - When the user asks to inspect a link, write a test plan, generate tests from a target, or update generated coverage, follow a plan-first workflow.
 - If test planning starts from high-level product inputs rather than an already-defined journey, create or update the Quality Canvas first, then ask or confirm the business questions for the specific executable plan.
+- Every time the user asks to create a new test plan, explicitly ask for or confirm a short description of the target system.
 - Every time the user asks to create a new test plan, explicitly ask for or confirm the intended user journey steps or the specific feature being planned.
+- Every time the user asks to create a new test plan, explicitly ask whether the scope should be treated as a `journey` or a `feature`.
 - Every time the user asks to create a new test plan, explicitly ask for or confirm the desired plan type such as `smoke`, `happy-path`, `negative-path`, `edge-case-focused`, `regression`, or `full`.
 - Before drafting a plan, ask or confirm the business questions first:
   - business goal
@@ -142,10 +149,11 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - Then ask for or confirm the user's journey steps or feature scope and the desired plan type.
 - Prefer a clean, structured question UI with short grouped prompts when the client supports it.
 - Treat `journey` as the preferred scope when the user is describing a business outcome that spans one or more pages.
-- Use Selenium MCP during planning only when live inspection would materially improve the draft or the user explicitly asks to inspect the target link.
-- When Selenium MCP explores a website, prefer headed mode whenever possible.
+- Use Selenium MCP during planning as a mandatory first step for UI work.
+- Start UI planning by inspecting the live target in headed mode before drafting the plan.
 - When Selenium MCP is used for planning, use it to navigate the intended journey steps, investigate unclear behavior, and feed the confirmed findings back into the plan's business cases and checkpoints.
 - Do not use Selenium MCP as disconnected browsing; align exploration to the requested feature, journey steps, and selected plan type.
+- Treat rendered state as truth for planning and generation unless the user explicitly defines a stronger business rule that the live environment does not yet reflect.
 - Create the canonical plan at `test-plans/<app>/<target-slug>.md` unless the user explicitly asks for a Markdown blueprint next to the flow XML under `flows/...`.
 - Create the canonical Quality Canvas at `quality/plans/<app>/<target-slug>-quality-canvas.md` unless the user explicitly asks for another location.
 - When the user asks for a plan, the work is not complete until the Markdown file is actually created or updated on disk.
@@ -170,6 +178,9 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - Split business coverage into multiple targeted tests when a journey has multiple checkpoints, outcomes, or failure modes.
 - Do not put many unrelated assertions into one test method just because the UI path is shared.
 - Prefer one clear business expectation per test, with only the supporting assertions needed to prove that expectation.
+- Write step-by-step business test cases and keep each test to at most two assertions.
+- Avoid brittle hardcoded result assumptions and prefer JSON-backed expectations tied to stable business signals.
+- Plan for dynamic UI behavior such as cookie banners, loading placeholders, and delayed content before finalizing assertions or waits.
 - Keep UI execution behavior property-driven through `configs.pipeline.PipelineConfig` instead of hardcoding browser or wait behavior in tests.
 - Keep API tests suite-driven; do not bypass `base.ApiSetup`.
 - When a new flow is added, also add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
@@ -179,5 +190,5 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - When only one environment's content is known for a language, duplicate that language's content into the other environment file by default.
 - Only diverge production and staging content when the user explicitly provides different values or the target URLs clearly indicate different environment-specific data should be captured.
 - Keep all four JSON files structurally identical even when their values differ.
-- Prefer the smallest meaningful verification path after changes.
+- Run the relevant suite for the changed flow and fix failures before stopping.
 - Final output should match existing repository conventions, not generic Selenium examples.

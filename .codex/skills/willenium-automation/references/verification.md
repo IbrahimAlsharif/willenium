@@ -6,16 +6,16 @@ Read this reference when the task reaches validation, smoke checking, or decidin
 
 ## Verification Principle
 
-Prefer the smallest meaningful verification path that proves the change.
+Run the relevant suite for the changed UI flow and fix failures before stopping.
 
 The correct verification depth depends on the request:
 
 - plan-only work
   validate the Markdown draft quality and linkage
 - localized automation update
-  run the smallest relevant flow or suite
+  run the relevant owned flow or suite and fix failures before stopping
 - broader regression update
-  run the primary owned flow and note follow-up paths when needed
+  run the primary owned flow, fix failures, and note follow-up paths when needed
 
 ## Existing Entry Points
 
@@ -33,13 +33,13 @@ Shortest bundled smoke path:
 Use plan type to shape validation expectations:
 
 - `smoke`
-  smallest owned path is usually enough
+  run the owned smoke path for the changed flow and fix failures before stopping
 - `happy-path`
-  run the main successful journey and confirm the core assertions
+  run the main successful journey, confirm the core assertions, and fix failures before stopping
 - `regression`
-  run the owned path that proves the fix and any nearby risky branch if feasible
+  run the owned path that proves the fix, fix failures, and cover any nearby risky branch if feasible
 - `full`
-  validate the primary owned path and note any additional paths that should follow if not run now
+  validate the primary owned path, fix failures, and note any additional paths that should follow if not run now
 
 ## What To Record
 
@@ -55,7 +55,7 @@ If the work is plan-only, say that code execution was not run yet.
 
 ## Selenium MCP In Verification
 
-Use Selenium MCP only when verification needs live clarification such as:
+Use Selenium MCP during verification when live clarification is needed after the required planning inspection, such as:
 
 - confirming rendered text
 - validating a locator before encoding it in Java
