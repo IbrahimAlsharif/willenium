@@ -12,11 +12,12 @@ This skill is for guidance and prompt shaping. It does not replace the execution
 - use `willenium-consultant` to challenge shallow requests, review planning quality, and decide whether the next step should be strategic framing, plan refinement, or execution
 - use `quality-canvas` to create a reusable strategic quality artifact before detailed planning starts
 - use `willenium-coach` to orient the user
+- use `willenium-test` for single-bug reproduction and evidence-backed manual verification through Selenium MCP
 - use `willenium-automation` for UI/browser work
 - use `willenium-api` for API/service work
 - use the `willenium` agent when invoking the repo agent directly
 
-For Codex users, the practical control surface is the skill layer. Recommend direct skill invocation when that will make the next step clearer.
+For Codex, Claude, and similar agent clients, the practical control surface is the skill layer. Recommend direct skill invocation when that will make the next step clearer.
 
 ## What To Help With
 
@@ -47,7 +48,9 @@ Map the user to the smallest correct next step:
 - if they have a failing test:
   recommend debugging the smallest affected flow
 - if they have a Jira issue:
-  recommend issue read -> impact analysis -> plan update -> test update
+  recommend either issue read -> `willenium-test` for reproduction evidence -> impact analysis -> plan update -> test update, or issue read -> impact analysis -> plan update -> test update when reproduction evidence is already known
+- if they have one reported UI bug and want to know whether it is still happening:
+  recommend `willenium-test`
 - if they have a TestRail case or run:
   recommend case/run read -> impact analysis -> plan update -> test update or reporting alignment
 - if they are new to the repo:
@@ -140,6 +143,7 @@ Explain the repo in simple terms:
 Remind the user that:
 
 - `willenium-consultant` is the right first skill when they need business-direction, governance, or a strategic review before execution
+- `willenium-test` is the right first skill when they need one bug reproduced, disproved, or evidence-backed before deciding whether framework automation should change
 - a Quality Canvas is a good first step when the input is still strategic and not yet journey-specific
 - plans come before generation for new or unclear targets
 - business intent should be clarified before plan scope and plan type are locked
@@ -162,6 +166,7 @@ Offer direct prompt upgrades like these:
 - `Use willenium-consultant to upgrade this technical automation ask into a business-directed plan recommendation.`
 - `Use willenium-consultant to review this test plan before generation and recommend what to automate now versus what to defer or inspect manually.`
 - `Use willenium-coach to ask me the business questions for this journey in a clean UI before you write the test plan.`
+- `Use willenium-coach to help me decide whether this Jira bug should go to willenium-test first for reproduction evidence or directly to an automation update.`
 - `Use quality-canvas to turn this Lean Canvas into a Quality Canvas artifact under quality/plans/ before any test-planning work starts.`
 - `Use quality-canvas to convert this product brief into a four-quadrant Quality Canvas and keep assumptions clearly labeled.`
 - `Use willenium-automation to inspect this URL from a business-journey perspective, then create a test plan under test-plans/ focused on business scenarios and real test cases.`
@@ -173,6 +178,8 @@ Offer direct prompt upgrades like these:
 - `Use willenium-api to update the existing API plan and linked tests for this service regression instead of creating duplicate coverage.`
 - `Use willenium-coach to help me choose whether this API work should be planned as endpoint, service, contract, or integration-flow coverage and whether it should be smoke, regression, negative-path, or full.`
 - `Use willenium-automation to read Jira bug ABC-123, decide which existing flows it affects, update the impacted plan, then update the linked tests.`
+- `Use willenium-test to read Jira bug ABC-123, reproduce it in the browser with Selenium MCP, save the evidence report, then tell me whether the bug is confirmed, fixed, or blocked.`
+- `Use willenium-test to investigate this user-described UI bug in the live staging environment and save an HTML report with screenshots.`
 - `Use willenium-automation to read TestRail case C123 or run R45, decide which existing flows it maps to, update the impacted plan, then update the linked tests.`
 - `Use willenium-automation to debug this failing flow and explain whether the fix belongs in the helper, assertion, test data, or XML suite.`
 

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bug Test Report - {ISSUE_KEY}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; color: #1a1a1a; padding: 40px 20px; }
+    .container { max-width: 860px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); overflow: hidden; }
+    .header { background: #1a1a2e; color: #fff; padding: 32px 40px; }
+    .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+    .verdict-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; padding: 6px 16px; border-radius: 20px; margin-bottom: 16px; color: #fff; }
+    .verdict-confirmed { background: #dc2626; }
+    .verdict-fixed { background: #16a34a; }
+    .verdict-not-reproduced { background: #6b7280; }
+    .verdict-partially { background: #d97706; }
+    .meta { display: flex; flex-wrap: wrap; gap: 20px; font-size: 13px; color: #a0aec0; margin-top: 8px; }
+    .meta span strong { color: #e2e8f0; }
+    .body { padding: 36px 40px; }
+    section { margin-bottom: 36px; }
+    section h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #6b7280; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 16px; }
+    .bug-card { background: #fafafa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; }
+    .bug-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .bug-meta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+    .pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+    .pill-high { background: #fee2e2; color: #991b1b; }
+    .pill-medium { background: #fef3c7; color: #92400e; }
+    .pill-low { background: #e0f2fe; color: #075985; }
+    .pill-done { background: #dcfce7; color: #166534; }
+    .pill-open { background: #fef3c7; color: #92400e; }
+    .bug-card p { font-size: 14px; color: #4b5563; line-height: 1.6; }
+    ol { padding-left: 20px; }
+    ol li { font-size: 14px; color: #374151; line-height: 1.7; margin-bottom: 4px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead th { background: #f3f4f6; text-align: left; padding: 10px 14px; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; }
+    tbody tr:nth-child(even) { background: #fafafa; }
+    tbody td { padding: 10px 14px; border-bottom: 1px solid #e5e7eb; color: #4b5563; vertical-align: top; }
+    tbody td:first-child { font-weight: 600; color: #1a1a1a; white-space: nowrap; }
+    code { background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 4px; padding: 1px 6px; font-size: 12px; font-family: "SF Mono", "Fira Code", monospace; color: #374151; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 16px; }
+    .gallery-item { border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; background: #fafafa; }
+    .gallery-item img { width: 100%; display: block; border-bottom: 1px solid #e5e7eb; }
+    .gallery-caption { padding: 8px 10px; font-size: 11px; color: #6b7280; line-height: 1.4; }
+    .verdict-box-fixed { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px 20px; font-size: 14px; color: #374151; line-height: 1.8; }
+    .verdict-box-confirmed { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 16px 20px; font-size: 14px; color: #374151; line-height: 1.8; }
+    .verdict-box-other { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; font-size: 14px; color: #374151; line-height: 1.8; }
+    .findings-list { display: flex; flex-direction: column; gap: 12px; }
+    .finding-item { display: flex; gap: 12px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 14px 16px; }
+    .finding-num { font-size: 13px; font-weight: 700; color: #92400e; min-width: 20px; }
+    .finding-item p { font-size: 13px; color: #374151; line-height: 1.7; }
+    .finding-item strong { color: #92400e; }
+    .none-note { font-size: 14px; color: #9ca3af; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Bug Test Report - {ISSUE_KEY}</h1>
+      <div class="verdict-badge verdict-{VERDICT_CSS_CLASS}">&#10003; {VERDICT}</div>
+      <div class="meta">
+        <span><strong>Date:</strong> {TODAY}</span>
+        <span><strong>Environment:</strong> {ENVIRONMENT}</span>
+        <span><strong>Tester:</strong> Willenium Test (Selenium MCP)</span>
+      </div>
+    </div>
+    <div class="body">
+      <section>
+        <h2>Bug</h2>
+        <div class="bug-card">
+          <h3>{BUG_TITLE}</h3>
+          <div class="bug-meta">
+            <span class="pill pill-{PRIORITY_CSS}">{PRIORITY} Priority</span>
+            <span class="pill pill-{STATUS_CSS}">{JIRA_STATUS}</span>
+          </div>
+          <p>{ONE_SENTENCE_DESCRIPTION}</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Steps Executed</h2>
+        <ol>
+          {STEPS_AS_LI_ITEMS}
+        </ol>
+      </section>
+
+      <section>
+        <h2>Findings</h2>
+        <p style="font-size:14px;color:#374151;line-height:1.8;">{FINDINGS_PARAGRAPH}</p>
+      </section>
+
+      <section>
+        <h2>Evidence</h2>
+        <table>
+          <thead><tr><th>Step</th><th>Screenshot</th><th>Observation</th></tr></thead>
+          <tbody>
+            {EVIDENCE_ROWS_AS_TR}
+          </tbody>
+        </table>
+        <div class="gallery">
+          {GALLERY_ITEMS}
+        </div>
+      </section>
+
+      <section>
+        <h2>Verdict Detail</h2>
+        <div class="verdict-box-{VERDICT_BOX_CLASS}">{VERDICT_DETAIL}</div>
+      </section>
+
+      <section>
+        <h2>Additional Findings</h2>
+        {ADDITIONAL_FINDINGS_HTML}
+      </section>
+    </div>
+  </div>
+</body>
+</html>

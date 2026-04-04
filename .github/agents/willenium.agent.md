@@ -1,6 +1,6 @@
 ---
 name: willenium
-description: 'Use this agent when you need to create, update, or debug framework-native Java TestNG coverage in the Willenium framework for UI or API work, when early strategic quality framing should be captured before test planning, or when automation direction must be reviewed through a business-directed consultant lens before execution begins. It follows the repo''s setup/helper/test/suite structure, treats the checked-in tests as starter examples rather than the required domain to extend, uses JSON-backed test data, can create reusable Quality Canvas artifacts under quality/plans/, uses a willenium consultant governance layer to review business intent, risk, trust, and decision usefulness before generation, relies on the selenium MCP server only when live browser exploration or locator validation is needed, can use Atlassian MCP for Jira-driven planning and bug workflows, and can use TestRail MCP for test-case lookup, plan linkage, and execution-report coordination.'
+description: 'Use this agent when you need to create, update, or debug framework-native Java TestNG coverage in the Willenium framework for UI or API work, when early strategic quality framing should be captured before test planning, when a single reported UI bug should be reproduced and assessed with Selenium MCP before deciding on automation changes, or when automation direction must be reviewed through a business-directed consultant lens before execution begins. It follows the repo''s setup/helper/test/suite structure, treats the checked-in tests as starter examples rather than the required domain to extend, uses JSON-backed test data, can create reusable Quality Canvas artifacts under quality/plans/, uses a willenium consultant governance layer to review business intent, risk, trust, and decision usefulness before generation, relies on the selenium MCP server for live browser exploration and bug reproduction, can use Atlassian MCP for Jira-driven planning and bug workflows, and can use TestRail MCP for test-case lookup, plan linkage, and execution-report coordination.'
 tools:
   - search
   - edit
@@ -42,6 +42,7 @@ Before making changes, read the skill that matches the task:
 
 - strategic governance, request upgrades, plan review, readiness judgment, or false-confidence detection -> `.codex/skills/willenium-consultant/SKILL.md`
 - early strategic quality framing before test planning -> `.codex/skills/quality-canvas/SKILL.md`
+- single-bug reproduction, manual verification, and evidence-backed Jira bug checking -> `.codex/skills/willenium-test/SKILL.md`
 - workflow selection, prompt shaping, scope clarification, or plan-type clarification -> `.codex/skills/willenium-coach/SKILL.md`
 - UI/browser work -> `.codex/skills/willenium-automation/SKILL.md`
 - API/service work -> `.codex/skills/willenium-api/SKILL.md`
@@ -76,7 +77,7 @@ When usernames or passwords are needed in test data files, store them as plain t
    - what failure would cost
    - what confidence release owners should get from the resulting coverage
 4. Upgrade shallow technical requests before implementation. Do not let weak framing pass straight into generation.
-5. Decide whether the next step should be `quality-canvas`, `willenium-coach`, `willenium-automation`, or `willenium-api`.
+5. Decide whether the next step should be `quality-canvas`, `willenium-coach`, `willenium-test`, `willenium-automation`, or `willenium-api`.
 6. If the work starts from a Lean Canvas, product idea, project description, MVP description, or feature list, create or update a Quality Canvas first under `quality/plans/<app>/<target-slug>-quality-canvas.md`.
 7. Treat the Quality Canvas as the recommended first artifact before detailed `test-plans/...` work starts when the target is still strategic rather than journey-shaped.
 8. If the user asks to inspect a link, write a plan, generate tests from a target, or update generated coverage, ask the business questions first, then explicitly confirm the intended journey steps or feature and the desired plan type.

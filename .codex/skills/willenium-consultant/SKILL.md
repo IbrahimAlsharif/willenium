@@ -1,6 +1,6 @@
 ---
 name: willenium-consultant
-description: Use when Willenium work needs a strategic governance layer that keeps automation aligned with business goals, reviews requests and plans for decision usefulness, upgrades shallow technical asks into business-directed work, and routes the next step to quality-canvas, willenium-coach, willenium-automation, or willenium-api.
+description: Use when Willenium work needs a strategic governance layer that keeps automation aligned with business goals, reviews requests and plans for decision usefulness, upgrades shallow technical asks into business-directed work, and routes the next step to quality-canvas, willenium-coach, willenium-test, willenium-automation, or willenium-api.
 ---
 
 # Willenium Consultant
@@ -14,6 +14,7 @@ Use this skill above the other Willenium skills:
 - use `willenium-consultant` to challenge, frame, review, and route the work
 - use `quality-canvas` when the target is still strategic, vague, risky, or not yet journey-shaped
 - use `willenium-coach` when the user needs help shaping the request, choosing scope, or choosing plan type
+- use `willenium-test` when the user needs one reported UI bug reproduced and assessed with live browser evidence before deciding on automation updates
 - use `willenium-automation` for UI/browser planning, generation, debugging, and updates after direction is clear
 - use `willenium-api` for API/service planning, generation, debugging, and updates after direction is clear
 
@@ -44,9 +45,9 @@ Use this skill when any of the following is true:
 
 Do not use this skill as a substitute for writing the actual Quality Canvas, test plan, UI automation, or API automation. Use it to improve the quality of those downstream steps.
 
-## How To Invoke In Codex
+## How To Invoke
 
-In Codex, call this skill directly when you want the consultant layer to operate explicitly.
+Call this skill directly when you want the consultant layer to operate explicitly, whether the session is running in Codex, Claude, or another compatible agent client.
 
 Preferred prompt style:
 
@@ -54,6 +55,7 @@ Preferred prompt style:
 - `Use willenium-consultant to challenge this automation ask and upgrade it into business-directed work.`
 - `Use willenium-consultant to review this Quality Canvas for business value, risk coverage, and decision usefulness.`
 - `Use willenium-consultant to review this test plan before generation and tell me whether it creates real release confidence.`
+- `Use willenium-consultant to decide whether this reported bug should go first to willenium-test for reproduction evidence or straight to automation updates.`
 - `Use willenium-consultant to decide what should be automated now, explored manually, monitored, or deferred.`
 
 When the user is unsure which skill should come next, the consultant should route the work to the right downstream skill instead of trying to do everything itself.
@@ -82,9 +84,10 @@ Use this routing order:
    - does it describe what confidence the result should create
 3. If the framing is vague, risky, or commercially shallow, route first to `quality-canvas`.
 4. If the user mainly needs help clarifying scope, plan type, or prompting, route to `willenium-coach`.
-5. If the work is ready for UI journey planning or execution, route to `willenium-automation`.
-6. If the work is ready for API/service planning or execution, route to `willenium-api`.
-7. Keep the consultant lens active during later plan review, generation review, and readiness judgment.
+5. If the immediate need is evidence-backed reproduction of one reported UI bug, route to `willenium-test`.
+6. If the work is ready for UI journey planning or execution, route to `willenium-automation`.
+7. If the work is ready for API/service planning or execution, route to `willenium-api`.
+8. Keep the consultant lens active during later plan review, generation review, and readiness judgment.
 
 ## Review Quality Canvas
 

@@ -6,17 +6,19 @@ Skill routing:
 
 - use `willenium-consultant` when the work needs a strategic governance layer that keeps automation aligned to business goals, upgrades shallow requests before execution, or reviews a Quality Canvas or test plan for decision usefulness and release confidence
 - use `quality-canvas` when the work starts from a Lean Canvas, product idea, project description, MVP description, or feature list and needs a reusable quality artifact before test planning
+- use `willenium-test` when the work is to verify a single reported UI bug from a Jira link, Jira key, or user description through Selenium MCP and produce an evidence-backed verdict report before deciding whether automation updates are needed
 - use `willenium-automation` for UI/browser automation work
 - use `willenium-api` for API/service automation work
 - use `willenium-coach` when the user needs help choosing workflow, prompt shape, plan scope, or plan type
 
 Primary source files:
 
-- Codex consultant skill: `.codex/skills/willenium-consultant/SKILL.md`
-- Codex quality canvas skill: `.codex/skills/quality-canvas/SKILL.md`
-- Codex execution skill: `.codex/skills/willenium-automation/SKILL.md`
-- Codex API execution skill: `.codex/skills/willenium-api/SKILL.md`
-- Codex coaching skill: `.codex/skills/willenium-coach/SKILL.md`
+- Consultant skill: `.codex/skills/willenium-consultant/SKILL.md`
+- Quality Canvas skill: `.codex/skills/quality-canvas/SKILL.md`
+- Bug verification skill: `.codex/skills/willenium-test/SKILL.md`
+- UI execution skill: `.codex/skills/willenium-automation/SKILL.md`
+- API execution skill: `.codex/skills/willenium-api/SKILL.md`
+- Coaching skill: `.codex/skills/willenium-coach/SKILL.md`
 - Agent spec: `.github/agents/willenium.agent.md`
 
 ## Mission
@@ -48,7 +50,7 @@ The XML suite under `flows/...` is the executable representation of that journey
 
 Treat the checked-in tests, flows, GitHub workflows, and JSON data as starter examples of framework structure. Their website links, labels, and assertions are sample content unless the user confirms they are the real target application.
 
-Treat `willenium consultant` as the governance and direction layer above `quality-canvas`, `willenium-coach`, `willenium-automation`, and `willenium-api`.
+Treat `willenium consultant` as the governance and direction layer above `quality-canvas`, `willenium-coach`, `willenium-test`, `willenium-automation`, and `willenium-api`.
 Use it to keep automation business-directed rather than only business-aware.
 
 ## Selenium MCP

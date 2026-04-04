@@ -151,6 +151,7 @@ The usual handoff is:
 
 1. `willenium-consultant` to judge business direction, risk priority, and decision usefulness when the next step is not yet obvious
 2. `willenium-coach` when the user needs help choosing scope, plan type, or prompt shape
-3. `willenium-automation` or `willenium-api` when execution planning is ready
+3. `willenium-test` when the immediate need is evidence-backed reproduction of one reported UI bug before deciding on plan or automation updates
+4. `willenium-automation` or `willenium-api` when execution planning is ready
 
 The canvas may point to future `test-plans/...` files, but it must not generate them directly.
