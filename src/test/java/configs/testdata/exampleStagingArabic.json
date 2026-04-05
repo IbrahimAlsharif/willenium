@@ -36,10 +36,10 @@
     }
   },
   "wewillHome": {
-    "heroHeading": "We don’t just test software.",
-    "primaryCta": "Book a Clarity Session",
-    "methodologyHeading": "GenAI Feature Quality & Decision Governance",
-    "bilingualOfferingCta": "Explore (EN/AR)",
-    "footerSlogan": "Reduce Time, Reduce Cost & Be Confident"
+    "heroHeading": "نحن لا نختبر البرمجيات فحسب.",
+    "primaryCta": "احجز جلسة وضوح",
+    "methodologyHeading": "جودة ميزات GenAI وحوكمة القرار",
+    "bilingualOfferingCta": "استكشف (EN/AR)",
+    "footerSlogan": "قلل الوقت، قلل التكلفة، وكن واثقاً"
   }
 }
