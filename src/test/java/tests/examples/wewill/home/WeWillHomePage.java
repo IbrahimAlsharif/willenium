@@ -7,22 +7,22 @@ import org.openqa.selenium.WebElement;
 public class WeWillHomePage {
 
     public static WebElement getHeroHeading() {
-        return Finder.get(By.id("hero-heading"));
+        return Finder.get(By.cssSelector("[data-i18n='hero.title']"));
     }
 
     public static WebElement getPrimaryCallToAction() {
-        return Finder.get(By.name("primary-cta"));
+        return Finder.get(By.cssSelector("[data-i18n='hero.ctaPrimary']"));
     }
 
     public static WebElement getMethodologyHeading() {
-        return Finder.get(By.id("methodology-heading"));
+        return Finder.get(By.cssSelector("[data-i18n='genai.card.title']"));
     }
 
     public static WebElement getBilingualOfferingCallToAction() {
-        return Finder.get(By.name("bilingual-offering-cta"));
+        return Finder.get(By.cssSelector("[data-i18n='genai.cta']"));
     }
 
     public static WebElement getFooterSlogan() {
-        return Finder.get(By.id("footer-slogan"));
+        return Finder.get(By.cssSelector("[data-site-setting='footer_tagline']"));
     }
 }
