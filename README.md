@@ -475,9 +475,30 @@ If Chrome or Firefox fails before the browser opens with a message about `localh
 - Common toggles include `WILLENIUM_BROWSER_HEADLESS`, `WILLENIUM_BROWSER_INCOGNITO`, `WILLENIUM_BROWSER_MAXIMIZE`, `WILLENIUM_BROWSER_WINDOW_SIZE`, and `WILLENIUM_PAGE_LOAD_STRATEGY`.
 - UI synchronization and interaction safety are tunable with `WILLENIUM_UI_WAIT_TIMEOUT_SECONDS`, `WILLENIUM_UI_INTERACTION_RETRY_ATTEMPTS`, `WILLENIUM_UI_INTERACTION_RETRY_DELAY_MILLIS`, `WILLENIUM_UI_VERIFY_TYPED_TEXT`, and `WILLENIUM_UI_HIGHLIGHT_INTERACTIONS`.
 - TestRail reporting is controlled by `WILLENIUM_TESTRAIL_REPORT`.
+- TestRail runtime configuration is provided through `WILLENIUM_TESTRAIL_BASE_URL`, `WILLENIUM_TESTRAIL_USERNAME`, `WILLENIUM_TESTRAIL_PASSWORD`, `WILLENIUM_TESTRAIL_PROJECT_ID`, `WILLENIUM_TESTRAIL_SUITE_ID`, and `WILLENIUM_TESTRAIL_RUN_NAME`.
 - Extent report auto-open is controlled by `WILLENIUM_AUTO_OPEN_EXTENT_REPORT`. Local runs try to open `extent-reports/extent-report.html`; when auto-open is unavailable, Willenium prints an exact command you can run to open it.
 - Browser-specific capabilities are set in `src/test/java/configs/BrowserOptions.java`.
 - Screenshots and page-source artifacts are cleaned and recreated in the `screenshots/` directory at setup time.
+
+## TestRail Sync
+
+- `@TestRailCase("...")` is the source of truth for mapping a test method to TestRail.
+- `@TestRailCase` now supports `value`, `title`, and `section` so the code can keep the exact TestRail case id plus an explicit business title and section when needed.
+- Keep only one local config file at the project root: `testrail.local.properties`. It stays at the root on purpose so customer-specific credentials do not live under `src/test/java` with source code.
+- Preferred command: `.\mvnw.cmd -Psync-testrail test-compile exec:java`.
+- To sync one flow only, pass `-Dwillenium.testrail.flow=flows/.../YourFlow.xml`, for example: `.\mvnw.cmd -Psync-testrail -Dwillenium.testrail.flow=flows/examples/wewill/ProtectExampleHomeTrustEnglish.xml test-compile exec:java`.
+- If Maven is already installed on `PATH`, `mvn -Psync-testrail test-compile exec:java` does the same thing.
+- Run tests with `WILLENIUM_TESTRAIL_REPORT=true` to create a TestRail run and publish results from the annotated test methods.
+- Do not commit customer-specific TestRail credentials; pass them through environment variables or CI secrets.
+- Example:
+
+```java
+@TestRailCase(value = "2372", title = "User can submit a valid sign up form", section = "Sign Up")
+@Test
+public void verifyValidUserCanSubmitSignUpForm() {
+    // test body
+}
+```
 
 ## Adding New Tests
 

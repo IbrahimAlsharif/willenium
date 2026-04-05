@@ -180,7 +180,7 @@ public class Setup {
         }
         try {
             TestRailManager testRailManager = new TestRailManager();
-            Go.testRunId = testRailManager.createTestRun("Sentra", 2);
+            Go.testRunId = testRailManager.createTestRun();
         } catch (IOException | APIException exception) {
             throw new IllegalStateException("Failed to create the TestRail run after UI driver startup", exception);
         }
