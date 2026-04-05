@@ -84,6 +84,7 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Prefer existing helper patterns over introducing a new page-object architecture.
 - Reuse `Finder` and `Go` before adding direct `driver.findElement(...)` or custom wait code.
 - Prefer the higher-level shared helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before writing one-off synchronization or interaction fallback logic.
+- When selecting locators during Selenium MCP exploration or when translating MCP findings back into Java, prefer `id` first, then `name`, then stable CSS or semantic attributes, and use XPath only when a stable non-XPath locator is not available.
 - Keep assertions in `*Test.java`; helper classes should expose actions, locators, and small state checks.
 - Add short plain-language comments in generated or updated `*Test.java` files so low-code readers can follow what each test protects and what each assertion block is checking.
 - Prefer many focused business tests over one large test with many assertions.

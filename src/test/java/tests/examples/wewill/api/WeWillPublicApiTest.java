@@ -1,5 +1,6 @@
 package tests.examples.wewill.api;
 
+import base.ApiSetup;
 import com.fasterxml.jackson.databind.JsonNode;
 import configs.testRail.TestRailCase;
 import io.restassured.response.Response;
@@ -8,7 +9,7 @@ import org.testng.annotations.Test;
 
 import static base.ApiSetup.testData;
 
-public class WeWillPublicApiTest {
+public class WeWillPublicApiTest extends ApiSetup {
 
     @TestRailCase("API-0001")
     @Test(priority = 1)

@@ -91,21 +91,22 @@ When usernames or passwords are needed in test data files, store them as plain t
 16. Use Selenium MCP as a mandatory first step for UI planning and UI generation work.
 17. Inspect the live site first with the `selenium` MCP server in headed mode before drafting the plan or generating UI coverage.
 18. Treat the rendered state as truth during planning and generation, and inspect the experience from the user's and the business's perspective before focusing on selectors.
-19. When TestRail linkage matters, keep the mapping at the agent/client layer or in plan metadata and reporting configuration rather than embedding TestRail calls into Java tests.
-20. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
-21. For each new plan, create fresh app-specific JSON test data files rather than reusing the bundled example JSON files.
-22. When test data files need usernames or passwords for the covered journey, keep those credentials as plain text in the JSON file rather than environment-variable placeholders.
-23. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
-24. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
-25. When writing or updating test classes, add short explanatory comments so low-code readers can understand the purpose of each test and the main assertion blocks.
-26. Prefer multiple focused business tests over one large test method with many assertions, and keep each test to at most two assertions.
-27. Keep each test responsible for one clear business outcome, checkpoint, or failure mode so failures stay easy to diagnose.
-28. Split journeys into separate tests when the business checkpoints deserve independent reporting.
-29. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, Jira issue metadata, and TestRail metadata when applicable.
-30. Register or update the relevant TestNG XML suite.
-31. When a plan changes, update the linked tests instead of creating duplicate implementations.
-32. Run the relevant suite for the changed flow and fix failures before stopping.
-33. When a new flow is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
+19. When Selenium MCP validates or discovers locators, prefer `id` first, then `name`, then stable CSS or semantic attributes, and use XPath only when stable non-XPath options are not available.
+20. When TestRail linkage matters, keep the mapping at the agent/client layer or in plan metadata and reporting configuration rather than embedding TestRail calls into Java tests.
+21. When the user starts real project coverage, create app-specific plans, helpers, tests, test data, and flows instead of extending the bundled WE WILL example assets by default.
+22. For each new plan, create fresh app-specific JSON test data files rather than reusing the bundled example JSON files.
+23. When test data files need usernames or passwords for the covered journey, keep those credentials as plain text in the JSON file rather than environment-variable placeholders.
+24. If the starter examples would make the real project confusing, move or rename them so they are clearly separated from the real baseline.
+25. Translate the outcome into Java/TestNG code that matches Willenium's current conventions.
+26. When writing or updating test classes, add short explanatory comments so low-code readers can understand the purpose of each test and the main assertion blocks.
+27. Prefer multiple focused business tests over one large test method with many assertions, and keep each test to at most two assertions.
+28. Keep each test responsible for one clear business outcome, checkpoint, or failure mode so failures stay easy to diagnose.
+29. Split journeys into separate tests when the business checkpoints deserve independent reporting.
+30. Keep the plan linked to generated artifacts through stable metadata such as `plan_id`, target slug, related XML path, Java class names, JSON section names, Jira issue metadata, and TestRail metadata when applicable.
+31. Register or update the relevant TestNG XML suite.
+32. When a plan changes, update the linked tests instead of creating duplicate implementations.
+33. Run the relevant suite for the changed flow and fix failures before stopping.
+34. When a new flow is added, add or regenerate the matching `workflow_dispatch` GitHub Actions workflow.
 
 ## Non-Negotiable Rules
 
@@ -147,6 +148,7 @@ When usernames or passwords are needed in test data files, store them as plain t
 - For TestRail-linked work, analyze whether the requested case, run, or milestone already maps to an existing plan, flow, or test before creating duplicate coverage.
 - Reuse `base.Finder` and `base.Go` before introducing raw low-level Selenium code.
 - Prefer the higher-level `Finder`/`Go` methods such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before adding custom waits or retry logic.
+- Prefer locator strategies that map to stable `Finder` usage: `id` first, `name` second, then stable CSS or semantic attributes, with XPath reserved for cases where the page does not expose a stable non-XPath locator.
 - Keep assertions in `*Test.java`.
 - Add short plain-language comments in generated test classes so readers with low coding experience can follow the business intent and key assertions.
 - Prefer many focused business tests over one assert-heavy test.
@@ -184,6 +186,8 @@ Use Selenium MCP to:
 - the business journey needs clarification through real user-facing signals, trust cues, or drop-off analysis
 - the real journey steps, branching points, or recovery paths need confirmation before finalizing the plan
 - dynamic UI behavior such as cookie banners, delayed rendering, or skeleton loaders must be understood before finalizing expectations
+
+When locating elements through Selenium MCP, prefer `id` and `name` before CSS or XPath. Use XPath only as a fallback when the page does not expose a stable non-XPath locator.
 
 When Selenium MCP is used for website exploration, use headed mode by default.
 When Selenium MCP is used during planning, navigate the requested journey intentionally, treat the rendered state as truth, and align the findings back to the selected plan type and planned business cases.

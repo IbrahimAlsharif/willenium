@@ -42,6 +42,7 @@ The XML suite under `flows/...` is the executable representation of that journey
 - Keep API setup in `base.ApiSetup` and shared request execution in `base.ApiClient`.
 - Reuse `base.Finder` and `base.Go` before writing raw Selenium code.
 - Prefer the higher-level `Finder`/`Go` helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before adding custom waits or retry logic.
+- When choosing locators for Selenium MCP exploration or Java helpers, prefer `id` first, then `name`, then stable CSS or semantic attributes, and use XPath only when the page does not expose a stable non-XPath option.
 - Update JSON-backed test data instead of hardcoding user-facing strings when possible.
 - For each new plan, create fresh app-specific test data files instead of reusing the checked-in example JSON files.
 - When usernames or passwords are needed in test data files, store them as plain text in the JSON instead of reading them from environment variables.
@@ -68,6 +69,16 @@ Use Selenium MCP to:
 - understand the business intent of the page or journey
 - identify trust signals, conversion blockers, misleading success states, or recovery paths
 - handle dynamic UI behavior such as cookie banners, delayed rendering, and skeleton loaders before locking test expectations
+
+When Selenium MCP is used to choose or validate locators, prefer the most stable strategy first:
+
+- `id`
+- `name`
+- stable CSS selectors
+- other semantic attributes that map cleanly into `Finder`
+- XPath only as a fallback
+
+Do not default to XPath when `id` or `name` already provides a stable locator. Keep generated or updated Java helpers aligned with `base.Finder` methods before falling back to XPath-specific helpers.
 
 When Selenium MCP is used for website exploration, use headed mode by default.
 

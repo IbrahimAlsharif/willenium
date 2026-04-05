@@ -46,11 +46,21 @@ For the pinned `@angiejones/mcp-selenium` package, the public docs describe tool
 Locator strategies documented by the package include:
 
 - `id`
+- `name`
 - `css`
 - `xpath`
-- `name`
 - `tag`
 - `class`
+
+Prefer locator strategies in this order for this repository:
+
+1. `id`
+2. `name`
+3. stable `css`
+4. stable semantic attributes that can map cleanly into `Finder`
+5. `xpath` only as a fallback when the page does not expose a stable non-XPath locator
+
+The goal is to keep generated Java aligned with the stronger locator strategies already supported by `base.Finder` instead of defaulting to XPath for convenience.
 
 The package docs show `start_browser` examples for Chrome and Firefox. The upstream GitHub README also mentions Edge support, so treat browser availability as server-version-dependent and prefer Chrome unless there is a project-specific reason to do otherwise.
 
@@ -75,6 +85,8 @@ The package docs show `start_browser` examples for Chrome and Firefox. The upstr
    - XML suite registration under `flows/...`
    - plan sections and business test cases in `test-plans/...`
 9. Close the MCP session once you have the evidence you need.
+
+When selector options are tied, choose the one that keeps the resulting Java helper closest to shared `Finder` methods before adding XPath-specific helpers.
 
 ## Planning Guardrails
 

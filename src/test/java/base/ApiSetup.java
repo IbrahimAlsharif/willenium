@@ -9,8 +9,9 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -19,9 +20,9 @@ public class ApiSetup {
     public static TestData testData;
     public static RequestSpecification apiSpecification;
 
-    @Test(priority = 1)
+    @BeforeClass(alwaysRun = true)
     @Parameters({"language", "branch"})
-    public void setUpApiClient(String language, String branch) {
+    public void setUpApiClient(@Optional("english") String language, @Optional("production") String branch) {
         ApiContext.clear();
         testData = TestDataFactory.getTestData(branch, language);
 
