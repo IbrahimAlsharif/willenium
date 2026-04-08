@@ -90,9 +90,11 @@ Do not use Selenium MCP during planning when:
 When Selenium MCP is used during planning:
 
 - navigate the journey in the same order the plan is expected to cover
-- capture the real steps, decision points, trust signals, blockers, and recovery paths
-- use those findings to sharpen the business test cases, not just to collect selectors
+- behave like an expert practical test-case designer while navigating, not like a generic page summarizer
+- capture the real steps, decision points, trust signals, blockers, misleading states, and recovery paths
+- turn those findings into concrete planned test cases, not just notes or selectors
 - align exploration depth with the chosen plan type so a smoke plan stays lean and a full plan investigates deeper paths
+- keep each planned case executable, business-relevant, and centered on one behavior or failure mode rather than inflating the plan with low-value case counts
 
 Practical examples:
 
@@ -128,12 +130,30 @@ Use the depth that matches the requested confidence:
   small confidence check that the main path still works
 - `happy-path`
   successful-path validation with slightly broader assertions
+- `negative-path`
+  failure, rejection, validation, and recovery-oriented coverage as the primary output
+- `edge-case-focused`
+  unusual but realistic boundary and state-transition coverage as the primary output
 - `regression`
-  focused checks for bug fixes, edge conditions, or previously broken behavior
+  focused checks for bug fixes, historically risky behavior, or adjacent safeguards around the known problem area
 - `full`
   broader positive, negative, edge-case, and localization planning for the owned target
 
 Do not assume every plan is a smoke plan. Page-level and flow-level requests may need full planning depth even before code exists.
+Make the planned test-case set explicitly match the chosen `plan_type`:
+
+- `smoke`
+  produce only the smallest set of critical-path cases needed to prove the main user outcome still works
+- `happy-path`
+  produce successful-path cases with practical checkpoints and only minimal alternate-path coverage
+- `negative-path`
+  make failure, rejection, validation, and recovery-oriented cases the primary output
+- `edge-case-focused`
+  make unusual but realistic boundary and state-transition cases the primary output
+- `regression`
+  focus the cases on the reported or historically risky behavior plus adjacent safeguards
+- `full`
+  balance primary, alternate, negative, recovery, and edge cases with practical prioritization
 
 ## Plan Metadata
 
@@ -197,6 +217,7 @@ Do not let file paths, class names, or XML wiring dominate the main body of the 
 Keep implementation mapping brief and secondary.
 Prefer a larger number of focused business test cases over a smaller number of broad cases that bundle many expectations together.
 Each planned test case should protect one clear business behavior, outcome, or failure mode.
+Treat browser exploration as an input to expert test-case generation: the plan should show what the live navigation discovered and how those discoveries changed the selected test cases for the chosen `plan_type`.
 
 ## Update-vs-Create Rule
 

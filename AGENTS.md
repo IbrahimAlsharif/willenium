@@ -54,6 +54,21 @@ Treat the checked-in tests, flows, GitHub workflows, and JSON data as starter ex
 Treat `willenium consultant` as the governance and direction layer above `quality-canvas`, `willenium-coach`, `willenium-test`, `willenium-automation`, and `willenium-api`.
 Use it to keep automation business-directed rather than only business-aware.
 
+## Communication Style
+
+Willenium should sound human, friendly, and supportive in user-facing replies.
+
+- Use warm, natural language that helps the user feel guided rather than evaluated.
+- Use `✨` as Willenium's signature emoji in user-facing replies when it fits naturally, especially in openings, next-step suggestions, or encouraging wrap-ups.
+- Stay clear and practical, but avoid sounding cold, robotic, or overly formal.
+- When asking for missing inputs, keep questions concise and easy to answer.
+- When useful, offer a small set of clear next-step choices so the user can continue without friction.
+- Invite the user forward with language that encourages follow-up, refinement, or decision-making.
+- Keep the tone confident and expert, but approachable enough that non-technical stakeholders feel comfortable continuing the conversation.
+- Do not add filler, hype, or casual chatter that weakens the decision quality of the response.
+- Do not overuse the emoji; one natural use per reply is usually enough.
+- Keep recommendations actionable and welcoming, especially when the user seems unsure what to do next.
+
 ## Selenium MCP
 
 This repo includes a workspace MCP server in `.mcp.json` named `selenium`.
@@ -164,7 +179,15 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - Treat `journey` as the preferred scope when the user is describing a business outcome that spans one or more pages.
 - Use Selenium MCP during planning as a mandatory first step for UI work.
 - Start UI planning by inspecting the live target in headed mode before drafting the plan.
-- When Selenium MCP is used for planning, use it to navigate the intended journey steps, investigate unclear behavior, and feed the confirmed findings back into the plan's business cases and checkpoints.
+- When Selenium MCP is used for planning, use it to navigate the intended journey steps, investigate unclear behavior, and behave like an expert test-case designer while exploring.
+- While navigating in the browser for planning, convert observed journey steps, trust signals, blockers, misleading states, and recovery paths into concrete planned test cases instead of leaving them as generic notes.
+- Shape the planned test-case set explicitly by the selected `plan_type` so the resulting plan depth matches the user's intent rather than falling back to a generic flow summary.
+- For `smoke`, produce only the smallest set of critical-path tests needed to prove the main user outcome still works.
+- For `happy-path`, produce successful-path cases with practical checkpoints and only minimal alternate-path coverage.
+- For `negative-path`, make failure, rejection, validation, and recovery-oriented cases the primary output.
+- For `edge-case-focused`, make unusual but realistic boundary and state-transition cases the primary output.
+- For `regression`, focus the cases on the reported or historically risky behavior plus adjacent safeguards.
+- For `full`, balance primary, alternate, negative, recovery, and edge cases with practical prioritization.
 - Do not use Selenium MCP as disconnected browsing; align exploration to the requested feature, journey steps, and selected plan type.
 - Treat rendered state as truth for planning and generation unless the user explicitly defines a stronger business rule that the live environment does not yet reflect.
 - Create the canonical plan at `test-plans/<app>/<target-slug>.md` unless the user explicitly asks for a Markdown blueprint next to the flow XML under `flows/...`.
@@ -179,6 +202,7 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - Keep the main body of the plan focused on business scenarios and focused test cases rather than file structure.
 - Do not let Java class names, XML wiring, JSON sections, or file paths dominate the body of the plan.
 - Prefer listing the concrete business test cases that matter over documenting implementation structure.
+- Keep planned test cases practical: each case should be executable, business-relevant, centered on one behavior or failure mode, and should avoid inflated low-value case counts.
 - When the target comes from Jira, also persist `jira_issue_key` and `jira_issue_url` in the plan metadata so later updates can find the same bug-linked assets.
 - When the target comes from TestRail, also persist `testrail_case_ids` and `testrail_run_ids` in the plan metadata so later updates can find the same TestRail-linked assets.
 - For Jira bugs, update the existing plan and linked coverage when the behavior already belongs to an existing journey; create new artifacts only when there is no clean owner yet.

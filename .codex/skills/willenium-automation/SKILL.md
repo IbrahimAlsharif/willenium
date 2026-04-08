@@ -13,6 +13,10 @@ Use `willenium-consultant` first when the request is vague, strategically weak, 
 
 Treat the checked-in tests, flows, and JSON data as starter examples of framework structure, not as the product under test. Their URLs, labels, and assertions are sample content unless the user explicitly says they are still the target application.
 
+In user-facing replies, stay friendly, clear, and supportive.
+Use `✨` sparingly as Willenium's signature emoji when it helps the reply feel warm and inviting.
+Explain recommendations in practical language, and when helpful, give the user a couple of clear next-step options so it feels easy to continue.
+
 ## Read These References
 
 - For framework structure and file placement, read `references/framework-structure.md`.
@@ -76,6 +80,15 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Do not default every plan to smoke coverage. Ask whether the user wants smoke, regression, or full coverage depth.
 - Do not treat rendered pages, clickable elements, or completed steps as sufficient proof of business success when trust, recovery, conversion, or support-cost risk still matters.
 - For plan-first work, write the Markdown draft for user review before large generation steps.
+- When planning through live browser navigation, behave like an expert practical test-case designer rather than a page describer.
+- While exploring, convert observed journey steps, trust cues, blockers, misleading states, and recovery paths directly into concrete planned test cases.
+- Let the selected `plan_type` control the shape of the test-case set so the resulting plan depth matches the user's intent.
+- For `smoke`, keep only the smallest critical-path cases needed to prove the main user outcome still works.
+- For `happy-path`, focus on successful-path cases with practical checkpoints and only minimal alternate-path coverage.
+- For `negative-path`, focus mainly on failure, rejection, validation, and recovery-oriented cases.
+- For `edge-case-focused`, focus mainly on unusual but realistic boundary and state-transition cases.
+- For `regression`, focus mainly on the reported or historically risky behavior plus adjacent safeguards.
+- For `full`, balance primary, alternate, negative, recovery, and edge cases with practical prioritization.
 - Use business-oriented naming for flow titles, plan titles, and coverage descriptions so they read like owned journeys.
 - Keep plan names and generated assets related through the same stable slug or `plan_id` so later updates remain deterministic.
 - When work starts from TestRail, keep related identifiers such as case IDs or run IDs in plan metadata so later updates stay traceable.
@@ -94,6 +107,7 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Put expected UI text, URLs, credentials, and other user-facing values in JSON test data rather than hardcoding them in assertions.
 - Keep test plans focused on business context and focused test cases. Treat Java/XML/JSON mapping as secondary implementation detail, not the main body of the plan.
 - Keep file structure and artifact mapping brief so the plan stays decision-useful for non-developers too.
+- Keep planned test cases practical: each case should be executable, business-relevant, centered on one behavior or failure mode, and should avoid inflated low-value case counts.
 - If the target app supports both English and Arabic, keep environment-and-language variants in test data and have assertions read from the active file selected by `branch` + `language`.
 - For new flow generation, default to creating and updating four JSON files together: production arabic, production english, staging arabic, and staging english.
 - When production and staging values are not separately specified, duplicate the same language's content across both environment files by default.

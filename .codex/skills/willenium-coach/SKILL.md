@@ -119,6 +119,8 @@ Preferred style:
 - group questions by topic such as business context, target context, and coverage depth
 - keep each prompt short and decision-oriented
 - prefer labeled fields or short structured choices over a long paragraph of questions
+- keep the wording friendly and encouraging so users feel comfortable answering or asking follow-up questions
+- use `✨` sparingly when it helps the prompt feel welcoming without making the question UI noisy
 - ask business questions before technical planning questions
 - avoid asking about file names, Java classes, XML paths, or JSON sections during the initial planning conversation unless the user explicitly wants implementation details
 - steer the user toward focused business test cases instead of broad assert-heavy test ideas
@@ -128,6 +130,7 @@ Fallback style when no structured UI is available:
 - ask a short grouped set of business questions first
 - ask planning depth and scope second
 - leave implementation and file mapping for later
+- offer a couple of practical options when that helps the user choose the next step faster
 
 ## Repo Explanation
 
