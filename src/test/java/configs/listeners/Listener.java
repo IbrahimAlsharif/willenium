@@ -189,7 +189,7 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
     }
 
     private void publishTestRailResult(ITestResult result, int status, String screenshotPath) {
-        if (!PipelineConfig.testRailReport) {
+        if (!PipelineConfig.testRailReport || testRunId == null || testRunId.isBlank()) {
             return;
         }
 
@@ -201,7 +201,8 @@ public class Listener implements ITestListener, IInvokedMethodListener, IExecuti
         try {
             testRail.setResult(testRunId, testCaseId, status, screenshotPath);
         } catch (IOException | APIException e) {
-            throw new RuntimeException(e);
+            System.err.println("TestRail result publishing skipped for "
+                    + result.getMethod().getQualifiedName() + ": " + e.getMessage());
         }
     }
 

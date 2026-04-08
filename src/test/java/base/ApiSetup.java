@@ -3,6 +3,9 @@ package base;
 import com.fasterxml.jackson.databind.JsonNode;
 import configs.api.ApiContext;
 import configs.api.OpenApiContract;
+import configs.pipeline.PipelineConfig;
+import configs.testRail.APIException;
+import configs.testRail.TestRailManager;
 import configs.testdata.TestData;
 import configs.testdata.TestDataFactory;
 import io.restassured.builder.RequestSpecBuilder;
@@ -19,6 +22,7 @@ import java.util.Map;
 public class ApiSetup {
     public static TestData testData;
     public static RequestSpecification apiSpecification;
+    public static final TestRailManager testRail = new TestRailManager();
 
     @BeforeClass(alwaysRun = true)
     @Parameters({"language", "branch"})
@@ -47,6 +51,18 @@ public class ApiSetup {
         OpenApiContract.configure(apiData);
         apiSpecification = builder.build();
         ApiClient.initialize(apiSpecification, baseUrl);
+        startTestRailRunIfEnabled();
         Assert.assertNotNull(apiSpecification, "API request specification should be initialized");
+    }
+
+    private void startTestRailRunIfEnabled() {
+        if (!PipelineConfig.testRailReport || Go.testRunId != null && !Go.testRunId.isBlank()) {
+            return;
+        }
+        try {
+            Go.testRunId = testRail.createTestRun();
+        } catch (APIException | java.io.IOException exception) {
+            throw new IllegalStateException("Failed to create the TestRail run after API setup", exception);
+        }
     }
 }

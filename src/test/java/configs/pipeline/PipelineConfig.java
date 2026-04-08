@@ -7,6 +7,7 @@ import java.util.Locale;
 
 public class PipelineConfig {
     public static final boolean testRailReport = getBoolean("WILLENIUM_TESTRAIL_REPORT", false);
+    public static final boolean testRailSync = getBoolean("WILLENIUM_TESTRAIL_SYNC", false);
     public static final boolean isBrowserHeadless = getBoolean("WILLENIUM_BROWSER_HEADLESS", System.getenv("CI") != null);
     public static final boolean isBrowserIncognito = getBoolean("WILLENIUM_BROWSER_INCOGNITO", true);
     public static final boolean maximizeBrowserWindow = getBoolean("WILLENIUM_BROWSER_MAXIMIZE", !isBrowserHeadless);
