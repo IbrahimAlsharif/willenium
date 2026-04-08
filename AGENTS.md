@@ -27,6 +27,7 @@ Produce framework-native Java Selenium TestNG and RestAssured TestNG changes for
 
 Treat each flow as a business journey that protects a user outcome and a business objective.
 The XML suite under `flows/...` is the executable representation of that journey, not just a bucket of tests.
+Treat `flows/steps/...` as reusable business-step building blocks that top-level flows can compose.
 
 - Put early strategic quality artifacts in `quality/plans/<app>/<target-slug>-quality-canvas.md` by default.
 - Put planning artifacts in `test-plans/<app>/<target-slug>.md` by default.
@@ -38,6 +39,9 @@ The XML suite under `flows/...` is the executable representation of that journey
 - Prefer many small business-focused tests over one large test with many assertions.
 - Keep each test centered on one business behavior, decision point, or failure mode so failures stay easy to understand.
 - Avoid packing an entire journey into one method when the business checkpoints can be owned as separate tests.
+- Decompose each journey into reusable business steps that represent meaningful checkpoints, not individual clicks.
+- Prefer step boundaries such as `home page is ready`, `search is performed and results are visible`, or `details view is opened` so later flows can reuse them cleanly.
+- Do not make steps too coarse or too granular: one step may contain multiple UI actions when they serve one business checkpoint, and one journey may compose several such steps.
 - Keep setup and driver lifecycle in `base.Setup` and `base.TearDownTest`.
 - Keep API setup in `base.ApiSetup` and shared request execution in `base.ApiClient`.
 - Reuse `base.Finder` and `base.Go` before writing raw Selenium code.
@@ -175,6 +179,7 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
   - key risk or unacceptable outcome
   - confidence target
 - Then ask for or confirm the user's journey steps or feature scope and the desired plan type.
+- When journey steps are confirmed, shape them as reusable business-step candidates that can later map into `flows/steps/...` and be composed into top-level flows.
 - Prefer a clean, structured question UI with short grouped prompts when the client supports it.
 - Treat `journey` as the preferred scope when the user is describing a business outcome that spans one or more pages.
 - Use Selenium MCP during planning as a mandatory first step for UI work.
@@ -198,6 +203,7 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - Make the plan comprehensive enough to drive later generation, but keep the main body business-first: include business goal, user value, scope, assumptions, actual test cases, localization notes, unacceptable outcomes, and scenario mapping, then keep technical mapping as a short secondary section only.
 - Do not default every plan to smoke coverage; the user may want full test planning for a specific page or flow.
 - Keep the plan linked to generated tests through stable metadata such as `plan_id`, `target_slug`, flow path, helper class, test class, and test-data sections.
+- Keep the plan linked to generated tests through stable metadata such as `plan_id`, `target_slug`, flow path, step-suite paths, helper class, test class, and test-data sections.
 - Prefer business-care naming for flows and plans so the name reads like the owned journey rather than a technical grouping.
 - Keep the main body of the plan focused on business scenarios and focused test cases rather than file structure.
 - Do not let Java class names, XML wiring, JSON sections, or file paths dominate the body of the plan.
@@ -213,6 +219,8 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - Keep UI tests suite-driven; do not bypass setup/teardown assumptions.
 - Prefer one short comment per test or assertion block that explains the business intent in plain language, not only the code action.
 - Split business coverage into multiple targeted tests when a journey has multiple checkpoints, outcomes, or failure modes.
+- Reuse or create step suites under `flows/steps/...` around business checkpoints so shared parts of a journey are not rewritten in each flow.
+- Compose top-level flows from those reusable steps whenever the same checkpoint sequence appears across journeys.
 - Do not put many unrelated assertions into one test method just because the UI path is shared.
 - Prefer one clear business expectation per test, with only the supporting assertions needed to prove that expectation.
 - Write step-by-step business test cases and keep each test to at most two assertions.

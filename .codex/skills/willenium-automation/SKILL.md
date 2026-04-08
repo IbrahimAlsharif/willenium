@@ -7,6 +7,7 @@ description: Use when creating, updating, or debugging Java Selenium TestNG UI c
 
 Use this skill for browser-test work in this repository. The implementation target is always the Java/TestNG framework in this repo, not ad hoc scripts in another language.
 Treat flows as business journeys first and execution suites second.
+Treat `flows/steps/...` as the reusable business-step layer that sits beneath those journeys.
 
 Use `willenium-api` instead when the task is primarily API coverage, API planning, API debugging, or RestAssured/TestNG work.
 Use `willenium-consultant` first when the request is vague, strategically weak, commercially shallow, high-risk, or likely to create false confidence before UI execution begins.
@@ -40,19 +41,22 @@ Explain recommendations in practical language, and when helpful, give the user a
    - TestRail-linked work -> inspect the relevant TestRail cases or runs before creating duplicate framework assets
 3. Keep the plan as the source of truth for later generation and update work.
 4. Treat `flows/...` as the executable expression of a business journey, not merely a grouping of tests.
+5. Decompose each journey into reusable business steps that represent meaningful checkpoints, not one-off click sequences.
+6. Prefer step names and boundaries such as `home ready`, `search results shown`, and `details opened` so future flows can compose them cleanly.
+7. Reuse or extend an existing step suite under `flows/steps/...` when the same checkpoint already exists.
 5. Keep the framework split intact:
    - setup/driver lifecycle in `base.Setup` and `base.TearDownTest`
    - reusable browser actions in `base.Go`
    - reusable element lookup helpers in `base.Finder`
    - page/feature helpers in `tests/.../<Feature>.java`
    - assertions in `tests/.../<Feature>Test.java`
-6. When the user asks for the first real test for a new product, create app-specific test data, helper classes, test classes, flows, and plans instead of building on the sample app names and sample URLs.
-7. If keeping the examples in place would make the real project confusing, move or rename the sample assets so they are clearly marked as examples or starter content before adding the first real coverage.
-8. Add or update JSON-backed test data before hardcoding user-facing strings, URLs, credentials, or inputs.
-9. Register new or changed coverage in the appropriate TestNG XML suite under `flows/steps/...` or a composed suite under `flows/...`.
-10. When a new top-level flow/profile is added, add or regenerate the matching manually triggered GitHub Actions workflow under `.github/workflows/`.
-11. When a plan already exists for the target, update the linked plan and tests instead of creating duplicates.
-12. Run the smallest relevant verification path that matches the plan type and request.
+8. When the user asks for the first real test for a new product, create app-specific test data, helper classes, test classes, flows, and plans instead of building on the sample app names and sample URLs.
+9. If keeping the examples in place would make the real project confusing, move or rename the sample assets so they are clearly marked as examples or starter content before adding the first real coverage.
+10. Add or update JSON-backed test data before hardcoding user-facing strings, URLs, credentials, or inputs.
+11. Register new or changed coverage in the appropriate TestNG XML suite under `flows/steps/...` or a composed suite under `flows/...`.
+12. When a new top-level flow/profile is added, add or regenerate the matching manually triggered GitHub Actions workflow under `.github/workflows/`.
+13. When a plan already exists for the target, update the linked plan and tests instead of creating duplicates.
+14. Run the smallest relevant verification path that matches the plan type and request.
 
 ## Jira MCP Rules
 
@@ -103,6 +107,9 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Prefer many focused business tests over one large test with many assertions.
 - Keep each test centered on one business outcome, checkpoint, or failure mode.
 - Split a long journey into multiple tests when that makes failures clearer and reporting more useful.
+- Model steps around business checkpoints that are likely to be reused across flows, not around every single interaction.
+- One reusable step may contain multiple low-level actions when together they establish a single business checkpoint.
+- Compose top-level flows from reusable steps instead of duplicating the same `home`, `search/results`, or `details` setup in every journey-specific suite.
 - Keep browser, wait, retry, and reporting toggles property-driven through `configs.pipeline.PipelineConfig` rather than hardcoding them in helper or test classes.
 - Put expected UI text, URLs, credentials, and other user-facing values in JSON test data rather than hardcoding them in assertions.
 - Keep test plans focused on business context and focused test cases. Treat Java/XML/JSON mapping as secondary implementation detail, not the main body of the plan.

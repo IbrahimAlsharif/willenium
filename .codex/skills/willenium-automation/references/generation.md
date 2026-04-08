@@ -36,6 +36,7 @@ Translate the plan into the repo's native structure:
 - reusable browser logic in `src/test/java/tests/.../<Feature>.java`
 - assertions in `src/test/java/tests/.../<Feature>Test.java`
 - dynamic inputs and expected values in `src/test/java/configs/testdata/...`
+- reusable step suites in `flows/steps/...`
 - suite wiring in `flows/...`
 
 Keep:
@@ -53,6 +54,10 @@ Keep:
 - prefer multiple focused tests over one assert-heavy test method
 - keep each test responsible for one business outcome, checkpoint, or failure mode
 - avoid bundling several business expectations into one test just because they share the same navigation path
+- decompose a journey into reusable business steps before wiring the top-level flow
+- prefer a step per meaningful checkpoint, not a step per click and not a whole journey collapsed into one step
+- reuse existing `flows/steps/...` suites when they already express the same checkpoint
+- compose top-level `flows/...` suites from those reusable steps whenever the same checkpoints recur across journeys
 - keep browser/runtime behavior property-driven through `configs.pipeline.PipelineConfig` instead of embedding wait or browser flags in feature code
 - put expected UI text, URLs, credentials, filters, and inputs in JSON instead of hardcoding them
 - preserve environment-and-language separation when the product supports both multiple languages and multiple environments
@@ -67,6 +72,7 @@ When generating from a plan, verify that each area is reflected in code:
 
 - target slug matches the file naming scheme
 - flow naming reflects the business journey rather than a generic technical grouping
+- step-suite naming reflects reusable business checkpoints rather than low-level UI actions
 - helper class path matches the plan
 - test class path matches the plan
 - flow XML path matches the plan

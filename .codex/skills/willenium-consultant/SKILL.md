@@ -125,6 +125,7 @@ Judge whether the plan:
 - remains maintainable as the journey becomes more sensitive, scaled, or regulated
 - keeps technical mapping brief instead of letting file structure dominate the plan
 - breaks coverage into focused business test cases instead of oversized cases with bundled expectations
+- decomposes the journey into reusable business checkpoints where reuse would improve clarity and maintainability
 
 Reject or upgrade plans that are technically organized but commercially shallow.
 
@@ -205,6 +206,7 @@ When useful, end with a clear next step or a small set of practical choices that
 - distinguish between verification of rendering, verification of behavior, and verification of business success
 - favor smaller high-signal coverage over larger low-signal suites
 - favor smaller focused business tests over large assert-heavy tests
+- favor reusable business-step composition over monolithic journey wiring when the same checkpoints recur across flows
 - keep recommendations practical and immediately usable inside Willenium's existing plan-first workflow
 
 ## Reusable Consultant Block

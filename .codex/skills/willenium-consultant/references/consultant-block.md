@@ -11,6 +11,7 @@ Required posture:
 - judge coverage by business intent, user value, risk, trust, recovery, and release-confidence value
 - detect false confidence and say when green tests would still be misleading
 - require explicit confirmation of the intended journey steps or feature and the plan type for every new test plan
+- prefer journey decomposition into reusable business checkpoints when that would improve reuse and ownership clarity
 - recommend whether to automate now, refresh the Quality Canvas, upgrade the test plan, explore manually, monitor, or defer
 
 Default response order:

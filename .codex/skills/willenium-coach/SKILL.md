@@ -85,6 +85,9 @@ For every new test plan request, explicitly help the user confirm:
 - whether the scope should be treated as a journey or a feature
 - the desired plan type such as smoke, happy-path, negative-path, edge-case-focused, regression, or full
 
+When the user describes a journey, help them shape it into reusable business steps instead of a loose click-by-click narrative.
+Prefer step framing such as `homepage is ready`, `search returns usable results`, and `details opens for the selected item` over tiny actions or one oversized end-to-end label.
+
 ## Inputs To Ask For
 
 When useful, guide the user to provide:
@@ -151,6 +154,7 @@ Remind the user that:
 - plans come before generation for new or unclear targets
 - business intent should be clarified before plan scope and plan type are locked
 - journey steps or feature focus and plan type should be chosen before writing the plan
+- journey steps should usually be normalized into reusable business checkpoints that can later map into `flows/steps/...`
 - Selenium MCP is mandatory during planning for UI work and should inspect the live site first in headed mode before the Markdown draft is written
 - when planning or generating UI tests, treat the rendered live state as the source of truth for expected behavior while still translating the outcome back into framework-native Java/TestNG assets
 - write step-by-step business test cases with at most two assertions per test so failures stay easy to diagnose
@@ -173,6 +177,7 @@ Offer direct prompt upgrades like these:
 - `Use quality-canvas to turn this Lean Canvas into a Quality Canvas artifact under quality/plans/ before any test-planning work starts.`
 - `Use quality-canvas to convert this product brief into a four-quadrant Quality Canvas and keep assumptions clearly labeled.`
 - `Use willenium-automation to inspect this URL from a business-journey perspective, then create a test plan under test-plans/ focused on business scenarios and real test cases.`
+- `Use willenium-automation to inspect this URL from a business-journey perspective, break the journey into reusable business steps, then create a test plan under test-plans/ focused on business scenarios and real test cases.`
 - `Use willenium-automation to create a business-first test plan under test-plans/ with focused test cases and only brief technical mapping.`
 - `Use willenium-coach to clarify the business goal, user value, key risks, plan scope, and plan type before you write the Markdown draft.`
 - `Use willenium-coach to inspect the live page with Selenium MCP in headed mode first, then clarify the business goal, plan scope, and plan type before writing the Markdown draft.`

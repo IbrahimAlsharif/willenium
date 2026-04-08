@@ -34,6 +34,8 @@ Then determine two planning inputs:
 
 For every new test plan request, explicitly ask for or confirm the journey steps or feature and the plan type before proceeding.
 If either is unclear, ask a concise follow-up before proceeding.
+When the input is a journey, normalize the journey into reusable business-step candidates rather than leaving the steps as a loose narrative.
+Prefer step candidates such as `homepage is ready`, `search returns relevant results`, and `selected result opens details` over tiny actions like `click search field` or over-broad labels like `complete journey`.
 
 Interpret `flow` as a business flow and prefer `journey` when the requested coverage is really about an end-to-end user outcome that serves a business goal.
 
@@ -218,6 +220,7 @@ Keep implementation mapping brief and secondary.
 Prefer a larger number of focused business test cases over a smaller number of broad cases that bundle many expectations together.
 Each planned test case should protect one clear business behavior, outcome, or failure mode.
 Treat browser exploration as an input to expert test-case generation: the plan should show what the live navigation discovered and how those discoveries changed the selected test cases for the chosen `plan_type`.
+When useful, add a short step map that shows how the journey decomposes into reusable business steps and which of those steps should map to `flows/steps/...` for later composition.
 
 ## Update-vs-Create Rule
 

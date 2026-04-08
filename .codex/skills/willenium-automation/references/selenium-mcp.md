@@ -77,14 +77,16 @@ The package docs show `start_browser` examples for Chrome and Firefox. The upstr
    - trust signals
    - blockers or drop-off points
    - recovery paths
-7. Align the investigation depth to the chosen plan type so smoke work stays lean and fuller plans investigate more paths.
-8. Translate the validated interaction back into repo-native code and planning artifacts:
+7. Normalize the observed journey into reusable business-step candidates for later `flows/steps/...` composition whenever the same checkpoint is likely to recur.
+8. Align the investigation depth to the chosen plan type so smoke work stays lean and fuller plans investigate more paths.
+9. Translate the validated interaction back into repo-native code and planning artifacts:
    - helper methods in `tests/.../<Feature>.java`
    - assertions in `tests/.../<Feature>Test.java`
    - JSON keys in test data
+   - reusable step suites under `flows/steps/...`
    - XML suite registration under `flows/...`
    - plan sections and business test cases in `test-plans/...`
-9. Close the MCP session once you have the evidence you need.
+10. Close the MCP session once you have the evidence you need.
 
 When selector options are tied, choose the one that keeps the resulting Java helper closest to shared `Finder` methods before adding XPath-specific helpers.
 
