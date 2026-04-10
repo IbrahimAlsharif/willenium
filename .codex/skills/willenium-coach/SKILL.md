@@ -155,7 +155,8 @@ Remind the user that:
 - business intent should be clarified before plan scope and plan type are locked
 - journey steps or feature focus and plan type should be chosen before writing the plan
 - journey steps should usually be normalized into reusable business checkpoints that can later map into `flows/steps/...`
-- Selenium MCP is mandatory during planning for UI work and should inspect the live site first in headed mode before the Markdown draft is written
+- Playwright MCP is the preferred live-inspection tool during planning for UI work when it is available in the client, and the live site should be inspected first in headed mode before the Markdown draft is written
+- Selenium MCP remains useful for bug reproduction and Selenium-runtime parity checks before final Java locator decisions
 - when planning or generating UI tests, treat the rendered live state as the source of truth for expected behavior while still translating the outcome back into framework-native Java/TestNG assets
 - write step-by-step business test cases with at most two assertions per test so failures stay easy to diagnose
 - avoid brittle hardcoded result assumptions and prefer resilient expectations backed by JSON test data and stable business signals
@@ -180,7 +181,7 @@ Offer direct prompt upgrades like these:
 - `Use willenium-automation to inspect this URL from a business-journey perspective, break the journey into reusable business steps, then create a test plan under test-plans/ focused on business scenarios and real test cases.`
 - `Use willenium-automation to create a business-first test plan under test-plans/ with focused test cases and only brief technical mapping.`
 - `Use willenium-coach to clarify the business goal, user value, key risks, plan scope, and plan type before you write the Markdown draft.`
-- `Use willenium-coach to inspect the live page with Selenium MCP in headed mode first, then clarify the business goal, plan scope, and plan type before writing the Markdown draft.`
+- `Use willenium-coach to inspect the live page with Playwright MCP in headed mode first, then clarify the business goal, plan scope, and plan type before writing the Markdown draft.`
 - `Use willenium-automation to update the existing plan and linked tests for this regression instead of creating duplicate coverage.`
 - `Use willenium-api to ask the business and contract questions for this endpoint first, then create a test plan under test-plans/ focused on coverage scenarios and test cases.`
 - `Use willenium-api to update the existing API plan and linked tests for this service regression instead of creating duplicate coverage.`
@@ -197,7 +198,7 @@ Offer direct prompt upgrades like these:
 - Do not jump straight to technical mapping when the business questions are still unanswered.
 - Do not let planning default to smoke coverage when the user may need a fuller plan.
 - Do not encourage one large test with many assertions when several focused business tests would be clearer.
-- Do not skip the live Selenium MCP inspection step for UI planning work.
+- Do not skip the live UI inspection step for UI planning work when the rendered experience or locator reliability is still uncertain.
 - Do not write tests with more than two assertions.
 - Do not hardcode brittle expected results that should come from rendered truth or JSON-backed data.
 - Do not invent tenant-specific Jira configuration for the user.

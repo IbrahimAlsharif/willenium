@@ -21,10 +21,10 @@ Treat a non-Jira bug as `MANUAL` for reporting.
 
 ## Required Tools
 
-- Atlassian MCP for Jira issue reading, screenshot attachment upload, and comment posting
+- Jira MCP for Jira issue reading, screenshot attachment upload, and comment posting
 - Selenium MCP for live browser reproduction in headed mode
 
-Do not use Playwright MCP for this skill in this repository.
+This skill is the intentional Selenium-first exception in the repo. Use Selenium MCP here even though Playwright MCP is preferred for planning and locator discovery in `willenium-automation`.
 
 ## Save Paths
 
@@ -37,7 +37,7 @@ Create `reports/` if it does not exist.
 ## Workflow
 
 1. Get the bug details.
-   - If the input is a Jira key or Jira URL, read the issue through Atlassian MCP.
+   - If the input is a Jira key or Jira URL, read the issue through Jira MCP.
    - Capture the summary, description, priority, status, assignee, expected behavior, actual behavior, and reproduction steps.
    - If there is no Jira issue, use the user description and set `ISSUE_KEY` to `MANUAL`.
 2. Turn the bug into a test mission.

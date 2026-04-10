@@ -1,6 +1,6 @@
 ---
 name: willenium-automation
-description: Use when creating, updating, or debugging Java Selenium TestNG UI coverage in the Willenium framework, especially when work must follow base.Setup, base.Finder, base.Go, JSON test data, and TestNG XML suite composition, with Selenium MCP used for live browser exploration when needed and TestRail MCP used for case linkage when relevant.
+description: Use when creating, updating, or debugging Java Selenium TestNG UI coverage in the Willenium framework, especially when work must follow base.Setup, base.Finder, base.Go, JSON test data, and TestNG XML suite composition, with Playwright MCP preferred for live browser planning and locator validation when available, Selenium MCP used for parity checks when needed, and TestRail MCP used for case linkage when relevant.
 ---
 
 # Willenium UI Selenium TestNG
@@ -25,7 +25,7 @@ Explain recommendations in practical language, and when helpful, give the user a
 - For generation and update workflow after planning, read `references/generation.md`.
 - For verification strategy and smallest-meaningful validation, read `references/verification.md`.
 - For Jira MCP workflows and issue-to-test linkage, read `references/jira-mcp.md` when the task involves Jira.
-- For the Selenium MCP contract and when to use it, read `references/selenium-mcp.md`.
+- For the UI MCP contract and when to use Playwright MCP versus Selenium MCP, read `references/selenium-mcp.md`.
 - Use TestRail MCP when the task starts from existing test cases, runs, or execution reporting expectations and keep that linkage at the agent/client layer rather than in Java runtime code.
 
 ## Core Workflow
@@ -101,7 +101,8 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Prefer existing helper patterns over introducing a new page-object architecture.
 - Reuse `Finder` and `Go` before adding direct `driver.findElement(...)` or custom wait code.
 - Prefer the higher-level shared helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before writing one-off synchronization or interaction fallback logic.
-- When selecting locators during Selenium MCP exploration or when translating MCP findings back into Java, prefer `id` first, then `name`, then stable CSS or semantic attributes, and use XPath only when a stable non-XPath locator is not available.
+- When selecting locators during Playwright MCP or Selenium MCP exploration or when translating MCP findings back into Java, prefer `id` first, then `name`, then stable CSS or semantic attributes, and use XPath only when a stable non-XPath locator is not available.
+- Do not encode Playwright-only locator syntax into Java guidance or generated code. Translate `getByRole(...)`, `getByText(...)`, `getByLabel(...)`, `getByPlaceholder(...)`, `locator(...).filter(...)`, `locator(...).nth(...)`, `:has-text(...)`, and similar Playwright extensions into Selenium-supported locator strategies before they reach `Finder` or Java helper methods.
 - Keep assertions in `*Test.java`; helper classes should expose actions, locators, and small state checks.
 - Add short plain-language comments in generated or updated `*Test.java` files so low-code readers can follow what each test protects and what each assertion block is checking.
 - Prefer many focused business tests over one large test with many assertions.
@@ -122,7 +123,8 @@ Jira-linked work should follow the Jira reference and still remain plan-first.
 - Keep all four JSON files structurally identical even when their values differ.
 - If only one language is known today, still preserve the JSON structure so the second language can be added cleanly later.
 - Use the existing JSON files only as examples of shape; do not treat their sample website links or labels as canonical values for a new client project.
-- When using Selenium MCP, start by understanding the business goal, user intent, trust signals, and drop-off risks before drilling into technical selectors.
-- When using Selenium MCP for planning, navigate the requested journey steps or feature area intentionally and align the findings back to the planned business cases and selected plan type.
+- When using Playwright MCP or Selenium MCP, start by understanding the business goal, user intent, trust signals, and drop-off risks before drilling into technical selectors.
+- Prefer Playwright MCP for planning and locator validation when it is available in the client, and use Selenium MCP when runtime parity with Selenium matters or when a second check is warranted before encoding the locator in Java.
+- When using Playwright MCP or Selenium MCP for planning, navigate the requested journey steps or feature area intentionally and align the findings back to the planned business cases and selected plan type.
 - Do not commit personal Jira credentials, cloud IDs, account IDs, or customer tenant URLs into this public template; Jira tenant details should come from the user's authorized MCP client at runtime.
 - Do not commit personal TestRail URLs, usernames, API keys, or project-specific identifiers into this public template; TestRail access belongs to workspace MCP config and runtime reporting configuration.

@@ -63,19 +63,20 @@ The expected sequence is:
 6. Let the user review the draft direction.
 7. Generate or update automation from the approved plan.
 
-## When Planning Should Use Selenium MCP
+## When Planning Should Use UI MCP
 
-Planning does not automatically require Selenium MCP.
+Planning does not automatically require live UI MCP exploration.
 
 Default approach:
 
 1. confirm business context
 2. confirm the journey steps or feature and the plan type
 3. inspect local plans, flows, tests, and test data
-4. use Selenium MCP to navigate and investigate the intended journey only when live evidence would materially improve the plan
-5. draft the Markdown plan with Selenium findings aligned to the business cases
+4. use Playwright MCP to navigate and investigate the intended journey when it is available and live evidence would materially improve the plan
+5. use Selenium MCP when Selenium-runtime parity or bug reproduction needs a second check
+6. draft the Markdown plan with live findings aligned to the business cases
 
-Use Selenium MCP during planning when:
+Use live UI MCP during planning when:
 
 - the user explicitly asks to inspect a real target link
 - the page structure or behavior is unclear from the user's description
@@ -83,13 +84,13 @@ Use Selenium MCP during planning when:
 - live exploration would meaningfully improve the plan's accuracy
 - the team needs the actual journey steps, decision points, or recovery paths confirmed before finalizing the test cases
 
-Do not use Selenium MCP during planning when:
+Do not use live UI MCP during planning when:
 
 - the user's description is already sufficient to draft the plan
 - the task is mainly updating an existing plan from a known bug or known coverage area
 - journey steps or feature focus and plan type are still undecided and live browsing would be premature
 
-When Selenium MCP is used during planning:
+When Playwright MCP or Selenium MCP is used during planning:
 
 - navigate the journey in the same order the plan is expected to cover
 - behave like an expert practical test-case designer while navigating, not like a generic page summarizer
@@ -101,11 +102,11 @@ When Selenium MCP is used during planning:
 Practical examples:
 
 - `Write a full test plan for this page`
-  Selenium MCP may be useful if the page needs inspection.
+  Playwright MCP may be useful if the page needs inspection.
 - `Update this existing plan for Jira bug ABC-123`
-  often no Selenium MCP at first; confirm the business context, intended journey steps or feature, and desired plan type with the user, then decide whether live inspection is actually needed.
+  often no live UI MCP at first; confirm the business context, intended journey steps or feature, and desired plan type with the user, then decide whether live inspection is actually needed.
 - `Inspect this target link and create the plan`
-  Selenium MCP is likely useful.
+  Playwright MCP is likely useful.
 
 ## Scope Guidance
 

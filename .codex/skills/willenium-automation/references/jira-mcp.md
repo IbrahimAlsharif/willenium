@@ -2,23 +2,22 @@
 
 ## Repo Configuration
 
-This repo now declares a project-level Atlassian MCP server in `.mcp.json`:
+This repo now declares a project-level Jira MCP server in `.mcp.json`:
 
-- server name: `atlassian`
-- type: `http`
-- url: `https://mcp.atlassian.com/v1/mcp`
+- server name: `jira`
+- command: `npx -y @aashari/mcp-server-atlassian-jira`
 
-This is the Atlassian Rovo MCP endpoint for Jira, Confluence, and Compass. In this repo, the practical Jira use cases are:
+In this repo, the practical Jira use cases are:
 
 - read existing bugs before writing a plan or test
 - create Jira bugs from a reproduced failure or test result summary
 - add comments or updates that point back to generated test artifacts
 
-The committed template should remain tenant-neutral:
+The committed template should keep Jira usage at the agent layer and document the expected env keys clearly:
 
-- keep only the generic Atlassian MCP endpoint in version control
-- do not commit customer Jira base URLs, project keys, cloud IDs, account IDs, API tokens, or personal credentials
-- expect the real Jira site context to come from the user's MCP client authorization and live tool responses at usage time
+- `ATLASSIAN_SITE_NAME`
+- `ATLASSIAN_USER_EMAIL`
+- `ATLASSIAN_API_TOKEN`
 
 ## Important Boundary
 
@@ -92,7 +91,7 @@ When a user wants to push a bug to Jira:
    - browser
    - suite or flow path
    - screenshots or report location when available
-3. Create the Jira bug through the Atlassian MCP server.
+3. Create the Jira bug through the `jira` MCP server.
 4. Keep the Jira key available for later plan and test generation if the bug will become automation work.
 
 ## Plan Metadata Guidance

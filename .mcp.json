@@ -1,8 +1,24 @@
 {
   "mcpServers": {
-    "atlassian": {
-      "type": "http",
-      "url": "https://mcp.atlassian.com/v1/mcp"
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--headed"
+      ]
+    },
+    "jira": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@aashari/mcp-server-atlassian-jira"
+      ],
+      "env": {
+        "ATLASSIAN_SITE_NAME": "jira-platofrm",
+        "ATLASSIAN_USER_EMAIL": "sara email",
+        "ATLASSIAN_API_TOKEN": "token"
+      }
     },
     "selenium": {
       "command": "npx",

@@ -46,7 +46,8 @@ Treat `flows/steps/...` as reusable business-step building blocks that top-level
 - Keep API setup in `base.ApiSetup` and shared request execution in `base.ApiClient`.
 - Reuse `base.Finder` and `base.Go` before writing raw Selenium code.
 - Prefer the higher-level `Finder`/`Go` helpers such as `Finder.get(...)`, `Finder.getClickable(...)`, `Go.click(...)`, `Go.type(...)`, and `Go.clickAndWait...` before adding custom waits or retry logic.
-- When choosing locators for Selenium MCP exploration or Java helpers, prefer `id` first, then `name`, then stable CSS or semantic attributes, and use XPath only when the page does not expose a stable non-XPath option.
+- When choosing locators during Playwright MCP or Selenium MCP exploration or for Java helpers, prefer `id` first, then `name`, then stable CSS or semantic attributes, and use XPath only when the page does not expose a stable non-XPath option.
+- Do not carry Playwright-only locator syntax into generated Selenium work. Avoid patterns such as `getByRole(...)`, `getByText(...)`, `getByLabel(...)`, `getByPlaceholder(...)`, `locator(...).filter(...)`, `locator(...).nth(...)`, `:has-text(...)`, and other Playwright-specific selector extensions unless they are translated first into Selenium-supported `id`, `name`, CSS, semantic attribute, or XPath strategies.
 - Update JSON-backed test data instead of hardcoding user-facing strings when possible.
 - For each new plan, create fresh app-specific test data files instead of reusing the checked-in example JSON files.
 - When usernames or passwords are needed in test data files, store them as plain text in the JSON instead of reading them from environment variables.
@@ -73,11 +74,33 @@ Willenium should sound human, friendly, and supportive in user-facing replies.
 - Do not overuse the emoji; one natural use per reply is usually enough.
 - Keep recommendations actionable and welcoming, especially when the user seems unsure what to do next.
 
+## UI MCP Workflow
+
+When Playwright MCP is available in the client, use it as the default tool for UI planning and locator validation, then translate the final findings back into Java Selenium/TestNG conventions for this repo.
+
+Use Selenium MCP when runtime parity with Selenium matters, when reproducing bugs through `willenium-test`, or when you want a second live check before locking a Selenium locator.
+
+Treat the rendered live site as the source of truth for planning and generation no matter which MCP client is used.
+
+When Playwright MCP is used, treat it as a discovery tool, not as a source of final selector syntax. Final locator recommendations must be expressible in Selenium Java through `By.id`, `By.name`, `By.cssSelector`, or `By.xpath`, and should map cleanly into `base.Finder`.
+
+This repo uses one intentional split:
+
+- `willenium-automation`: Playwright MCP first for planning and locator discovery when available, Selenium MCP as fallback or parity check
+- `willenium-test`: Selenium MCP first for live single-bug reproduction so the investigation matches the final Selenium runtime more closely
+
+Before any Playwright-discovered locator is accepted for Java generation, do a Selenium compatibility check:
+
+1. translate it to `id` or `name` if possible
+2. otherwise translate it to stable CSS using durable attributes
+3. use XPath only when that is the smallest stable fallback
+4. reject the locator and keep exploring if it still depends on Playwright-only semantics
+
 ## Selenium MCP
 
 This repo includes a workspace MCP server in `.mcp.json` named `selenium`.
 
-Use Selenium MCP as a required first step for UI planning and UI generation work. Inspect the live site first in headed mode and use that rendered experience to ground the plan and resulting coverage.
+Use Selenium MCP as the repo-pinned fallback and parity-check tool for UI work. Inspect the live site in headed mode when you need Selenium-specific confirmation for planning, locator validation, or bug reproduction.
 
 Use Selenium MCP to:
 
@@ -115,9 +138,9 @@ Do not treat MCP interactions as the final deliverable. Translate findings back 
 
 ## Jira MCP
 
-This repo also includes a workspace MCP server in `.mcp.json` named `atlassian`.
+This repo also includes a workspace MCP server in `.mcp.json` named `jira`.
 
-Use Atlassian MCP when Jira work materially helps:
+Use Jira MCP when Jira work materially helps:
 
 - read an existing bug before planning or generating tests
 - create a Jira bug from a reproduced failure or regression
@@ -182,9 +205,9 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - When journey steps are confirmed, shape them as reusable business-step candidates that can later map into `flows/steps/...` and be composed into top-level flows.
 - Prefer a clean, structured question UI with short grouped prompts when the client supports it.
 - Treat `journey` as the preferred scope when the user is describing a business outcome that spans one or more pages.
-- Use Selenium MCP during planning as a mandatory first step for UI work.
+- Use Playwright MCP during planning as the default first step for UI work when it is available in the client.
 - Start UI planning by inspecting the live target in headed mode before drafting the plan.
-- When Selenium MCP is used for planning, use it to navigate the intended journey steps, investigate unclear behavior, and behave like an expert test-case designer while exploring.
+- When Playwright MCP or Selenium MCP is used for planning, use it to navigate the intended journey steps, investigate unclear behavior, and behave like an expert test-case designer while exploring.
 - While navigating in the browser for planning, convert observed journey steps, trust signals, blockers, misleading states, and recovery paths into concrete planned test cases instead of leaving them as generic notes.
 - Shape the planned test-case set explicitly by the selected `plan_type` so the resulting plan depth matches the user's intent rather than falling back to a generic flow summary.
 - For `smoke`, produce only the smallest set of critical-path tests needed to prove the main user outcome still works.
@@ -193,7 +216,7 @@ Do not commit personal TestRail URLs, usernames, API keys, or customer workspace
 - For `edge-case-focused`, make unusual but realistic boundary and state-transition cases the primary output.
 - For `regression`, focus the cases on the reported or historically risky behavior plus adjacent safeguards.
 - For `full`, balance primary, alternate, negative, recovery, and edge cases with practical prioritization.
-- Do not use Selenium MCP as disconnected browsing; align exploration to the requested feature, journey steps, and selected plan type.
+- Do not use Playwright MCP or Selenium MCP as disconnected browsing; align exploration to the requested feature, journey steps, and selected plan type.
 - Treat rendered state as truth for planning and generation unless the user explicitly defines a stronger business rule that the live environment does not yet reflect.
 - Create the canonical plan at `test-plans/<app>/<target-slug>.md` unless the user explicitly asks for a Markdown blueprint next to the flow XML under `flows/...`.
 - Create the canonical Quality Canvas at `quality/plans/<app>/<target-slug>-quality-canvas.md` unless the user explicitly asks for another location.
