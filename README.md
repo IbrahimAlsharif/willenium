@@ -75,6 +75,8 @@ The generated project includes a simple public WE WILL homepage example so the f
 - Maven
 - Selenium 4
 - TestNG
+- Playwright
+- TypeScript
 - WebDriverManager
 - RestAssured
 - Extent Reports
@@ -93,7 +95,9 @@ The `create-willenium` scaffolder:
 Generated projects include:
 
 - Selenium + TestNG framework structure
+- Playwright + TypeScript framework foundation for gradual UI migration
 - ready-to-run example XML suites
+- ready-to-run example Playwright journey spec
 - example JSON test data setup
 - a simple public WE WILL homepage example
 - shared browser helpers
@@ -112,6 +116,15 @@ mvn test -PProtectExampleHomeTrustArabic
 mvn test -PProtectExamplePublicApiContractEnglish
 mvn test -PProtectExamplePublicApiContractArabic
 npm run sync:flow-workflows
+```
+
+Use the Playwright profile-based runtime:
+
+```bash
+npm install
+npx playwright install --with-deps chromium
+npm run pw:test:home:production:english
+npm run pw:test:home:production:arabic
 ```
 
 Useful suite entry points:
@@ -135,6 +148,11 @@ npm run sync:flow-workflows
 ```
 
 The generated workflow name matches the Maven profile name, so the new flow can be run manually from GitHub Actions without hand-writing another YAML file.
+
+Playwright pilot workflow:
+
+- `.github/workflows/protect-example-home-trust-playwright.yml`
+- supports manual dispatch with `branch` (`production` / `staging`) and `language` (`english` / `arabic`)
 
 ## MCP Integration
 

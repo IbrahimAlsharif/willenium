@@ -25,23 +25,33 @@ jira_issue_key:
 jira_issue_url:
 affected_flows:
   - flows/
+  - flows-ts/examples/wewill/ProtectExampleHomeTrust.flow.ts
 affected_tests:
   - src/test/java/base/Setup.java
   - src/test/java/base/Finder.java
   - src/test/java/base/Go.java
   - src/test/java/configs/pipeline/PipelineConfig.java
   - src/test/java/configs/testdata/TestDataFactory.java
+  - src/pw/core/runtime/RuntimeProfile.ts
+  - src/pw/core/data/TestDataFactory.ts
+  - src/pw/core/helpers/Finder.ts
+  - src/pw/core/helpers/Go.ts
+  - src/pw/tests/examples/wewill/home/WeWillHomePage.spec.ts
 affected_testdata:
   - src/test/java/configs/testdata/exampleProductionArabic.json
   - src/test/java/configs/testdata/exampleProductionEnglish.json
   - src/test/java/configs/testdata/exampleStagingArabic.json
   - src/test/java/configs/testdata/exampleStagingEnglish.json
+  - src/pw/config/testdata/exampleProductionArabic.json
+  - src/pw/config/testdata/exampleProductionEnglish.json
+  - src/pw/config/testdata/exampleStagingArabic.json
+  - src/pw/config/testdata/exampleStagingEnglish.json
 flow_xml: flows/
 java_helper: base.Finder, base.Go
 java_test: tests.*.*.*
 testdata_sections:
   - shared journey sections (per app)
-status: draft
+status: in-progress
 ---
 
 # Test Plan: Selenium Java TestNG to Playwright TypeScript Migration
@@ -284,10 +294,32 @@ Minimum CI transition pattern:
 - maintain migration feature flag in CI (`USE_PLAYWRIGHT_UI=true/false`)
 - for any parity regression, revert impacted journey to legacy owner while fixing Playwright implementation
 
+## Execution Progress (2026-04-13)
+
+- completed Wave 0 scaffold:
+  - `playwright.config.ts` with four profile-aware projects
+  - `src/pw/core/runtime/RuntimeProfile.ts`
+  - `src/pw/core/data/TestDataFactory.ts` with cross-profile shape validation
+- completed Wave 1 helper parity baseline:
+  - `src/pw/core/helpers/Finder.ts`
+  - `src/pw/core/helpers/Go.ts`
+  - `src/pw/fixtures/willenium.fixture.ts`
+- started Wave 2 with one pilot journey:
+  - `src/pw/tests/examples/wewill/home/WeWillHomePage.spec.ts`
+  - `flows-ts/examples/wewill/ProtectExampleHomeTrust.flow.ts`
+  - `.github/workflows/protect-example-home-trust-playwright.yml`
+- verification evidence:
+  - `npm run pw:typecheck` passed
+  - profile runs passed for:
+    - `production-english`
+    - `production-arabic`
+    - `staging-english`
+    - `staging-arabic`
+
 ## Review Status
 
-- ready for review as migration draft
-- waiting for confirmation of:
-  - preferred CI mixed-mode strategy
-  - pilot journey shortlist
-  - cutover acceptance threshold
+- in-progress and ready for Wave 2 parity execution review
+- next confirmations needed:
+  - preferred CI mixed-mode strategy (single workflow vs dual workflows)
+  - pilot journey shortlist for next 2 to 3 migrations
+  - cutover acceptance threshold for Selenium UI decommission

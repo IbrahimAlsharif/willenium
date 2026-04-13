@@ -1,9 +1,16 @@
 {
   "name": "create-willenium",
   "version": "0.1.4",
-  "description": "Scaffold a Java Selenium TestNG starter framework with JSON test data and XML flow suites.",
+  "description": "Scaffold a journey-driven automation framework with Selenium/TestNG and Playwright/TypeScript support.",
   "scripts": {
-    "sync:flow-workflows": "node scripts/sync-flow-workflows.js"
+    "sync:flow-workflows": "node scripts/sync-flow-workflows.js",
+    "pw:test": "playwright test",
+    "pw:test:home:production:english": "playwright test src/pw/tests/examples/wewill/home/WeWillHomePage.spec.ts --project=production-english",
+    "pw:test:home:production:arabic": "playwright test src/pw/tests/examples/wewill/home/WeWillHomePage.spec.ts --project=production-arabic",
+    "pw:test:home:staging:english": "playwright test src/pw/tests/examples/wewill/home/WeWillHomePage.spec.ts --project=staging-english",
+    "pw:test:home:staging:arabic": "playwright test src/pw/tests/examples/wewill/home/WeWillHomePage.spec.ts --project=staging-arabic",
+    "pw:report": "playwright show-report",
+    "pw:typecheck": "tsc --noEmit"
   },
   "bin": {
     "create-willenium": "bin/create-willenium.js"
@@ -24,6 +31,11 @@
     "url": "git+https://github.com/IbrahimAlsharif/willenium.git"
   },
   "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "@types/node": "^22.15.18",
+    "typescript": "^5.8.3"
+  },
   "engines": {
     "node": ">=18"
   }

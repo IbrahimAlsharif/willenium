@@ -1,0 +1,60 @@
+name: ProtectExampleHomeTrustPlaywright
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Target branch profile"
+        required: true
+        type: choice
+        default: production
+        options:
+          - production
+          - staging
+      language:
+        description: "Target language profile"
+        required: true
+        type: choice
+        default: english
+        options:
+          - english
+          - arabic
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright home trust flow
+        run: |
+          PROJECT_NAME="${{ inputs.branch }}-${{ inputs.language }}"
+          npx playwright test src/pw/tests/examples/wewill/home/WeWillHomePage.spec.ts --project="$PROJECT_NAME"
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+
+      - name: Upload Playwright test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-results/

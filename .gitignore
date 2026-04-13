@@ -42,3 +42,6 @@ build/
 ### Node ###
 node_modules/
 *.tgz
+playwright-report/
+test-results/
+dist-pw/
