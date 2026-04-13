@@ -1,6 +1,6 @@
 export const protectExampleHomeTrustFlow = {
   flowId: 'protect-example-home-trust-playwright',
-  planId: 'framework_selenium-java-testng-to-playwright-typescript-migration',
+  planId: 'framework_playwright-typescript-foundation',
   targetSlug: 'example-home-trust',
   app: 'examples',
   profileProjects: [

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="Protect Example Public API Contract Arabic" parallel="none">
-    <suite-files>
-        <suite-file path="flows/SetupApiArabic.xml"/>
-        <suite-file path="flows/examples/steps/wewill/public_api_journey.xml"/>
-    </suite-files>
-</suite>

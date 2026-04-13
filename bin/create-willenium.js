@@ -35,10 +35,9 @@ const SKIP_ANYWHERE = new Set([
 
 function printHelp() {
   console.log(`Usage:
-  npx create-willenium <project-name> [--group-id com.example.tests] [--force]
+  npx create-willenium <project-name> [--force]
 
 Options:
-  --group-id <value>  Override the generated Maven groupId
   --force             Allow creation inside an existing empty directory
   --help              Show this help message`);
 }
@@ -58,7 +57,6 @@ function parseArgs(argv) {
   const args = argv.slice(2);
   const options = {
     force: false,
-    groupId: null,
     projectName: null
   };
 
@@ -72,16 +70,6 @@ function parseArgs(argv) {
 
     if (arg === "--force") {
       options.force = true;
-      continue;
-    }
-
-    if (arg === "--group-id") {
-      const value = args[index + 1];
-      if (!value) {
-        exitWithError("Missing value for --group-id.");
-      }
-      options.groupId = value.trim();
-      index += 1;
       continue;
     }
 
@@ -99,18 +87,6 @@ function parseArgs(argv) {
   }
 
   return options;
-}
-
-function sanitizeArtifactId(projectName) {
-  return projectName
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "") || "willenium-project";
-}
-
-function toGroupId(artifactId) {
-  return `com.${artifactId.replace(/-/g, ".")}`;
 }
 
 function ensureDestination(destDir, force) {
@@ -249,16 +225,6 @@ function copyRecursive(sourceDir, targetDir, isRoot = false) {
   }
 }
 
-function replacePomMetadata(projectDir, artifactId, groupId) {
-  const pomPath = path.join(projectDir, "pom.xml");
-  let pom = fs.readFileSync(pomPath, "utf8");
-
-  pom = pom.replace(/<groupId>WEWILL<\/groupId>/, `<groupId>${groupId}</groupId>`);
-  pom = pom.replace(/<artifactId>willenium<\/artifactId>/, `<artifactId>${artifactId}</artifactId>`);
-
-  fs.writeFileSync(pomPath, pom);
-}
-
 function updateReadme(projectDir, projectName) {
   const readmePath = path.join(projectDir, "README.md");
   if (!fs.existsSync(readmePath)) {
@@ -270,7 +236,7 @@ function updateReadme(projectDir, projectName) {
     .replace(/^# Willenium$/m, `# ${projectName}`)
     .replace(
       /^Willenium is .*$/m,
-      `${projectName} is based on the Willenium Selenium UI automation framework`
+      `${projectName} is based on the Willenium Playwright + TypeScript automation framework`
     )
     .replace(
       /## Quick Start[\s\S]*?(?=\n## Troubleshooting\n)/,
@@ -278,7 +244,9 @@ function updateReadme(projectDir, projectName) {
 
 \`\`\`bash
 cd ${projectName}
-mvn test -PProtectExampleHomeTrustEnglish
+npm install
+npx playwright install --with-deps chromium
+npm run pw:test
 \`\`\`
 `
     )
@@ -324,15 +292,12 @@ async function main() {
   const options = parseArgs(process.argv);
   const destination = path.resolve(process.cwd(), options.projectName);
   const projectName = path.basename(destination);
-  const artifactId = sanitizeArtifactId(projectName);
-  const groupId = options.groupId || toGroupId(artifactId);
   const templateSource = await prepareTemplateSource();
   const destinationState = ensureDestination(destination, options.force);
 
   try {
     copyRecursive(templateSource.templateRoot, destination, true);
     writeGitignore(destination, templateSource.templateRoot);
-    replacePomMetadata(destination, artifactId, groupId);
     updateReadme(destination, projectName);
   } catch (error) {
     if (destinationState.created) {
@@ -349,7 +314,9 @@ Created ${projectName} in ${destination}
 
 Next steps:
   cd ${destination}
-  mvn test -PProtectExampleHomeTrustEnglish
+  npm install
+  npx playwright install --with-deps chromium
+  npm run pw:test
 `);
 }
 

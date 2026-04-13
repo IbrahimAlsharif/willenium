@@ -20,13 +20,6 @@
         "ATLASSIAN_API_TOKEN": "token"
       }
     },
-    "selenium": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@angiejones/mcp-selenium@0.1.21"
-      ]
-    },
     "testrail": {
       "command": "uvx",
       "args": [

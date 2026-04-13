@@ -1,9 +1,8 @@
 {
   "name": "create-willenium",
   "version": "0.1.4",
-  "description": "Scaffold a journey-driven automation framework with Selenium/TestNG and Playwright/TypeScript support.",
+  "description": "Scaffold a journey-driven Playwright TypeScript automation framework.",
   "scripts": {
-    "sync:flow-workflows": "node scripts/sync-flow-workflows.js",
     "pw:test": "playwright test",
     "pw:test:home:production:english": "playwright test src/pw/tests/examples/wewill/home/WeWillHomePage.spec.ts --project=production-english",
     "pw:test:home:production:arabic": "playwright test src/pw/tests/examples/wewill/home/WeWillHomePage.spec.ts --project=production-arabic",
@@ -19,9 +18,9 @@
     "bin"
   ],
   "keywords": [
-    "selenium",
-    "testng",
-    "maven",
+    "playwright",
+    "typescript",
+    "automation",
     "scaffold",
     "bootstrap",
     "willenium"
