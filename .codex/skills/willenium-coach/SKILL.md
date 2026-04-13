@@ -12,7 +12,7 @@ This skill is for guidance and prompt shaping. It does not replace the execution
 - use `willenium-consultant` to challenge shallow requests, review planning quality, and decide whether the next step should be strategic framing, plan refinement, or execution
 - use `quality-canvas` to create a reusable strategic quality artifact before detailed planning starts
 - use `willenium-coach` to orient the user
-- use `willenium-test` for single-bug reproduction and evidence-backed manual verification through Selenium MCP
+- use `willenium-test` for single-bug reproduction and evidence-backed manual verification through Playwright MCP
 - use `willenium-automation` for UI/browser work
 - use `willenium-api` for API/service work
 - use the `willenium` agent when invoking the repo agent directly
@@ -141,10 +141,12 @@ Explain the repo in simple terms:
 
 - `quality/plans/...` holds strategic quality artifacts such as a Quality Canvas
 - `test-plans/...` holds the source-of-truth plans
-- `flows/...` holds TestNG suite wiring
-- `src/test/java/tests/...` holds helper classes and `*Test.java` or `*ApiTest.java`
-- `src/test/java/configs/testdata/...` holds dynamic assertions and inputs
-- `src/test/java/base/...` holds shared setup and execution helpers such as `Setup`, `ApiSetup`, `Go`, `Finder`, and `ApiClient`
+- `flows-ts/...` holds Playwright UI flow ownership
+- `src/pw/...` holds Playwright runtime, helpers, fixtures, and specs
+- `src/pw/config/testdata/...` holds UI dynamic assertions and inputs
+- `src/test/java/tests/...` holds API helper classes and `*ApiTest.java` assertions
+- `src/test/java/configs/testdata/...` holds API dynamic inputs and expectations
+- `src/test/java/base/...` holds shared API setup and execution helpers such as `ApiSetup` and `ApiClient`
 
 Remind the user that:
 
@@ -154,10 +156,10 @@ Remind the user that:
 - plans come before generation for new or unclear targets
 - business intent should be clarified before plan scope and plan type are locked
 - journey steps or feature focus and plan type should be chosen before writing the plan
-- journey steps should usually be normalized into reusable business checkpoints that can later map into `flows/steps/...`
+- journey steps should usually be normalized into reusable business checkpoints that can later map into `flows-ts/...`
 - Playwright MCP is the preferred live-inspection tool during planning for UI work when it is available in the client, and the live site should be inspected first in headed mode before the Markdown draft is written
-- Selenium MCP remains useful for bug reproduction and Selenium-runtime parity checks before final Java locator decisions
-- when planning or generating UI tests, treat the rendered live state as the source of truth for expected behavior while still translating the outcome back into framework-native Java/TestNG assets
+- Playwright MCP is the standard tool for bug reproduction and live locator checks in UI work
+- when planning or generating UI tests, treat the rendered live state as the source of truth for expected behavior while still translating the outcome back into framework-native Playwright TypeScript assets
 - write step-by-step business test cases with at most two assertions per test so failures stay easy to diagnose
 - avoid brittle hardcoded result assumptions and prefer resilient expectations backed by JSON test data and stable business signals
 - account for dynamic UI behavior such as cookie banners, delayed rendering, and skeleton loaders in both planning notes and generated coverage
@@ -187,10 +189,10 @@ Offer direct prompt upgrades like these:
 - `Use willenium-api to update the existing API plan and linked tests for this service regression instead of creating duplicate coverage.`
 - `Use willenium-coach to help me choose whether this API work should be planned as endpoint, service, contract, or integration-flow coverage and whether it should be smoke, regression, negative-path, or full.`
 - `Use willenium-automation to read Jira bug ABC-123, decide which existing flows it affects, update the impacted plan, then update the linked tests.`
-- `Use willenium-test to read Jira bug ABC-123, reproduce it in the browser with Selenium MCP, save the evidence report, then tell me whether the bug is confirmed, fixed, or blocked.`
+- `Use willenium-test to read Jira bug ABC-123, reproduce it in the browser with Playwright MCP, save the evidence report, then tell me whether the bug is confirmed, fixed, or blocked.`
 - `Use willenium-test to investigate this user-described UI bug in the live staging environment and save an HTML report with screenshots.`
 - `Use willenium-automation to read TestRail case C123 or run R45, decide which existing flows it maps to, update the impacted plan, then update the linked tests.`
-- `Use willenium-automation to debug this failing flow and explain whether the fix belongs in the helper, assertion, test data, or XML suite.`
+- `Use willenium-automation to debug this failing flow and explain whether the fix belongs in the helper, assertion, test data, , test data, or flow map configuration.`
 
 ## Guardrails
 

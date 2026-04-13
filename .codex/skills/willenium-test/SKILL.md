@@ -1,15 +1,15 @@
 ---
 name: willenium-test
-description: Use when testing a reported UI bug from a Jira link, Jira key, or user description, especially when the goal is to reproduce or disprove the issue in a live browser with Selenium MCP, assess it like an experienced business-aware tester, and produce a concise evidence-backed report with screenshots and optional Jira updates.
+description: Use when testing a reported UI bug from a Jira link, Jira key, or user description, especially when the goal is to reproduce or disprove the issue in a live browser with Playwright MCP, assess it like an experienced business-aware tester, and produce a concise evidence-backed report with screenshots and optional Jira updates.
 ---
 
 # Willenium Test
 
 Use this skill to investigate one reported UI bug at a time.
-The first deliverable is a reproduction verdict with screenshots and a saved report, not framework-native Java automation.
+The first deliverable is a reproduction verdict with screenshots and a saved report, not framework-native automation code.
 
 Use `willenium-consultant` first when the request is vague enough that the business impact, user outcome, or failure cost is still unclear.
-Use `willenium-automation` after this skill when the user wants the confirmed behavior translated into Java/TestNG coverage.
+Use `willenium-automation` after this skill when the user wants the confirmed behavior translated into Playwright TypeScript coverage.
 
 ## Accepted Inputs
 
@@ -22,9 +22,9 @@ Treat a non-Jira bug as `MANUAL` for reporting.
 ## Required Tools
 
 - Jira MCP for Jira issue reading, screenshot attachment upload, and comment posting
-- Selenium MCP for live browser reproduction in headed mode
+- Playwright MCP for live browser reproduction in headed mode
 
-This skill is the intentional Selenium-first exception in the repo. Use Selenium MCP here even though Playwright MCP is preferred for planning and locator discovery in `willenium-automation`.
+This skill is Playwright-first and Playwright-only for UI bug reproduction.
 
 ## Save Paths
 
@@ -44,7 +44,7 @@ Create `reports/` if it does not exist.
    - Identify the affected feature or page.
    - Identify the user intent and the business outcome at risk.
    - Write the ordered reproduction steps. If the bug does not provide them, infer the smallest reasonable path and mark that inference in the report.
-3. Open the live application with Selenium MCP in headed mode.
+3. Open the live application with Playwright MCP in headed mode.
    - Prefer the staging environment named by the user or bug context.
    - Take an immediate screenshot before interacting.
 4. Handle authentication carefully.
@@ -106,6 +106,6 @@ End with:
 ## Boundaries
 
 - One bug per run.
-- Do not generate Java/TestNG coverage unless the user asks for that next.
+- Do not generate framework coverage unless the user asks for that next.
 - Do not mark a bug as fixed just because seed data or access was missing; use `NOT REPRODUCED` with a blocker note instead.
-- Keep Jira and Selenium interactions at the agent layer, not in Java runtime code.
+- Keep Jira and Playwright interactions at the agent layer, not in runtime framework code.

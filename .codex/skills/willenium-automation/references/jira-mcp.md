@@ -21,7 +21,7 @@ The committed template should keep Jira usage at the agent layer and document th
 
 ## Important Boundary
 
-Jira MCP is an agent/client capability, not a Selenium runtime dependency.
+Jira MCP is an agent/client capability, not a UI runtime dependency.
 
 Keep Jira interactions outside:
 

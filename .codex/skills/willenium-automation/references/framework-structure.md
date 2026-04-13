@@ -2,131 +2,64 @@
 
 ## Runtime Shape
 
-Willenium is organized around suite-driven execution rather than isolated test classes.
+Willenium now uses a Playwright TypeScript runtime for UI automation and keeps Java/TestNG for API automation.
 
-1. `base.Setup` loads test data, starts the browser, initializes shared helpers, and opens the app.
-2. Feature-level `*Test.java` classes run inside that initialized state.
-3. `base.TearDownTest` closes the driver and clears the shared UI session state.
+### UI runtime (Playwright)
 
-Because `Setup.driver`, `Setup.wait`, and `Setup.testData` are static shared state, UI test classes are expected to run through TestNG XML suites that include setup and teardown.
+1. `playwright.config.ts` defines profile projects (`production/staging` + `english/arabic`) and runtime settings.
+2. `src/pw/core/runtime/RuntimeProfile.ts` resolves active profile and behavior settings.
+3. `src/pw/core/data/TestDataFactory.ts` loads and validates profile-mapped JSON data.
+4. `src/pw/core/helpers/Finder.ts` and `src/pw/core/helpers/Go.ts` provide shared UI helper patterns.
+5. `src/pw/fixtures/willenium.fixture.ts` wires reusable fixtures for tests.
+6. `src/pw/tests/...` contains assertion-focused Playwright specs.
+7. `flows-ts/...` maps business-flow ownership for Playwright suites.
 
-## Key Files
+### API runtime (Java/TestNG)
 
-- `src/test/java/base/Setup.java`
-  Starts local or remote browsers, supports `auto|local|remote` execution behavior, creates `WebDriverWait`, and initializes `Go` and `Finder`.
-- `src/test/java/base/Finder.java`
-  Shared waits and element lookup helpers, including higher-level `By`-based accessors such as `get(...)` and `getClickable(...)`.
-- `src/test/java/base/Go.java`
-  Shared browser interactions and utility actions, including retry-aware click/type helpers and report artifacts such as screenshots and page-source snapshots.
-- `src/test/java/base/TearDownTest.java`
-  Closes the browser session and clears shared driver references.
-- `src/test/java/configs/testdata/TestDataFactory.java`
-  Maps `branch` + `language` to the correct JSON file.
-- `src/test/java/configs/pipeline/PipelineConfig.java`
-  Controls browser/runtime behavior such as headless mode, incognito, window sizing, page-load strategy, UI wait/retry tuning, report auto-open, and TestRail flags through properties or environment variables.
-- `test-plans/TEMPLATE.md`
-  Default template for plan-first coverage authoring.
-- `test-plans/README.md`
-  Naming and linkage rules for plans, flows, Java classes, and JSON data.
+- `base.ApiSetup`, `base.ApiClient`, `configs.api.ApiContext`
+- API helpers in `src/test/java/tests/.../*Api.java`
+- API assertions in `src/test/java/tests/.../*ApiTest.java`
 
-## Test Organization
+## Key Paths
 
-The current UI pattern is:
+- UI plans: `test-plans/<app>/<target-slug>.md`
+- Quality canvas artifacts: `quality/plans/<app>/<target-slug>-quality-canvas.md`
+- UI tests: `src/pw/tests/...`
+- UI helpers: `src/pw/core/helpers/...`
+- UI test data: `src/pw/config/testdata/...`
+- UI flow ownership: `flows-ts/...`
+- API tests: `src/test/java/tests/...`
+- API flow wiring: `flows/...`
 
-- planning artifact:
-  `test-plans/<app>/<target-slug>.md`
-- feature helper/action class:
-  `src/test/java/tests/.../<Feature>.java`
-- assertion-focused test class:
-  `src/test/java/tests/.../<Feature>Test.java`
+## Test Data Rules (UI)
 
-Examples already in the repo:
+Use profile-based JSON files for UI assertions and inputs:
 
-- WE WILL public home journey: `tests.examples.wewill.home.WeWillHomePage` + `WeWillHomePageTest`
+- `exampleProductionEnglish.json`
+- `exampleProductionArabic.json`
+- `exampleStagingEnglish.json`
+- `exampleStagingArabic.json`
 
-These checked-in classes are examples of framework structure, not the required business domain for future work.
+Keep all four files structurally identical even when values differ.
 
-For a real project:
+## Locator Strategy (Playwright)
 
-- create app-specific plans before generating app-specific automation
-- create app-specific folders, helpers, tests, JSON data, and flows
-- avoid carrying forward sample names, URLs, or assertions unless the user confirms they are still relevant
-- feel free to move or rename the starter examples so they are clearly separated from the real project baseline
+Use Playwright-native locator strategies without Selenium compatibility constraints:
 
-Plans should be the source of truth when a user asks to:
+1. `getByRole` + accessible name
+2. `getByLabel`
+3. `getByPlaceholder`
+4. `getByTestId`
+5. stable CSS/XPath as fallback only
 
-- inspect a target link and write a test plan
-- generate full tests from an approved plan
-- update a plan and then update the related tests
-
-Each plan should include stable metadata pointing to:
-
-- the target slug
-- the related flow XML file
-- the helper and test classes
-- the JSON data sections that support the tests
-
-## Suite Composition
-
-TestNG XML files are the orchestration layer.
-
-- setup suites:
-  `flows/SetupEnglish.xml`, `flows/SetupArabic.xml`
-- feature step suites:
-  `flows/examples/steps/...`
-- composed end-to-end suites:
-  `flows/examples/wewill/...`
-- teardown suite:
-  `flows/TearDown.xml`
-
-Example:
-
-- `flows/examples/wewill/ProtectExampleHomeTrustEnglish.xml`
-  includes setup, steps, and teardown.
-- `flows/examples/steps/wewill/home_journey.xml`
-  runs the bundled public-site example test class.
-
-If a new scenario should run with the broader flow, wire it into the relevant step suite. If it needs a dedicated path, create a new XML suite that still includes setup and teardown.
-
-When the first real client scenario is added, prefer creating dedicated app-specific suites instead of extending the WE WILL sample flow unless the user explicitly wants to keep the examples as the main path.
-
-Because XML files are execution artifacts, keep comprehensive planning in `test-plans/` by default. Only add a Markdown blueprint under `flows/...` when the user explicitly asks for a flow-local plan file.
-
-## Test Data Rules
-
-Use `TestDataFactory` rules when choosing JSON files:
-
-- production + english -> `exampleProductionEnglish.json`
-- production + arabic -> `exampleProductionArabic.json`
-- non-production + english -> `exampleStagingEnglish.json`
-- non-production + arabic -> `exampleStagingArabic.json`
-
-The current JSON files are starter examples of the expected shape. Use them as a structural reference only.
-
-Real tests should:
-
-- store expected assertions, URLs, credentials, and inputs in JSON rather than embedding them in test methods
-- keep English and Arabic values in their respective files when the target app supports both
-- keep production and staging values in their respective files when the target app differs by environment
-- default new bilingual flow coverage to four files: production arabic, production english, staging arabic, and staging english
-- duplicate same-language content across production and staging by default when only one environment's values are known
-- keep all four files structurally identical even when their values differ
-- create new app-appropriate values for the real system under test instead of reusing the sample site content
+Do not rewrite strong Playwright locators to match another runtime.
 
 ## Execution Entry Points
 
-- Maven profiles in `pom.xml`:
-  - `ProtectExampleHomeTrustEnglish`
-  - `ProtectExampleHomeTrustArabic`
-- shortest existing smoke path:
-  - `example_quick_path.xml`
+- `npm run pw:test`
+- `npm run pw:test:home:production:english`
+- `npm run pw:test:home:production:arabic`
+- `npm run pw:test:home:staging:english`
+- `npm run pw:test:home:staging:arabic`
 
-## Practical Conventions
-
-- Reuse `Finder`/`Go` before adding raw Selenium code.
-- Prefer the higher-level `Finder`/`Go` helpers before writing custom waits or retry wrappers in feature helpers.
-- Favor explicit helper methods that encode intent, then assert in `*Test.java`.
-- Add short plain-language comments in `*Test.java` so low-code readers can understand the purpose of each test and major assertion block.
-- Preserve suite-driven execution.
-- Keep new files in ASCII and match the repo's direct, utility-first style.
-- Be conservative with Java language features even though the build is now aligned on Java 17; follow the existing code style unless a newer feature is clearly warranted.
+Use API Maven profiles only for API coverage.
